@@ -317,6 +317,21 @@ func editorRowCxToRx(row *EditorRow) int {
 	return rx
 }
 
+func editorRowRxToCx(row *EditorRow, rx int) int {
+	cur_rx := 0
+	var cx int
+	for cx = 0; cx < row.Size; cx++ {
+		if row.Data[cx] == '\t' {
+			cur_rx += (Global.Tabsize - 1) - (cur_rx % Global.Tabsize)
+		}
+		cur_rx++
+		if cur_rx > rx {
+			return cx
+		}
+	}
+	return cx
+}
+
 func editorUpdateRow(row *EditorRow) {
 	tabs := 0
 	for _, rv := range row.Data {
@@ -491,6 +506,22 @@ func EditorSave() {
 	}
 	Global.Input = fmt.Sprintf("Wrote %d lines (%d bytes) to %s", l, b, fn)
 	Global.CurrentB.Dirty = false
+}
+
+func editorFind() {
+	query := editorPrompt("Search")
+	if query == "" {
+		return
+	}
+	for i, row := range Global.CurrentB.Rows {
+		match := strings.Index(row.Render, query)
+		if match > -1 {
+			Global.CurrentB.cy = i
+			Global.CurrentB.cx = editorRowRxToCx(row, match)
+			Global.CurrentB.rowoff = Global.CurrentB.NumRows
+			break
+		}
+	}
 }
 
 func InitEditor() {

@@ -81,6 +81,7 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacssave", lispSingleton(EditorSave))
 	env.AddFunction("emacsdelchar", lispSingleton(editorDelChar))
 	env.AddFunction("emacsaddnl", lispSingleton(editorInsertNewline))
+	env.AddFunction("emacssearch", lispSingleton(editorFind))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -108,6 +109,7 @@ func LoadUserConfig(env *zygo.Glisp) {
 
 func LoadDefaultConfig(env *zygo.Glisp) {
 	env.LoadString(`
+(emacsbindkey "C-s" "(emacssearch)")
 (emacsbindkey "C-x C-c" "(emacsquit)")
 (emacsbindkey "C-x C-s" "(emacssave)")
 (emacsbindkey "LEFT" "(emacsmvcurs -1 0)")
