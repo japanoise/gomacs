@@ -173,7 +173,7 @@ func editorGetKey() string {
 	}
 }
 
-func editorPrompt(prompt string) string {
+func editorPrompt(prompt string, callback func(string, string)) string {
 	buffer := ""
 	buflen := 0
 	editorSetPrompt(prompt)
@@ -188,8 +188,14 @@ func editorPrompt(prompt string) string {
 		switch key {
 		case "C-c":
 		case "C-g":
+			if callback != nil {
+				callback(buffer, key)
+			}
 			return ""
 		case "RET":
+			if callback != nil {
+				callback(buffer, key)
+			}
 			return buffer
 		case "DEL":
 			if buflen > 0 {
@@ -201,6 +207,9 @@ func editorPrompt(prompt string) string {
 				buffer += key
 				buflen++
 			}
+		}
+		if callback != nil {
+			callback(buffer, key)
 		}
 	}
 }
@@ -483,7 +492,7 @@ func EditorOpen(filename string) error {
 func EditorSave() {
 	fn := Global.CurrentB.Filename
 	if fn == "" {
-		fn = editorPrompt("Save as")
+		fn = editorPrompt("Save as", nil)
 		if fn == "" {
 			Global.Input = "Save aborted"
 			return
@@ -508,9 +517,10 @@ func EditorSave() {
 	Global.CurrentB.Dirty = false
 }
 
-func editorFind() {
-	query := editorPrompt("Search")
-	if query == "" {
+func editorFindCallback(query string, key string) {
+	//If it's an unprintable character, and we're not just ammending the string...
+	if len(key) > 1 && key != "DEL" {
+		//...outta here!
 		return
 	}
 	for i, row := range Global.CurrentB.Rows {
@@ -521,6 +531,23 @@ func editorFind() {
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			break
 		}
+	}
+}
+
+func editorFind() {
+	saved_cx := Global.CurrentB.cx
+	saved_cy := Global.CurrentB.cy
+	saved_co := Global.CurrentB.coloff
+	saved_ro := Global.CurrentB.rowoff
+
+	query := editorPrompt("Search", editorFindCallback)
+
+	if query == "" {
+		//Search cancelled, go back to where we were
+		Global.CurrentB.cx = saved_cx
+		Global.CurrentB.cy = saved_cy
+		Global.CurrentB.coloff = saved_co
+		Global.CurrentB.rowoff = saved_ro
 	}
 }
 
