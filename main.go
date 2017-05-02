@@ -517,16 +517,42 @@ func EditorSave() {
 	Global.CurrentB.Dirty = false
 }
 
+// HACK: Go does not have static variables, so these have to go in global state.
+var last_match int = -1
+var direction int = 1
+
 func editorFindCallback(query string, key string) {
-	//If it's an unprintable character, and we're not just ammending the string...
-	if len(key) > 1 && key != "DEL" {
+	if key == "C-s" {
+		direction = 1
+	} else if key == "C-r" {
+		direction = -1
+		//If it's an unprintable character, and we're not just ammending the string...
+	} else if len(key) > 1 && key != "DEL" {
 		//...outta here!
+		last_match = -1
+		direction = 1
 		return
+	} else {
+		last_match = -1
+		direction = 1
 	}
-	for i, row := range Global.CurrentB.Rows {
+
+	if last_match == -1 {
+		direction = 1
+	}
+	current := last_match
+	for range Global.CurrentB.Rows {
+		current += direction
+		if current == -1 {
+			current = Global.CurrentB.NumRows - 1
+		} else if current == Global.CurrentB.NumRows {
+			current = 0
+		}
+		row := Global.CurrentB.Rows[current]
 		match := strings.Index(row.Render, query)
 		if match > -1 {
-			Global.CurrentB.cy = i
+			last_match = current
+			Global.CurrentB.cy = current
 			Global.CurrentB.cx = editorRowRxToCx(row, match)
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			break
