@@ -145,6 +145,18 @@ func editorChoiceIndex(title string, choices []string, def int) int {
 	}
 }
 
+func trimString(s string, coloff int) string {
+	if coloff == 0 {
+		return s
+	}
+	sr := []rune(s)
+	if coloff < len(sr) {
+		return string(sr[coloff:])
+	} else {
+		return ""
+	}
+}
+
 func editorDrawRows(sy int) {
 	for y := 0; y < sy; y++ {
 		filerow := y + Global.CurrentB.rowoff
@@ -152,7 +164,7 @@ func editorDrawRows(sy int) {
 			termbox.SetCell(0, y, '~', termbox.ColorBlue, termbox.ColorDefault)
 		} else {
 			if Global.CurrentB.coloff < Global.CurrentB.Rows[filerow].RenderSize {
-				printstring(Global.CurrentB.Rows[filerow].Render[Global.CurrentB.coloff:], 0, y)
+				printstring(trimString(Global.CurrentB.Rows[filerow].Render, Global.CurrentB.coloff), 0, y)
 			}
 		}
 	}
