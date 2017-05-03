@@ -269,7 +269,7 @@ func MoveCursor(x, y int) {
 }
 
 func MoveCursorToEol() {
-	if Global.CurrentB.cy <= Global.CurrentB.NumRows {
+	if Global.CurrentB.cy < Global.CurrentB.NumRows {
 		Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy].Size
 	}
 }
