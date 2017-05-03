@@ -5,9 +5,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
 	"os"
 	"strings"
+	"unicode/utf8"
 )
 
 type CommandList struct {
@@ -80,8 +82,10 @@ var Global EditorState
 var Emacs *CommandList
 
 func printstring(s string, y int) {
-	for i, ru := range s {
+	i := 0
+	for _, ru := range s {
 		termbox.SetCell(i, y, ru, termbox.ColorDefault, termbox.ColorDefault)
+		i += runewidth.RuneWidth(ru)
 	}
 }
 
@@ -115,16 +119,19 @@ func GetScreenSize() (int, int) {
 
 func editorDrawStatusLine(x, y int) {
 	editorUpdateStatus()
-	var i int
 	var ru rune
-	for i, ru = range Global.Status {
-		termbox.SetCell(i, y-2, ru, termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+	rx := 0
+	for _, ru = range Global.Status {
+		termbox.SetCell(rx, y-2, ru, termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+		rx += runewidth.RuneWidth(ru)
 	}
-	for ix := i + 1; ix < x; ix++ {
+	for ix := rx; ix < x; ix++ {
 		termbox.SetCell(ix, y-2, ' ', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
 	}
-	for i, ru = range Global.Prompt + "-> " + Global.Input {
-		termbox.SetCell(i, y-1, ru, termbox.ColorDefault, termbox.ColorDefault)
+	rx = 0
+	for _, ru = range Global.Prompt + "-> " + Global.Input {
+		termbox.SetCell(rx, y-1, ru, termbox.ColorDefault, termbox.ColorDefault)
+		rx += runewidth.RuneWidth(ru)
 	}
 }
 
@@ -176,13 +183,14 @@ func editorGetKey() string {
 func editorPrompt(prompt string, callback func(string, string)) string {
 	buffer := ""
 	buflen := 0
+	cursor := 0
 	editorSetPrompt(prompt)
 	defer editorSetPrompt("")
 	for {
 		_, y := termbox.Size()
 		Global.Input = buffer
 		editorRefreshScreen()
-		termbox.SetCursor(len(prompt)+3+buflen, y-1)
+		termbox.SetCursor(utf8.RuneCountInString(prompt)+3+cursor, y-1)
 		termbox.Flush()
 		key := editorGetKey()
 		switch key {
@@ -199,13 +207,17 @@ func editorPrompt(prompt string, callback func(string, string)) string {
 			return buffer
 		case "DEL":
 			if buflen > 0 {
-				buffer = buffer[0 : buflen-1]
-				buflen--
+				r, rs := utf8.DecodeLastRuneInString(buffer)
+				buffer = buffer[0 : buflen-rs]
+				buflen -= rs
+				cursor -= runewidth.RuneWidth(r)
 			}
 		default:
-			if len(key) == 1 {
+			if utf8.RuneCountInString(key) == 1 {
+				r, _ := utf8.DecodeLastRuneInString(buffer)
 				buffer += key
-				buflen++
+				buflen += len(key)
+				cursor += runewidth.RuneWidth(r)
 			}
 		}
 		if callback != nil {
@@ -215,10 +227,22 @@ func editorPrompt(prompt string, callback func(string, string)) string {
 }
 
 func MoveCursor(x, y int) {
+	// Initial position of the cursor
+	icx, icy := Global.CurrentB.cx, Global.CurrentB.cy
 	// Regular cursor movement - most cases
-	realline := Global.CurrentB.cy < Global.CurrentB.NumRows && Global.CurrentB.NumRows != 0
-	nx, ny := Global.CurrentB.cx+x, Global.CurrentB.cy+y
-	if nx >= 0 && ny < Global.CurrentB.NumRows && realline && nx <= Global.CurrentB.Rows[Global.CurrentB.cy].Size {
+	realline := icy < Global.CurrentB.NumRows && Global.CurrentB.NumRows != 0
+	nx, ny := icx+x, icy+y
+	if realline && icx <= Global.CurrentB.Rows[icy].Size {
+		if x >= 1 {
+			_, rs := utf8.DecodeRuneInString(Global.CurrentB.Rows[icy].Data[icx:])
+			nx = icx + rs
+		} else if x <= -1 {
+			_, rs :=
+				utf8.DecodeLastRuneInString(Global.CurrentB.Rows[icy].Data[:icx])
+			nx = icx - rs
+		}
+	}
+	if nx >= 0 && ny < Global.CurrentB.NumRows && realline && nx <= Global.CurrentB.Rows[icy].Size {
 		Global.CurrentB.cx = nx
 	}
 	if ny >= 0 && ny <= Global.CurrentB.NumRows {
@@ -227,11 +251,11 @@ func MoveCursor(x, y int) {
 
 	// Edge cases
 	realline = Global.CurrentB.cy < Global.CurrentB.NumRows && Global.CurrentB.NumRows != 0
-	if nx < 0 && Global.CurrentB.cy > 0 {
+	if x < 0 && Global.CurrentB.cy > 0 && icx == 0 {
 		// Left at the beginning of a line
 		Global.CurrentB.cy--
 		MoveCursorToEol()
-	} else if realline && y == 0 && nx > Global.CurrentB.Rows[Global.CurrentB.cy].Size {
+	} else if realline && y == 0 && icx == Global.CurrentB.Rows[Global.CurrentB.cy].Size && x > 0 {
 		// Right at the end of a line
 		Global.CurrentB.cy++
 		MoveCursorToBol()
@@ -321,7 +345,7 @@ func editorRowCxToRx(row *EditorRow) int {
 		if rv == '\t' {
 			rx += (Global.Tabsize - 1) - (rx % Global.Tabsize)
 		}
-		rx++
+		rx += runewidth.RuneWidth(rv)
 	}
 	return rx
 }
@@ -350,13 +374,13 @@ func editorUpdateRow(row *EditorRow) {
 	}
 	var buffer bytes.Buffer
 	row.RenderSize = row.Size + tabs*(Global.Tabsize-1) + 1
-	for j, rv := range row.Data {
+	for _, rv := range row.Data {
 		if rv == '\t' {
 			for i := 0; i < Global.Tabsize; i++ {
 				buffer.WriteByte(' ')
 			}
 		} else {
-			buffer.WriteByte(row.Data[j])
+			buffer.WriteRune(rv)
 		}
 	}
 	row.Render = buffer.String()
@@ -416,13 +440,13 @@ func editorRowInsertStr(row *EditorRow, at int, s string) {
 	Global.CurrentB.Dirty = true
 }
 
-func editorRowDelChar(row *EditorRow, at int) {
+func editorRowDelChar(row *EditorRow, at int, rw int) {
 	if at < 0 || row.Size < 0 || at >= row.Size {
 		return
 	}
 	var buffer bytes.Buffer
 	buffer.WriteString(row.Data[0:at])
-	buffer.WriteString(row.Data[at+1:])
+	buffer.WriteString(row.Data[at+rw:])
 	row.Data = buffer.String()
 	row.Size = len(row.Data)
 	editorUpdateRow(row)
@@ -433,11 +457,11 @@ func editorInsertStr(s string) {
 	Global.Input = "Insert " + s
 	if Global.CurrentB.cy == Global.CurrentB.NumRows {
 		editorInsertRow(Global.CurrentB.cy, s)
-		Global.CurrentB.cx++
+		Global.CurrentB.cx += len(s)
 		return
 	}
 	editorRowInsertStr(Global.CurrentB.Rows[Global.CurrentB.cy], Global.CurrentB.cx, s)
-	Global.CurrentB.cx++
+	Global.CurrentB.cx += len(s)
 }
 
 func editorDelChar() {
@@ -449,8 +473,9 @@ func editorDelChar() {
 	}
 	row := Global.CurrentB.Rows[Global.CurrentB.cy]
 	if Global.CurrentB.cx > 0 {
-		editorRowDelChar(row, Global.CurrentB.cx-1)
-		Global.CurrentB.cx--
+		_, rs := utf8.DecodeRuneInString(Global.CurrentB.Rows[Global.CurrentB.cy].Data[:Global.CurrentB.cx])
+		editorRowDelChar(row, Global.CurrentB.cx-rs, rs)
+		Global.CurrentB.cx -= rs
 	} else {
 		Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy-1].Size
 		editorRowAppendStr(Global.CurrentB.Rows[Global.CurrentB.cy-1], row.Data)
@@ -527,7 +552,7 @@ func editorFindCallback(query string, key string) {
 	} else if key == "C-r" {
 		direction = -1
 		//If it's an unprintable character, and we're not just ammending the string...
-	} else if len(key) > 1 && key != "DEL" {
+	} else if utf8.RuneCountInString(key) > 1 && key != "DEL" {
 		//...outta here!
 		last_match = -1
 		direction = 1
@@ -629,9 +654,8 @@ func main() {
 				Global.quit = true
 				continue
 			}
-			//HACK: Currently I'm a little unsure of how to do this.
-			//We'll just guess that it's a printable character by its len
-			if len(key) == 1 {
+			// Hack fixed (though we won't support any encoding save utf8)
+			if utf8.RuneCountInString(key) == 1 {
 				editorInsertStr(key)
 				continue
 			}
