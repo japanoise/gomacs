@@ -74,6 +74,7 @@ type EditorState struct {
 	Status   string
 	Input    string
 	CurrentB *EditorBuffer
+	Buffers  []*EditorBuffer
 	Tabsize  int
 	Prompt   string
 }
@@ -81,11 +82,66 @@ type EditorState struct {
 var Global EditorState
 var Emacs *CommandList
 
-func printstring(s string, y int) {
+func printstring(s string, x, y int) {
 	i := 0
 	for _, ru := range s {
-		termbox.SetCell(i, y, ru, termbox.ColorDefault, termbox.ColorDefault)
+		termbox.SetCell(x+i, y, ru, termbox.ColorDefault, termbox.ColorDefault)
 		i += runewidth.RuneWidth(ru)
+	}
+}
+
+func editorSwitchBuffer() {
+	choices := []string{}
+	def := 0
+	for i, buf := range Global.Buffers {
+		if buf == Global.CurrentB {
+			def = i
+		}
+		d := ""
+		if buf.Dirty {
+			d = "[M] "
+		}
+		if buf.Filename == "" {
+			choices = append(choices, d+"*unnamed buffer*")
+		} else {
+			choices = append(choices, d+buf.Filename)
+		}
+	}
+	in := editorChoiceIndex("Switch buffer", choices, def)
+	Global.CurrentB = Global.Buffers[in]
+}
+
+func editorChoiceIndex(title string, choices []string, def int) int {
+	selection := def
+	// Will need these in a smarter version of this function
+	//offset := 0
+	//sx, sy := termbox.Size()
+	for {
+		termbox.HideCursor()
+		termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+		printstring(title, 0, 0)
+		for i, s := range choices {
+			printstring(s, 3, i+1)
+		}
+		printstring(">", 1, selection+1)
+		termbox.Flush()
+		key := editorGetKey()
+		switch key {
+		case "C-c":
+			fallthrough
+		case "C-g":
+			return def
+		case "UP":
+			if selection > 0 {
+				selection--
+			}
+		case "DOWN":
+			if selection < len(choices)-1 {
+				selection++
+			}
+		case "RET":
+			return selection
+		}
 	}
 }
 
@@ -96,18 +152,22 @@ func editorDrawRows(sy int) {
 			termbox.SetCell(0, y, '~', termbox.ColorBlue, termbox.ColorDefault)
 		} else {
 			if Global.CurrentB.coloff < Global.CurrentB.Rows[filerow].RenderSize {
-				printstring(Global.CurrentB.Rows[filerow].Render[Global.CurrentB.coloff:], y)
+				printstring(Global.CurrentB.Rows[filerow].Render[Global.CurrentB.coloff:], 0, y)
 			}
 		}
 	}
 }
 
 func editorUpdateStatus() {
+	fn := Global.CurrentB.Filename
+	if fn == "" {
+		fn = "*unnamed file*"
+	}
 	if Global.CurrentB.Dirty {
-		Global.Status = fmt.Sprintf("%s [Modified] - %d:%d", Global.CurrentB.Filename,
+		Global.Status = fmt.Sprintf("%s [Modified] - %d:%d", fn,
 			Global.CurrentB.cy, Global.CurrentB.cx)
 	} else {
-		Global.Status = fmt.Sprintf("%s - %d:%d", Global.CurrentB.Filename,
+		Global.Status = fmt.Sprintf("%s - %d:%d", fn,
 			Global.CurrentB.cy, Global.CurrentB.cx)
 	}
 }
@@ -499,6 +559,17 @@ func editorInsertNewline() {
 	Global.CurrentB.cx = 0
 }
 
+func editorFindFile() {
+	fn := editorPrompt("Find File", nil)
+	if fn == "" {
+		return
+	}
+	buffer := &EditorBuffer{}
+	Global.CurrentB = buffer
+	Global.Buffers = append(Global.Buffers, buffer)
+	EditorOpen(fn)
+}
+
 func EditorOpen(filename string) error {
 	Global.CurrentB.Filename = filename
 	f, err := os.Open(filename)
@@ -604,7 +675,7 @@ func editorFind() {
 
 func InitEditor() {
 	buffer := &EditorBuffer{}
-	Global = EditorState{false, "", "", buffer, 4, ""}
+	Global = EditorState{false, "", "", buffer, []*EditorBuffer{buffer}, 4, ""}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
 }

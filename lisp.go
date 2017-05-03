@@ -82,6 +82,8 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacsdelchar", lispSingleton(editorDelChar))
 	env.AddFunction("emacsaddnl", lispSingleton(editorInsertNewline))
 	env.AddFunction("emacssearch", lispSingleton(editorFind))
+	env.AddFunction("emacsfindfile", lispSingleton(editorFindFile))
+	env.AddFunction("emacsswitchbuffer", lispSingleton(editorSwitchBuffer))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -131,6 +133,8 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "DEL" "(emacsdelchar)")
 (emacsbindkey "deletechar" "(emacsmvcurs 1 0) (emacsdelchar)")
 (emacsbindkey "RET" "(emacsaddnl)")
+(emacsbindkey "C-x C-f" "(emacsfindfile)")
+(emacsbindkey "C-x b" "(emacsswitchbuffer)")
 `)
 	env.Run()
 }
