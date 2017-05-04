@@ -267,6 +267,7 @@ func editorPrompt(prompt string, callback func(string, string)) string {
 		key := editorGetKey()
 		switch key {
 		case "C-c":
+			fallthrough
 		case "C-g":
 			if callback != nil {
 				callback(buffer, key)
