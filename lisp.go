@@ -84,6 +84,8 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacssearch", lispSingleton(editorFind))
 	env.AddFunction("emacsfindfile", lispSingleton(editorFindFile))
 	env.AddFunction("emacsswitchbuffer", lispSingleton(editorSwitchBuffer))
+	env.AddFunction("emacseof", lispSingleton(func() { Global.CurrentB.cy = Global.CurrentB.NumRows }))
+	env.AddFunction("emacsbof", lispSingleton(func() { Global.CurrentB.cy = 0 }))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -135,6 +137,8 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "RET" "(emacsaddnl)")
 (emacsbindkey "C-x C-f" "(emacsfindfile)")
 (emacsbindkey "C-x b" "(emacsswitchbuffer)")
+(emacsbindkey "M-<" "(emacsbof)")
+(emacsbindkey "M->" "(emacseof)")
 `)
 	env.Run()
 }
