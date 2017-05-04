@@ -4,11 +4,13 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
+	"flag"
 	"fmt"
 	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
 	"os"
 	"strings"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -51,10 +53,13 @@ func (c *CommandList) GetCommand(key string) (string, error) {
 }
 
 type EditorRow struct {
-	Size       int
-	Data       string
-	RenderSize int
-	Render     string
+	idx             int
+	Size            int
+	Data            string
+	RenderSize      int
+	Render          string
+	Hl              []EmacsColor
+	hl_open_comment bool
 }
 
 type EditorBuffer struct {
@@ -67,6 +72,7 @@ type EditorBuffer struct {
 	coloff   int
 	NumRows  int
 	Rows     []*EditorRow
+	Syntax   *EditorSyntax
 }
 
 type EditorState struct {
@@ -77,6 +83,7 @@ type EditorState struct {
 	Buffers  []*EditorBuffer
 	Tabsize  int
 	Prompt   string
+	NoSyntax bool
 }
 
 var Global EditorState
@@ -145,15 +152,33 @@ func editorChoiceIndex(title string, choices []string, def int) int {
 	}
 }
 
-func trimString(s string, coloff int) string {
+func trimString(s string, coloff int) (string, int) {
 	if coloff == 0 {
-		return s
+		return s, 0
 	}
 	sr := []rune(s)
 	if coloff < len(sr) {
-		return string(sr[coloff:])
+		ret := string(sr[coloff:])
+		return ret, strings.Index(s, ret)
 	} else {
-		return ""
+		return "", 0
+	}
+}
+
+func hlprint(s string, hl []EmacsColor, x, y int) {
+	i := 0
+	for in, ru := range s {
+		if unicode.IsControl(ru) || !utf8.ValidRune(ru) {
+			sym := '?'
+			if ru <= rune(26) {
+				sym = '@' + ru
+			}
+			termbox.SetCell(x+i, y, sym, termbox.AttrReverse, termbox.ColorDefault)
+		} else {
+			col := editorSyntaxToColor(hl[in])
+			termbox.SetCell(x+i, y, ru, col, termbox.ColorDefault)
+		}
+		i += runewidth.RuneWidth(ru)
 	}
 }
 
@@ -164,7 +189,8 @@ func editorDrawRows(sy int) {
 			termbox.SetCell(0, y, '~', termbox.ColorBlue, termbox.ColorDefault)
 		} else {
 			if Global.CurrentB.coloff < Global.CurrentB.Rows[filerow].RenderSize {
-				printstring(trimString(Global.CurrentB.Rows[filerow].Render, Global.CurrentB.coloff), 0, y)
+				r, off := trimString(Global.CurrentB.Rows[filerow].Render, Global.CurrentB.coloff)
+				hlprint(r, Global.CurrentB.Rows[filerow].Hl[off:], 0, y)
 			}
 		}
 	}
@@ -175,11 +201,15 @@ func editorUpdateStatus() {
 	if fn == "" {
 		fn = "*unnamed file*"
 	}
+	syn := "no ft"
+	if Global.CurrentB.Syntax != nil {
+		syn = Global.CurrentB.Syntax.filetype
+	}
 	if Global.CurrentB.Dirty {
-		Global.Status = fmt.Sprintf("%s [Modified] - %d:%d", fn,
+		Global.Status = fmt.Sprintf("%s [Modified] - (%s) %d:%d", fn, syn,
 			Global.CurrentB.cy, Global.CurrentB.cx)
 	} else {
-		Global.Status = fmt.Sprintf("%s - %d:%d", fn,
+		Global.Status = fmt.Sprintf("%s - (%s) %d:%d", fn, syn,
 			Global.CurrentB.cy, Global.CurrentB.cx)
 	}
 }
@@ -459,10 +489,18 @@ func editorUpdateRow(row *EditorRow) {
 		}
 	}
 	row.Render = buffer.String()
+	editorUpdateSyntax(row)
+}
+
+func updateLineIndexes() {
+	for i, row := range Global.CurrentB.Rows {
+		row.idx = i
+	}
 }
 
 func editorAppendRow(line string) {
-	Global.CurrentB.Rows = append(Global.CurrentB.Rows, &EditorRow{len(line), line, 0, ""})
+	Global.CurrentB.Rows = append(Global.CurrentB.Rows, &EditorRow{Global.CurrentB.NumRows,
+		len(line), line, 0, "", []EmacsColor{}, false})
 	editorUpdateRow(Global.CurrentB.Rows[Global.CurrentB.NumRows])
 	Global.CurrentB.NumRows++
 	Global.CurrentB.Dirty = true
@@ -477,6 +515,7 @@ func editorDelRow(at int) {
 	Global.CurrentB.Rows = Global.CurrentB.Rows[:len(Global.CurrentB.Rows)-1]
 	Global.CurrentB.NumRows--
 	Global.CurrentB.Dirty = true
+	updateLineIndexes()
 }
 
 func editorInsertRow(at int, line string) {
@@ -485,10 +524,11 @@ func editorInsertRow(at int, line string) {
 	}
 	Global.CurrentB.Rows = append(Global.CurrentB.Rows, nil)
 	copy(Global.CurrentB.Rows[at+1:], Global.CurrentB.Rows[at:])
-	Global.CurrentB.Rows[at] = &EditorRow{len(line), line, 0, ""}
+	Global.CurrentB.Rows[at] = &EditorRow{at, len(line), line, 0, "", []EmacsColor{}, false}
 	editorUpdateRow(Global.CurrentB.Rows[at])
 	Global.CurrentB.NumRows++
 	Global.CurrentB.Dirty = true
+	updateLineIndexes()
 }
 
 func editorRowAppendStr(row *EditorRow, s string) {
@@ -587,6 +627,7 @@ func editorFindFile() {
 
 func EditorOpen(filename string) error {
 	Global.CurrentB.Filename = filename
+	editorSelectSyntaxHighlight(Global.CurrentB)
 	f, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -609,6 +650,7 @@ func EditorSave() {
 			return
 		} else {
 			Global.CurrentB.Filename = fn
+			editorSelectSyntaxHighlight(Global.CurrentB)
 		}
 	}
 	f, err := os.Create(fn)
@@ -631,8 +673,14 @@ func EditorSave() {
 // HACK: Go does not have static variables, so these have to go in global state.
 var last_match int = -1
 var direction int = 1
+var saved_hl_line int
+var saved_hl []EmacsColor = nil
 
 func editorFindCallback(query string, key string) {
+	if saved_hl != nil {
+		Global.CurrentB.Rows[saved_hl_line].Hl = saved_hl
+		saved_hl = nil
+	}
 	if key == "C-s" {
 		direction = 1
 	} else if key == "C-r" {
@@ -666,6 +714,12 @@ func editorFindCallback(query string, key string) {
 			Global.CurrentB.cy = current
 			Global.CurrentB.cx = editorRowRxToCx(row, match)
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
+			saved_hl_line = current
+			saved_hl = make([]EmacsColor, len(Global.CurrentB.Rows[current].Hl))
+			copy(saved_hl, Global.CurrentB.Rows[current].Hl)
+			for i := range query {
+				Global.CurrentB.Rows[current].Hl[match+i] = HlSearch
+			}
 			break
 		}
 	}
@@ -690,7 +744,7 @@ func editorFind() {
 
 func InitEditor() {
 	buffer := &EditorBuffer{}
-	Global = EditorState{false, "", "", buffer, []*EditorBuffer{buffer}, 4, ""}
+	Global = EditorState{false, "", "", buffer, []*EditorBuffer{buffer}, 4, "", false}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
 }
@@ -715,12 +769,16 @@ func dumpCrashLog(e string) {
 
 func main() {
 	InitEditor()
+	fs := flag.NewFlagSet("", flag.ExitOnError)
+	fs.BoolVar(&Global.NoSyntax, "s", false, "disable syntax highlighting")
+	fs.Parse(os.Args[1:])
+	args := fs.Args()
 	env := NewLispInterp()
 	if Global.Input == "" {
 		Global.Input = "Welcome to Emacs!"
 	}
-	if len(os.Args) > 1 {
-		ferr := EditorOpen(os.Args[1])
+	if len(args) > 0 {
+		ferr := EditorOpen(args[0])
 		if ferr != nil {
 			Global.Input = ferr.Error()
 		}
