@@ -417,8 +417,10 @@ func editorRowCxToRx(row *EditorRow) int {
 		}
 		if rv == '\t' {
 			rx += (Global.Tabsize - 1) - (rx % Global.Tabsize)
+			rx++
+		} else {
+			rx += runewidth.RuneWidth(rv)
 		}
-		rx += runewidth.RuneWidth(rv)
 	}
 	return rx
 }
