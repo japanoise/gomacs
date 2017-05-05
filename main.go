@@ -73,6 +73,8 @@ type EditorBuffer struct {
 	NumRows  int
 	Rows     []*EditorRow
 	Syntax   *EditorSyntax
+	Undo     *EditorUndo
+	Redo     *EditorUndo
 }
 
 type EditorState struct {
@@ -84,6 +86,16 @@ type EditorState struct {
 	Tabsize  int
 	Prompt   string
 	NoSyntax bool
+}
+
+type EditorUndo struct {
+	ins    bool
+	startl int
+	endl   int
+	startc int
+	endc   int
+	str    string
+	prev   *EditorUndo
 }
 
 var Global EditorState
@@ -498,6 +510,108 @@ func updateLineIndexes() {
 	}
 }
 
+func editorAddUndo(ins bool, startc, endc, startl, endl int, str string) {
+	old := Global.CurrentB.Undo
+	app := false
+	if old != nil {
+		app = old.startl == startl && old.endl == endl && old.ins == ins
+		if app {
+			if ins {
+				app = old.endc == startc
+			} else {
+				app = old.startc == endc
+			}
+		}
+	}
+	if app {
+		//append to group things together, ala gnu
+		if ins {
+			old.str += str
+			old.endc = endc
+		} else {
+			old.str = str + old.str
+			old.startc = startc
+		}
+	} else {
+		ret := new(EditorUndo)
+		ret.endl = endl
+		ret.startl = startl
+		ret.endc = endc
+		ret.startc = startc
+		ret.str = str
+		ret.ins = ins
+
+		if old == nil {
+			ret.prev = nil
+		} else {
+			ret.prev = old
+		}
+		Global.CurrentB.Undo = ret
+	}
+}
+
+func editorDoUndo(tree *EditorUndo, redo bool) bool {
+	if tree == nil {
+		return false
+	}
+	if tree.ins {
+		// Insertion
+		if tree.startl == tree.endl {
+			// Basic string insertion
+			editorRowDelChar(Global.CurrentB.Rows[tree.startl],
+				tree.startc, len(tree.str))
+			Global.CurrentB.cx = tree.startc
+			Global.CurrentB.cy = tree.startl
+			return true
+		} else if tree.startl == -1 {
+			// inserting a string on the last line
+			editorDelRow(Global.CurrentB.NumRows - 1)
+			Global.CurrentB.cx = tree.startc
+			Global.CurrentB.cy = tree.endl
+			return true
+		} else {
+			// inserting a line
+			Global.CurrentB.cx = tree.startc
+			Global.CurrentB.cy = tree.startl
+			editorRowAppendStr(Global.CurrentB.Rows[tree.startl], tree.str)
+			editorDelRow(tree.endl)
+			return true
+		}
+	} else {
+		// Deletion
+		if tree.startl == tree.endl {
+			// Character or word deletion
+			editorRowInsertStr(Global.CurrentB.Rows[tree.startl],
+				tree.startc, tree.str)
+			Global.CurrentB.cx = tree.endc
+			Global.CurrentB.cy = tree.startl
+			return true
+		} else {
+			// deleting a line
+			editorInsertRow(tree.startl, Global.CurrentB.Rows[tree.startl].Data[:tree.endc])
+			row := Global.CurrentB.Rows[tree.endl]
+			row.Data = tree.str
+			row.Size = len(row.Data)
+			Global.CurrentB.Rows[tree.startl].Size = len(Global.CurrentB.Rows[tree.startl].Data)
+			editorUpdateRow(row)
+			editorUpdateRow(Global.CurrentB.Rows[tree.startl])
+			return true
+		}
+	}
+}
+
+func editorUndoAction() {
+	succ := editorDoUndo(Global.CurrentB.Undo, false)
+	if succ {
+		Global.CurrentB.Undo = Global.CurrentB.Undo.prev
+	} else {
+		Global.Input = "No further undo information."
+	}
+	if Global.CurrentB.Undo == nil {
+		Global.CurrentB.Dirty = false
+	}
+}
+
 func editorAppendRow(line string) {
 	Global.CurrentB.Rows = append(Global.CurrentB.Rows, &EditorRow{Global.CurrentB.NumRows,
 		len(line), line, 0, "", []EmacsColor{}, false})
@@ -571,10 +685,14 @@ func editorRowDelChar(row *EditorRow, at int, rw int) {
 func editorInsertStr(s string) {
 	Global.Input = "Insert " + s
 	if Global.CurrentB.cy == Global.CurrentB.NumRows {
+		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx+len(s),
+			-1, Global.CurrentB.cy, s)
 		editorInsertRow(Global.CurrentB.cy, s)
 		Global.CurrentB.cx += len(s)
 		return
 	}
+	editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx+len(s),
+		Global.CurrentB.cy, Global.CurrentB.cy, s)
 	editorRowInsertStr(Global.CurrentB.Rows[Global.CurrentB.cy], Global.CurrentB.cx, s)
 	Global.CurrentB.cx += len(s)
 }
@@ -589,9 +707,13 @@ func editorDelChar() {
 	row := Global.CurrentB.Rows[Global.CurrentB.cy]
 	if Global.CurrentB.cx > 0 {
 		_, rs := utf8.DecodeLastRuneInString(Global.CurrentB.Rows[Global.CurrentB.cy].Data[:Global.CurrentB.cx])
+		editorAddUndo(false, Global.CurrentB.cx-rs, Global.CurrentB.cx, Global.CurrentB.cy,
+			Global.CurrentB.cy, row.Data[Global.CurrentB.cx-rs:Global.CurrentB.cx])
 		editorRowDelChar(row, Global.CurrentB.cx-rs, rs)
 		Global.CurrentB.cx -= rs
 	} else {
+		editorAddUndo(false, Global.CurrentB.cx, Global.CurrentB.Rows[Global.CurrentB.cy-1].Size,
+			Global.CurrentB.cy-1, Global.CurrentB.cy, row.Data)
 		Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy-1].Size
 		editorRowAppendStr(Global.CurrentB.Rows[Global.CurrentB.cy-1], row.Data)
 		editorDelRow(Global.CurrentB.cy)
@@ -600,10 +722,14 @@ func editorDelChar() {
 }
 
 func editorInsertNewline() {
+	row := Global.CurrentB.Rows[Global.CurrentB.cy]
 	if Global.CurrentB.cx == 0 {
+		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx,
+			Global.CurrentB.cy, Global.CurrentB.cy+1, row.Data)
 		editorInsertRow(Global.CurrentB.cy, "")
 	} else {
-		row := Global.CurrentB.Rows[Global.CurrentB.cy]
+		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx,
+			Global.CurrentB.cy, Global.CurrentB.cy+1, row.Data[Global.CurrentB.cx:])
 		editorInsertRow(Global.CurrentB.cy+1, row.Data[Global.CurrentB.cx:])
 		row = Global.CurrentB.Rows[Global.CurrentB.cy]
 		row.Size = Global.CurrentB.cx
