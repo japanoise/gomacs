@@ -588,7 +588,7 @@ func editorDelChar() {
 	}
 	row := Global.CurrentB.Rows[Global.CurrentB.cy]
 	if Global.CurrentB.cx > 0 {
-		_, rs := utf8.DecodeRuneInString(Global.CurrentB.Rows[Global.CurrentB.cy].Data[:Global.CurrentB.cx])
+		_, rs := utf8.DecodeLastRuneInString(Global.CurrentB.Rows[Global.CurrentB.cy].Data[:Global.CurrentB.cx])
 		editorRowDelChar(row, Global.CurrentB.cx-rs, rs)
 		Global.CurrentB.cx -= rs
 	} else {
