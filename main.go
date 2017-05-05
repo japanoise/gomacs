@@ -194,15 +194,17 @@ func hlprint(s string, hl []EmacsColor, x, y int) {
 	}
 }
 
-func editorDrawRows(sy int) {
-	for y := 0; y < sy; y++ {
-		filerow := y + Global.CurrentB.rowoff
-		if filerow >= Global.CurrentB.NumRows {
-			termbox.SetCell(0, y, '~', termbox.ColorBlue, termbox.ColorDefault)
+func editorDrawRows(starty, sy int, buf *EditorBuffer) {
+	for y := starty; y < sy; y++ {
+		filerow := y + buf.rowoff
+		if filerow >= buf.NumRows {
+			if buf.coloff == 0 {
+				termbox.SetCell(0, y, '~', termbox.ColorBlue, termbox.ColorDefault)
+			}
 		} else {
-			if Global.CurrentB.coloff < Global.CurrentB.Rows[filerow].RenderSize {
-				r, off := trimString(Global.CurrentB.Rows[filerow].Render, Global.CurrentB.coloff)
-				hlprint(r, Global.CurrentB.Rows[filerow].Hl[off:], 0, y)
+			if buf.coloff < buf.Rows[filerow].RenderSize {
+				r, off := trimString(buf.Rows[filerow].Render, buf.coloff)
+				hlprint(r, buf.Rows[filerow].Hl[off:], 0, y)
 			}
 		}
 	}
@@ -274,7 +276,7 @@ func editorRefreshScreen() {
 	editorScroll(x, y-2)
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 	termbox.SetCursor(Global.CurrentB.rx-Global.CurrentB.coloff, Global.CurrentB.cy-Global.CurrentB.rowoff)
-	editorDrawRows(y - 2)
+	editorDrawRows(0, y-2, Global.CurrentB)
 	editorDrawStatusLine(x, y)
 	termbox.Flush()
 }
