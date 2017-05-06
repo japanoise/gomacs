@@ -111,27 +111,6 @@ func printstring(s string, x, y int) {
 	}
 }
 
-func editorSwitchBuffer() {
-	choices := []string{}
-	def := 0
-	for i, buf := range Global.Buffers {
-		if buf == Global.CurrentB {
-			def = i
-		}
-		d := ""
-		if buf.Dirty {
-			d = "[M] "
-		}
-		if buf.Filename == "" {
-			choices = append(choices, d+"*unnamed buffer*")
-		} else {
-			choices = append(choices, d+buf.Filename)
-		}
-	}
-	in := editorChoiceIndex("Switch buffer", choices, def)
-	Global.CurrentB = Global.Buffers[in]
-}
-
 func editorChoiceIndex(title string, choices []string, def int) int {
 	selection := def
 	// Will need these in a smarter version of this function
@@ -759,18 +738,6 @@ func editorInsertNewline() {
 	}
 	Global.CurrentB.cy++
 	Global.CurrentB.cx = 0
-}
-
-func editorFindFile() {
-	fn := editorPrompt("Find File", nil)
-	if fn == "" {
-		return
-	}
-	buffer := &EditorBuffer{}
-	Global.CurrentB = buffer
-	Global.Buffers = append(Global.Buffers, buffer)
-	Global.Windows = append(Global.Windows, buffer)
-	EditorOpen(fn)
 }
 
 func EditorOpen(filename string) error {

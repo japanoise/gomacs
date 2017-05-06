@@ -69,6 +69,10 @@ func lispBindKey(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, err
 	return zygo.SexpNull, nil
 }
 
+func lispOnlyWindow(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	return zygo.GoToSexp(len(Global.Windows) == 1, env)
+}
+
 func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
 	env.AddFunction("emacsquit", lispSingleton(EditorQuit))
@@ -88,6 +92,13 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacsbof", lispSingleton(func() { Global.CurrentB.cy = 0 }))
 	env.AddFunction("emacsundo", lispSingleton(editorUndoAction))
 	env.AddFunction("emacsindent", lispSingleton(func() { editorInsertStr("\t") }))
+	env.AddFunction("emacsswitchwindow", lispSingleton(switchWindow))
+	env.AddFunction("emacsclosewindow", lispSingleton(closeThisWindow))
+	env.AddFunction("emacscloseotherwindows", lispSingleton(closeOtherWindows))
+	env.AddFunction("emacssplit", lispSingleton(splitWindows))
+	env.AddFunction("emacsonlywindow", lispOnlyWindow)
+	env.AddFunction("emacsopenotherwindow", lispSingleton(func() { callFunOtherWindow(editorFindFile) }))
+	env.AddFunction("emacsswitchbufferotherwindow", lispSingleton(func() { callFunOtherWindow(editorSwitchBuffer) }))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -143,6 +154,13 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "M->" "(emacseof)")
 (emacsbindkey "C-_" "(emacsundo)")
 (emacsbindkey "TAB" "(emacsindent)")
+(emacsbindkey "C-x o" "(emacsswitchwindow)")
+(emacsbindkey "C-x 0" "(emacsclosewindow)")
+(emacsbindkey "C-x 1" "(emacscloseotherwindows)")
+(emacsbindkey "C-x 2" "(emacssplit)")
+(emacsbindkey "C-x 4 C-f" "(emacsopenotherwindow)")
+(emacsbindkey "C-x 4 f" "(emacsopenotherwindow)")
+(emacsbindkey "C-x 4 b" "(emacsswitchbufferotherwindow)")
 `)
 	env.Run()
 }
