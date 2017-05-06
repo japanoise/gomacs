@@ -78,14 +78,16 @@ type EditorBuffer struct {
 }
 
 type EditorState struct {
-	quit     bool
-	Status   string
-	Input    string
-	CurrentB *EditorBuffer
-	Buffers  []*EditorBuffer
-	Tabsize  int
-	Prompt   string
-	NoSyntax bool
+	quit           bool
+	Status         string
+	Input          string
+	CurrentB       *EditorBuffer
+	Buffers        []*EditorBuffer
+	Tabsize        int
+	Prompt         string
+	NoSyntax       bool
+	Windows        []*EditorBuffer
+	CurrentBHeight int
 }
 
 type EditorUndo struct {
@@ -196,7 +198,7 @@ func hlprint(s string, hl []EmacsColor, x, y int) {
 
 func editorDrawRows(starty, sy int, buf *EditorBuffer) {
 	for y := starty; y < sy; y++ {
-		filerow := y + buf.rowoff
+		filerow := (y - starty) + buf.rowoff
 		if filerow >= buf.NumRows {
 			if buf.coloff == 0 {
 				termbox.SetCell(0, y, '~', termbox.ColorBlue, termbox.ColorDefault)
@@ -229,8 +231,8 @@ func editorUpdateStatus() {
 }
 
 func GetScreenSize() (int, int) {
-	x, y := termbox.Size()
-	return x, y - 2
+	x, _ := termbox.Size()
+	return x, Global.CurrentBHeight
 }
 
 func editorDrawStatusLine(x, y int) {
@@ -272,11 +274,28 @@ func editorScroll(sx, sy int) {
 }
 
 func editorRefreshScreen() {
-	x, y := termbox.Size()
-	editorScroll(x, y-2)
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-	termbox.SetCursor(Global.CurrentB.rx-Global.CurrentB.coloff, Global.CurrentB.cy-Global.CurrentB.rowoff)
-	editorDrawRows(0, y-2, Global.CurrentB)
+	x, y := termbox.Size()
+	yrows := y - 2
+	numwin := len(Global.Windows)
+	winheight := yrows / numwin
+	for i, win := range Global.Windows {
+		starth := 0
+		if i >= 1 {
+			starth = 1 + winheight*i
+			for j := 0; j < x; j++ {
+				termbox.SetCell(j, winheight*i, '—', termbox.AttrReverse|termbox.ColorDefault, termbox.ColorDefault)
+			}
+			editorScroll(x, winheight-1)
+		} else {
+			editorScroll(x, winheight)
+		}
+		if win == Global.CurrentB {
+			Global.CurrentBHeight = winheight
+			termbox.SetCursor(Global.CurrentB.rx-Global.CurrentB.coloff, starth+Global.CurrentB.cy-Global.CurrentB.rowoff)
+		}
+		editorDrawRows(starth, winheight*(i+1), win)
+	}
 	editorDrawStatusLine(x, y)
 	termbox.Flush()
 }
@@ -750,6 +769,7 @@ func editorFindFile() {
 	buffer := &EditorBuffer{}
 	Global.CurrentB = buffer
 	Global.Buffers = append(Global.Buffers, buffer)
+	Global.Windows = append(Global.Windows, buffer)
 	EditorOpen(fn)
 }
 
@@ -872,7 +892,7 @@ func editorFind() {
 
 func InitEditor() {
 	buffer := &EditorBuffer{}
-	Global = EditorState{false, "", "", buffer, []*EditorBuffer{buffer}, 4, "", false}
+	Global = EditorState{false, "", "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
 }
