@@ -87,6 +87,7 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacseof", lispSingleton(func() { Global.CurrentB.cy = Global.CurrentB.NumRows }))
 	env.AddFunction("emacsbof", lispSingleton(func() { Global.CurrentB.cy = 0 }))
 	env.AddFunction("emacsundo", lispSingleton(editorUndoAction))
+	env.AddFunction("emacsindent", lispSingleton(func() { editorInsertStr("\t") }))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -141,6 +142,7 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "M-<" "(emacsbof)")
 (emacsbindkey "M->" "(emacseof)")
 (emacsbindkey "C-_" "(emacsundo)")
+(emacsbindkey "TAB" "(emacsindent)")
 `)
 	env.Run()
 }
