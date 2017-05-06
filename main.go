@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"flag"
 	"fmt"
 	"github.com/mattn/go-runewidth"
@@ -13,44 +12,6 @@ import (
 	"unicode"
 	"unicode/utf8"
 )
-
-type CommandList struct {
-	Parent   bool
-	Command  string
-	Children map[string]*CommandList
-}
-
-func (c *CommandList) PutCommand(key string, command string) {
-	if c.Children == nil {
-		c.Children = make(map[string]*CommandList)
-	}
-	keys := strings.Split(key, " ")
-	if c.Children[keys[0]] == nil {
-		c.Children[keys[0]] = &CommandList{false, "", nil}
-	}
-	if len(keys) > 1 {
-		c.Children[keys[0]].Parent = true
-		c.Children[keys[0]].PutCommand(strings.Join(keys[1:], " "), command)
-	} else {
-		c.Children[keys[0]].Command = command
-	}
-}
-
-func (c *CommandList) GetCommand(key string) (string, error) {
-	Global.Input += key + " "
-	editorRefreshScreen()
-	child := c.Children[key]
-	if child == nil {
-		return "", errors.New("Bad command: " + Global.Input)
-	}
-	if child.Parent {
-		nextkey := editorGetKey()
-		s, e := child.GetCommand(nextkey)
-		return s, e
-	} else {
-		return child.Command, nil
-	}
-}
 
 type EditorRow struct {
 	idx             int
@@ -108,40 +69,6 @@ func printstring(s string, x, y int) {
 	for _, ru := range s {
 		termbox.SetCell(x+i, y, ru, termbox.ColorDefault, termbox.ColorDefault)
 		i += runewidth.RuneWidth(ru)
-	}
-}
-
-func editorChoiceIndex(title string, choices []string, def int) int {
-	selection := def
-	// Will need these in a smarter version of this function
-	//offset := 0
-	//sx, sy := termbox.Size()
-	for {
-		termbox.HideCursor()
-		termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-		printstring(title, 0, 0)
-		for i, s := range choices {
-			printstring(s, 3, i+1)
-		}
-		printstring(">", 1, selection+1)
-		termbox.Flush()
-		key := editorGetKey()
-		switch key {
-		case "C-c":
-			fallthrough
-		case "C-g":
-			return def
-		case "UP":
-			if selection > 0 {
-				selection--
-			}
-		case "DOWN":
-			if selection < len(choices)-1 {
-				selection++
-			}
-		case "RET":
-			return selection
-		}
 	}
 }
 
@@ -281,64 +208,6 @@ func editorRefreshScreen() {
 
 func editorSetPrompt(prompt string) {
 	Global.Prompt = prompt
-}
-
-func editorGetKey() string {
-	for {
-		ev := termbox.PollEvent()
-		if ev.Type == termbox.EventResize {
-			editorRefreshScreen()
-		} else if ev.Type == termbox.EventKey {
-			return ParseTermboxEvent(ev)
-		}
-	}
-}
-
-func editorPrompt(prompt string, callback func(string, string)) string {
-	buffer := ""
-	buflen := 0
-	cursor := 0
-	editorSetPrompt(prompt)
-	defer editorSetPrompt("")
-	for {
-		_, y := termbox.Size()
-		Global.Input = buffer
-		editorRefreshScreen()
-		termbox.SetCursor(utf8.RuneCountInString(prompt)+3+cursor, y-1)
-		termbox.Flush()
-		key := editorGetKey()
-		switch key {
-		case "C-c":
-			fallthrough
-		case "C-g":
-			if callback != nil {
-				callback(buffer, key)
-			}
-			return ""
-		case "RET":
-			if callback != nil {
-				callback(buffer, key)
-			}
-			return buffer
-		case "DEL":
-			if buflen > 0 {
-				r, rs := utf8.DecodeLastRuneInString(buffer)
-				buffer = buffer[0 : buflen-rs]
-				buflen -= rs
-				cursor -= runewidth.RuneWidth(r)
-			}
-		default:
-			if utf8.RuneCountInString(key) == 1 {
-				r, _ := utf8.DecodeLastRuneInString(buffer)
-				buffer += key
-				buflen += len(key)
-				cursor += runewidth.RuneWidth(r)
-			}
-		}
-		if callback != nil {
-			callback(buffer, key)
-		}
-	}
 }
 
 func MoveCursor(x, y int) {
@@ -862,14 +731,6 @@ func InitEditor() {
 	Global = EditorState{false, "", "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
-}
-
-func InitTerm() {
-	err := termbox.Init()
-	if err != nil {
-		panic(err)
-	}
-	termbox.SetInputMode(termbox.InputAlt)
 }
 
 func dumpCrashLog(e string) {
