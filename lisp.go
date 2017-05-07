@@ -99,6 +99,10 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacsonlywindow", lispOnlyWindow)
 	env.AddFunction("emacsopenotherwindow", lispSingleton(func() { callFunOtherWindow(editorFindFile) }))
 	env.AddFunction("emacsswitchbufferotherwindow", lispSingleton(func() { callFunOtherWindow(editorSwitchBuffer) }))
+	env.AddFunction("emacssetmark", lispSingleton(func() { setMark(Global.CurrentB) }))
+	env.AddFunction("emacskillregion", lispSingleton(doKillRegion))
+	env.AddFunction("emacsyankregion", lispSingleton(doYankRegion))
+	env.AddFunction("emacscopyregion", lispSingleton(doCopyRegion))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -161,6 +165,10 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "C-x 4 C-f" "(emacsopenotherwindow)")
 (emacsbindkey "C-x 4 f" "(emacsopenotherwindow)")
 (emacsbindkey "C-x 4 b" "(emacsswitchbufferotherwindow)")
+(emacsbindkey "C-@" "(emacssetmark)")
+(emacsbindkey "C-w" "(emacskillregion)")
+(emacsbindkey "M-w" "(emacscopyregion)")
+(emacsbindkey "C-y" "(emacsyankregion)")
 `)
 	env.Run()
 }

@@ -24,18 +24,21 @@ type EditorRow struct {
 }
 
 type EditorBuffer struct {
-	Filename string
-	Dirty    bool
-	cx       int
-	cy       int
-	rx       int
-	rowoff   int
-	coloff   int
-	NumRows  int
-	Rows     []*EditorRow
-	Syntax   *EditorSyntax
-	Undo     *EditorUndo
-	Redo     *EditorUndo
+	Filename  string
+	Dirty     bool
+	cx        int
+	cy        int
+	rx        int
+	rowoff    int
+	coloff    int
+	NumRows   int
+	Rows      []*EditorRow
+	Syntax    *EditorSyntax
+	Undo      *EditorUndo
+	Redo      *EditorUndo
+	MarkX     int
+	MarkY     int
+	Clipboard string
 }
 
 type EditorState struct {
