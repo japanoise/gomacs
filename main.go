@@ -24,21 +24,20 @@ type EditorRow struct {
 }
 
 type EditorBuffer struct {
-	Filename  string
-	Dirty     bool
-	cx        int
-	cy        int
-	rx        int
-	rowoff    int
-	coloff    int
-	NumRows   int
-	Rows      []*EditorRow
-	Syntax    *EditorSyntax
-	Undo      *EditorUndo
-	Redo      *EditorUndo
-	MarkX     int
-	MarkY     int
-	Clipboard string
+	Filename string
+	Dirty    bool
+	cx       int
+	cy       int
+	rx       int
+	rowoff   int
+	coloff   int
+	NumRows  int
+	Rows     []*EditorRow
+	Syntax   *EditorSyntax
+	Undo     *EditorUndo
+	Redo     *EditorUndo
+	MarkX    int
+	MarkY    int
 }
 
 type EditorState struct {
@@ -52,6 +51,7 @@ type EditorState struct {
 	NoSyntax       bool
 	Windows        []*EditorBuffer
 	CurrentBHeight int
+	Clipboard      string
 }
 
 type EditorUndo struct {
@@ -731,7 +731,7 @@ func editorFind() {
 
 func InitEditor() {
 	buffer := &EditorBuffer{}
-	Global = EditorState{false, "", "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0}
+	Global = EditorState{false, "", "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0, ""}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
 }

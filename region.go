@@ -18,7 +18,7 @@ func validMark(buf *EditorBuffer) bool {
 func rowDelRange(row *EditorRow, startc, endc int, buf *EditorBuffer) {
 	editorAddUndo(false, startc, endc,
 		row.idx, row.idx, row.Data[startc:endc])
-	buf.Clipboard = row.Data[startc:endc]
+	Global.Clipboard = row.Data[startc:endc]
 	editorRowDelChar(row, startc, endc-startc)
 }
 
@@ -29,7 +29,7 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 		var bb bytes.Buffer
 		row := buf.Rows[startl]
 		rowDelRange(row, startc, row.Size, buf)
-		bb.WriteString(buf.Clipboard)
+		bb.WriteString(Global.Clipboard)
 		bb.WriteRune('\n')
 		for i := startl + 1; i < endl; i++ {
 			row = buf.Rows[startl+1] //it deletes as they go!
@@ -39,7 +39,7 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 			buf.cy = startl + 1
 			buf.cx = 0
 			editorDelChar()
-			bb.WriteString(buf.Clipboard)
+			bb.WriteString(Global.Clipboard)
 			bb.WriteRune('\n')
 		}
 		row = buf.Rows[startl+1]
@@ -47,8 +47,8 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 		buf.cy = startl + 1
 		buf.cx = 0
 		editorDelChar()
-		bb.WriteString(buf.Clipboard)
-		buf.Clipboard = bb.String()
+		bb.WriteString(Global.Clipboard)
+		Global.Clipboard = bb.String()
 		updateLineIndexes()
 	}
 	buf.cx = startc
@@ -57,7 +57,7 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 
 func bufCopyRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 	if startl == endl {
-		buf.Clipboard = buf.Rows[startl].Data[startc:endc]
+		Global.Clipboard = buf.Rows[startl].Data[startc:endc]
 	} else {
 		var bb bytes.Buffer
 		row := buf.Rows[startl]
@@ -70,7 +70,7 @@ func bufCopyRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 		}
 		row = buf.Rows[endl]
 		bb.WriteString(row.Data[:endc])
-		buf.Clipboard = bb.String()
+		Global.Clipboard = bb.String()
 	}
 }
 
@@ -109,7 +109,7 @@ func doCopyRegion() {
 }
 
 func doYankRegion() {
-	clipLines := strings.Split(Global.CurrentB.Clipboard, "\n")
+	clipLines := strings.Split(Global.Clipboard, "\n")
 	editorInsertStr(clipLines[0])
 	if len(clipLines) > 1 {
 		// Insert more lines...
