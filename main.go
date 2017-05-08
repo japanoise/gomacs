@@ -42,7 +42,6 @@ type EditorBuffer struct {
 
 type EditorState struct {
 	quit           bool
-	Status         string
 	Input          string
 	CurrentB       *EditorBuffer
 	Buffers        []*EditorBuffer
@@ -121,21 +120,21 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer) {
 	}
 }
 
-func editorUpdateStatus() {
-	fn := Global.CurrentB.Filename
+func editorUpdateStatus(buf *EditorBuffer) string {
+	fn := buf.Filename
 	if fn == "" {
 		fn = "*unnamed file*"
 	}
 	syn := "no ft"
-	if Global.CurrentB.Syntax != nil {
-		syn = Global.CurrentB.Syntax.filetype
+	if buf.Syntax != nil {
+		syn = buf.Syntax.filetype
 	}
-	if Global.CurrentB.Dirty {
-		Global.Status = fmt.Sprintf("%s [Modified] - (%s) %d:%d", fn, syn,
-			Global.CurrentB.cy, Global.CurrentB.cx)
+	if buf.Dirty {
+		return fmt.Sprintf("%s [Modified] - (%s) %d:%d", fn, syn,
+			buf.cy, buf.cx)
 	} else {
-		Global.Status = fmt.Sprintf("%s - (%s) %d:%d", fn, syn,
-			Global.CurrentB.cy, Global.CurrentB.cx)
+		return fmt.Sprintf("%s - (%s) %d:%d", fn, syn,
+			buf.cy, buf.cx)
 	}
 }
 
@@ -144,19 +143,27 @@ func GetScreenSize() (int, int) {
 	return x, Global.CurrentBHeight
 }
 
-func editorDrawStatusLine(x, y int) {
-	editorUpdateStatus()
+func editorDrawStatusLine(x, y int, buf *EditorBuffer) {
+	line := editorUpdateStatus(buf)
 	var ru rune
 	rx := 0
-	for _, ru = range Global.Status {
-		termbox.SetCell(rx, y-2, ru, termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+	for _, ru = range line {
+		termbox.SetCell(rx, y, ru, termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
 		rx += runewidth.RuneWidth(ru)
 	}
-	for ix := rx; ix < x; ix++ {
-		termbox.SetCell(ix, y-2, ' ', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+	termbox.SetCell(rx, y, ' ', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+	for ix := rx + 1; ix < x; ix++ {
+		if buf == Global.CurrentB {
+			termbox.SetCell(ix, y, '-', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+		} else {
+			termbox.SetCell(ix, y, ' ', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+		}
 	}
-	rx = 0
-	for _, ru = range Global.Prompt + "-> " + Global.Input {
+}
+
+func editorDrawPrompt(y int) {
+	rx := 0
+	for _, ru := range Global.Prompt + "-> " + Global.Input {
 		termbox.SetCell(rx, y-1, ru, termbox.ColorDefault, termbox.ColorDefault)
 		rx += runewidth.RuneWidth(ru)
 	}
@@ -192,9 +199,7 @@ func editorRefreshScreen() {
 		starth := 0
 		if i >= 1 {
 			starth = 1 + winheight*i
-			for j := 0; j < x; j++ {
-				termbox.SetCell(j, winheight*i, '—', termbox.AttrReverse|termbox.ColorDefault, termbox.ColorDefault)
-			}
+			editorDrawStatusLine(x, winheight*i, Global.Windows[i-1])
 			editorScroll(x, winheight-1)
 		} else {
 			editorScroll(x, winheight)
@@ -205,7 +210,8 @@ func editorRefreshScreen() {
 		}
 		editorDrawRows(starth, winheight*(i+1), win)
 	}
-	editorDrawStatusLine(x, y)
+	editorDrawStatusLine(x, y-2, Global.Windows[numwin-1])
+	editorDrawPrompt(y)
 	termbox.Flush()
 }
 
@@ -731,7 +737,7 @@ func editorFind() {
 
 func InitEditor() {
 	buffer := &EditorBuffer{}
-	Global = EditorState{false, "", "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0, ""}
+	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0, ""}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
 }
