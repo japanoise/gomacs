@@ -209,7 +209,7 @@ func editorRefreshScreen() {
 			Global.CurrentBHeight = winheight
 			termbox.SetCursor(Global.CurrentB.rx-Global.CurrentB.coloff, starth+Global.CurrentB.cy-Global.CurrentB.rowoff)
 		}
-		editorDrawRows(starth, winheight*(i+1), win)
+		editorDrawRows(starth, winheight*(i+1)+1, win)
 	}
 	editorDrawStatusLine(x, y-2, Global.Windows[numwin-1])
 	editorDrawPrompt(y)
