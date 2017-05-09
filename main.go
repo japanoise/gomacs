@@ -601,6 +601,9 @@ func editorDelChar() {
 }
 
 func editorInsertNewline() {
+	if Global.CurrentB.cy == Global.CurrentB.NumRows {
+		return
+	}
 	row := Global.CurrentB.Rows[Global.CurrentB.cy]
 	if Global.CurrentB.cx == 0 {
 		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx,
