@@ -1,5 +1,7 @@
 # Gomacs - Go Powered Emacs!
 
+![A screenshot showing Gomacs editing this README and its own source code](gomacs.png)
+
 Gomacs is an Emacs clone for the terminal. Unlike many other mini-Emacsen, it
 has an embedded Lisp, [powered by Zygomys.](https://github.com/glycerine/zygomys)
 This puts it in the realm of true Emacs! It also supports primitive syntax
