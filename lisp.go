@@ -156,6 +156,10 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("gettabstr", lispGetTabStr)
 	env.AddFunction("setsofttab", lispSetSoftTab)
 	env.AddFunction("disablesyntax", lispSetSyntaxOff)
+	env.AddFunction("emacsforwardword", lispSingleton(moveForwardWord))
+	env.AddFunction("emacskillforwardword", lispSingleton(delForwardWord))
+	env.AddFunction("emacsbackword", lispSingleton(moveBackWord))
+	env.AddFunction("emacskillbackword", lispSingleton(delBackWord))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -222,6 +226,10 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "C-w" "(emacskillregion)")
 (emacsbindkey "M-w" "(emacscopyregion)")
 (emacsbindkey "C-y" "(emacsyankregion)")
+(emacsbindkey "M-f" "(emacsforwardword)")
+(emacsbindkey "M-d" "(emacskillforwardword)")
+(emacsbindkey "M-b" "(emacsbackword)")
+(emacsbindkey "M-D" "(emacskillbackword)")
 `)
 	env.Run()
 }
