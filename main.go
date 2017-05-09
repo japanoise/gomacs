@@ -51,6 +51,7 @@ type EditorState struct {
 	Windows        []*EditorBuffer
 	CurrentBHeight int
 	Clipboard      string
+	SoftTab        bool
 }
 
 type EditorUndo struct {
@@ -735,9 +736,17 @@ func editorFind() {
 	}
 }
 
+func getTabString() string {
+	if Global.SoftTab {
+		return strings.Repeat(" ", Global.Tabsize)
+	} else {
+		return "\t"
+	}
+}
+
 func InitEditor() {
 	buffer := &EditorBuffer{}
-	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0, ""}
+	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0, "", false}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
 }

@@ -73,6 +73,55 @@ func lispOnlyWindow(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, 
 	return zygo.GoToSexp(len(Global.Windows) == 1, env)
 }
 
+func lispSetTabStop(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	if len(args) != 1 {
+		return zygo.SexpNull, zygo.WrongNargs
+	}
+	var x int
+	switch t := args[0].(type) {
+	case *zygo.SexpInt:
+		x = int(t.Val)
+	default:
+		return zygo.SexpNull, errors.New("Arg 1 needs to be an int")
+	}
+	Global.Tabsize = x
+	return zygo.SexpNull, nil
+}
+
+func lispSetSoftTab(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	if len(args) != 1 {
+		return zygo.SexpNull, zygo.WrongNargs
+	}
+	var x bool
+	switch t := args[0].(type) {
+	case *zygo.SexpBool:
+		x = bool(t.Val)
+	default:
+		return zygo.SexpNull, errors.New("Arg 1 needs to be a bool")
+	}
+	Global.SoftTab = x
+	return zygo.SexpNull, nil
+}
+
+func lispSetSyntaxOff(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	if len(args) != 1 {
+		return zygo.SexpNull, zygo.WrongNargs
+	}
+	var x bool
+	switch t := args[0].(type) {
+	case *zygo.SexpBool:
+		x = bool(t.Val)
+	default:
+		return zygo.SexpNull, errors.New("Arg 1 needs to be a bool")
+	}
+	Global.NoSyntax = x
+	return zygo.SexpNull, nil
+}
+
+func lispGetTabStr(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	return zygo.GoToSexp(getTabString(), env)
+}
+
 func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
 	env.AddFunction("emacsquit", lispSingleton(EditorQuit))
@@ -91,7 +140,7 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacseof", lispSingleton(func() { Global.CurrentB.cy = Global.CurrentB.NumRows }))
 	env.AddFunction("emacsbof", lispSingleton(func() { Global.CurrentB.cy = 0 }))
 	env.AddFunction("emacsundo", lispSingleton(editorUndoAction))
-	env.AddFunction("emacsindent", lispSingleton(func() { editorInsertStr("\t") }))
+	env.AddFunction("emacsindent", lispSingleton(func() { editorInsertStr(getTabString()) }))
 	env.AddFunction("emacsswitchwindow", lispSingleton(switchWindow))
 	env.AddFunction("emacsclosewindow", lispSingleton(closeThisWindow))
 	env.AddFunction("emacscloseotherwindows", lispSingleton(closeOtherWindows))
@@ -103,6 +152,10 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacskillregion", lispSingleton(doKillRegion))
 	env.AddFunction("emacsyankregion", lispSingleton(doYankRegion))
 	env.AddFunction("emacscopyregion", lispSingleton(doCopyRegion))
+	env.AddFunction("settabstop", lispSetTabStop)
+	env.AddFunction("gettabstr", lispGetTabStr)
+	env.AddFunction("setsofttab", lispSetSoftTab)
+	env.AddFunction("disablesyntax", lispSetSyntaxOff)
 }
 
 func NewLispInterp() *zygo.Glisp {
