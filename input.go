@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
@@ -157,4 +158,44 @@ func ParseTermboxEvent(ev termbox.Event) string {
 		return fmt.Sprintf("M-%c", ev.Ch)
 	}
 	return string(ev.Ch)
+}
+
+func editorYesNoPrompt(p string, allowcancel bool) (bool, error) {
+	Global.Input = ""
+	var plen int
+	if allowcancel {
+		pm := p + " (y/n/C-g)"
+		plen = utf8.RuneCountInString(pm) + 3
+		editorSetPrompt(pm)
+	} else {
+		pm := p + " (y/n)"
+		plen = utf8.RuneCountInString(pm) + 3
+		editorSetPrompt(pm)
+	}
+	editorRefreshScreen()
+	_, y := termbox.Size()
+
+	termbox.SetCursor(plen, y-1)
+	termbox.Flush()
+	for {
+		ev := termbox.PollEvent()
+		if ev.Type == termbox.EventResize {
+			editorRefreshScreen()
+			_, y = termbox.Size()
+			termbox.SetCursor(plen, y-1)
+			termbox.Flush()
+		} else if ev.Type == termbox.EventKey {
+			if ev.Key == termbox.KeyCtrlG && allowcancel {
+				Global.Input = "Cancelled."
+				editorSetPrompt("")
+				return false, errors.New("User cancelled")
+			} else if ev.Ch == 'y' {
+				editorSetPrompt("")
+				return true, nil
+			} else if ev.Ch == 'n' {
+				editorSetPrompt("")
+				return false, nil
+			}
+		}
+	}
 }

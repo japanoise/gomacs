@@ -298,7 +298,28 @@ func MoveCursorForthPage() {
 }
 
 func EditorQuit() {
-	Global.quit = true
+	nodirty := true
+	for _, buf := range Global.Buffers {
+		if buf.Dirty {
+			ds, cancel := editorYesNoPrompt(fmt.Sprintf("%s has unsaved changes; save them?", buf.Filename), true)
+			if ds && cancel == nil {
+				editorBufSave(buf)
+			} else if cancel != nil {
+				return
+			}
+		}
+		nodirty = nodirty && !buf.Dirty
+	}
+	if !nodirty {
+		dq, cancel := editorYesNoPrompt("Unsaved buffers exist; really quit?", false)
+		if dq && cancel == nil {
+			Global.quit = true
+		} else {
+			Global.Input = "Cancelled."
+		}
+	} else {
+		Global.quit = true
+	}
 }
 
 func lineEdDrawLine(prompt, ret string, cpos int) {
@@ -639,15 +660,19 @@ func EditorOpen(filename string) error {
 }
 
 func EditorSave() {
-	fn := Global.CurrentB.Filename
+	editorBufSave(Global.CurrentB)
+}
+
+func editorBufSave(buf *EditorBuffer) {
+	fn := buf.Filename
 	if fn == "" {
 		fn = editorPrompt("Save as", nil)
 		if fn == "" {
 			Global.Input = "Save aborted"
 			return
 		} else {
-			Global.CurrentB.Filename = fn
-			editorSelectSyntaxHighlight(Global.CurrentB)
+			buf.Filename = fn
+			editorSelectSyntaxHighlight(buf)
 		}
 	}
 	f, err := os.Create(fn)
@@ -657,14 +682,14 @@ func EditorSave() {
 	}
 	defer f.Close()
 	l, b := 0, 0
-	for _, row := range Global.CurrentB.Rows {
+	for _, row := range buf.Rows {
 		f.WriteString(row.Data)
 		f.WriteString("\n")
 		b += row.Size + 1
 		l++
 	}
 	Global.Input = fmt.Sprintf("Wrote %d lines (%d bytes) to %s", l, b, fn)
-	Global.CurrentB.Dirty = false
+	buf.Dirty = false
 }
 
 // HACK: Go does not have static variables, so these have to go in global state.
