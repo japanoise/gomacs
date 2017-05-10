@@ -28,28 +28,31 @@ Currently, the only supported option is -s, which disables syntax highlighting.
 Gomacs uses the standard Emacs keybindings. Of course, not all are implemented
 yet - I'll try to keep this list up to date!
 
-- C-s - Incremental search
-- M-< - Go to start of buffer
-- M-> - Go to end of buffer
-- C-x C-s - save changes
-- C-x C-c - quit
-- C-x C-f - find file
-- C-x b - switch buffer
-- C-x 2 - open a new window
-- C-x o - switch to other window
-- C-x 0 - delete selected window
-- C-x 1 - maximise selected window (deleting the others)
-- C-x 4 C-f - find file in other window (creating one if there's only one window)
-- C-x 4 b - switch buffer in other window
-- C-_ - Undo (C-/ also works)
-- C-@ - Set Mark (C-<space> also works)
-- C-w - Kill (cut) region between mark and cursor
-- M-w - Copy region between mark and cursor
-- C-y - Yank (paste) previously copied or killed region
-- M-d - Delete forward word
-- M-D (Meta-Shift-D) - delete backward word (M-&gt;deletechar&lt; does not work
+- `C-s` - Incremental search
+- `M-<` - Go to start of buffer
+- `M->` - Go to end of buffer
+- `C-x C-s` - save changes
+- `C-x C-c` - quit
+- `C-x C-f` - find file
+- `C-x b` - switch buffer
+- `C-x 2` - open a new window
+- `C-x o` - switch to other window
+- `C-x 0` - delete selected window
+- `C-x 1` - maximise selected window (deleting the others)
+- `C-x 4 C-f` - find file in other window (creating one if there's only one window)
+- `C-x 4 b` - switch buffer in other window
+- `C-_` - Undo (`C-/` also works)
+- `C-@` - Set Mark (`C-<space>` also works)
+- `C-w` - Kill (cut) region between mark and cursor
+- `M-w` - Copy region between mark and cursor
+- `C-y` - Yank (paste) previously copied or killed region
+- `M-d` - Delete forward word
+- `M-D` (Meta-Shift-D) - delete backward word (`M-<deletechar>` does not work
   due to a fault either in Termbox or my terminal. If it works in your terminal,
   feel free to bind it.)
+- `<f12>` - Panic key - quit emacs immediately without saving changes. Useful if
+  Zygomys falls down (which may happen if you do a lot of hacking on the editor's
+  internals)
 
 ## Customization
 
