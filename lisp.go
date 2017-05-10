@@ -230,6 +230,7 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "M-d" "(emacskillforwardword)")
 (emacsbindkey "M-b" "(emacsbackword)")
 (emacsbindkey "M-D" "(emacskillbackword)")
+(emacsbindkey "M-DEL" "(emacskillbackword)")
 `)
 	env.Run()
 }

@@ -113,6 +113,9 @@ func ParseTermboxEvent(ev termbox.Event) string {
 		switch ev.Key {
 		case termbox.KeyBackspace:
 		case termbox.KeyBackspace2:
+			if ev.Mod == termbox.ModAlt {
+				return fmt.Sprintf("M-DEL")
+			}
 			return "DEL"
 		case termbox.KeyTab:
 			return "TAB"
@@ -135,6 +138,9 @@ func ParseTermboxEvent(ev termbox.Event) string {
 		case termbox.KeyEnd:
 			return "End"
 		case termbox.KeyDelete:
+			if ev.Mod == termbox.ModAlt {
+				return fmt.Sprintf("M-deletechar")
+			}
 			return "deletechar"
 		case termbox.KeyInsert:
 			return "insert"
