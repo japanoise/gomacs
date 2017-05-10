@@ -31,6 +31,7 @@ yet - I'll try to keep this list up to date!
 - `C-s` - Incremental search
 - `M-<` - Go to start of buffer
 - `M->` - Go to end of buffer
+- `C-l` - Centre view on current line
 - `C-x C-s` - save changes
 - `C-x C-c` - quit
 - `C-x C-f` - find file

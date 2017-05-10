@@ -216,6 +216,13 @@ func editorRefreshScreen() {
 	termbox.Flush()
 }
 
+func editorCentreView() {
+	rowoff := Global.CurrentB.cy - (Global.CurrentBHeight / 2)
+	if rowoff >= 0 {
+		Global.CurrentB.rowoff = rowoff
+	}
+}
+
 func editorSetPrompt(prompt string) {
 	Global.Prompt = prompt
 }

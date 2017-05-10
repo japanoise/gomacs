@@ -160,6 +160,7 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacskillforwardword", lispSingleton(delForwardWord))
 	env.AddFunction("emacsbackword", lispSingleton(moveBackWord))
 	env.AddFunction("emacskillbackword", lispSingleton(delBackWord))
+	env.AddFunction("emacscentreview", lispSingleton(editorCentreView))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -231,6 +232,7 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "M-b" "(emacsbackword)")
 (emacsbindkey "M-D" "(emacskillbackword)")
 (emacsbindkey "M-DEL" "(emacskillbackword)")
+(emacsbindkey "C-l" "(emacscentreview)")
 `)
 	env.Run()
 }
