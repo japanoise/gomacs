@@ -27,6 +27,15 @@ func editorGetKey() string {
 	}
 }
 
+func editorGetKeyNoRefresh() string {
+	for {
+		ev := termbox.PollEvent()
+		if ev.Type == termbox.EventKey {
+			return ParseTermboxEvent(ev)
+		}
+	}
+}
+
 func editorPrompt(prompt string, callback func(string, string)) string {
 	buffer := ""
 	buflen := 0
@@ -76,19 +85,31 @@ func editorPrompt(prompt string, callback func(string, string)) string {
 
 func editorChoiceIndex(title string, choices []string, def int) int {
 	selection := def
-	// Will need these in a smarter version of this function
-	//offset := 0
-	//sx, sy := termbox.Size()
+	nc := len(choices) - 1
+	offset := 0
 	for {
+		_, sy := termbox.Size()
 		termbox.HideCursor()
 		termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 		printstring(title, 0, 0)
-		for i, s := range choices {
+		if selection < offset {
+			offset -= 5
+			if offset < 0 {
+				offset = 0
+			}
+		}
+		for selection-offset >= sy-1 {
+			offset += 5
+			if offset >= nc {
+				offset = nc
+			}
+		}
+		for i, s := range choices[offset:] {
 			printstring(s, 3, i+1)
 		}
-		printstring(">", 1, selection+1)
+		printstring(">", 1, (selection+1)-offset)
 		termbox.Flush()
-		key := editorGetKey()
+		key := editorGetKeyNoRefresh()
 		switch key {
 		case "C-c":
 			fallthrough
