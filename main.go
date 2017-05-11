@@ -811,6 +811,18 @@ func main() {
 		if ferr != nil {
 			Global.Input = ferr.Error()
 		}
+		if len(args) > 1 {
+			for _, fn := range args[1:] {
+				buffer := &EditorBuffer{}
+				Global.Buffers = append(Global.Buffers, buffer)
+				Global.CurrentB = buffer
+				ferr = EditorOpen(fn)
+				if ferr != nil {
+					Global.Input = ferr.Error()
+				}
+			}
+			Global.CurrentB = Global.Buffers[0]
+		}
 	}
 
 	InitTerm()
