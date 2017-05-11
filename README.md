@@ -36,6 +36,7 @@ yet - I'll try to keep this list up to date!
 - `C-x C-c` - quit
 - `C-x C-f` - find file
 - `C-x b` - switch buffer
+- `C-x k` - kill buffer
 - `C-x 2` - open a new window
 - `C-x o` - switch to other window
 - `C-x 0` - delete selected window

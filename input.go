@@ -86,6 +86,9 @@ func editorPrompt(prompt string, callback func(string, string)) string {
 func editorChoiceIndex(title string, choices []string, def int) int {
 	selection := def
 	nc := len(choices) - 1
+	if selection < 0 || selection > nc {
+		selection = 0
+	}
 	offset := 0
 	for {
 		_, sy := termbox.Size()
