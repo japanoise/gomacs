@@ -29,28 +29,39 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 		var bb bytes.Buffer
 		row := buf.Rows[startl]
 		rowDelRange(row, startc, row.Size, buf)
+		editorPopUndo()
 		bb.WriteString(Global.Clipboard)
 		bb.WriteRune('\n')
 		for i := startl + 1; i < endl; i++ {
 			row = buf.Rows[startl+1] //it deletes as they go!
+			hasdata := false
 			if row.Size > 0 {
+				hasdata = true
 				rowDelRange(row, 0, row.Size, buf)
+				editorPopUndo()
 			}
 			buf.cy = startl + 1
 			buf.cx = 0
 			editorDelChar()
-			bb.WriteString(Global.Clipboard)
+			editorPopUndo()
+			if hasdata {
+				bb.WriteString(Global.Clipboard)
+			}
 			bb.WriteRune('\n')
 		}
 		row = buf.Rows[startl+1]
 		rowDelRange(row, 0, endc, buf)
+		editorPopUndo()
 		buf.cy = startl + 1
 		buf.cx = 0
 		editorDelChar()
+		editorPopUndo()
 		bb.WriteString(Global.Clipboard)
 		Global.Clipboard = bb.String()
 		updateLineIndexes()
 	}
+	editorAddRegionUndo(false, startc, endc,
+		startl, endl, Global.Clipboard)
 	buf.cx = startc
 	buf.cy = startl
 }
@@ -108,14 +119,25 @@ func doCopyRegion() {
 	}
 }
 
-func doYankRegion() {
-	clipLines := strings.Split(Global.Clipboard, "\n")
+func spitRegion(cx, cy int, region string) {
+	Global.CurrentB.cx = cx
+	Global.CurrentB.cy = cy
+	clipLines := strings.Split(region, "\n")
 	editorInsertStr(clipLines[0])
+	editorPopUndo()
 	if len(clipLines) > 1 {
 		// Insert more lines...
 		for i := 1; i < len(clipLines); i++ {
 			editorInsertNewline()
+			editorPopUndo()
 			editorInsertStr(clipLines[i])
+			editorPopUndo()
 		}
 	}
+	editorAddRegionUndo(true, cx, Global.CurrentB.cx,
+		cy, Global.CurrentB.cy, region)
+}
+
+func doYankRegion() {
+	spitRegion(Global.CurrentB.cx, Global.CurrentB.cy, Global.Clipboard)
 }

@@ -56,6 +56,7 @@ type EditorState struct {
 
 type EditorUndo struct {
 	ins    bool
+	region bool
 	startl int
 	endl   int
 	startc int
@@ -417,6 +418,35 @@ func updateLineIndexes() {
 	}
 }
 
+// Discards the last undo. Useful for the region functions, as they're made of
+// regular insertion functions (which take care of their own undo)
+func editorPopUndo() {
+	old := Global.CurrentB.Undo
+	if old == nil {
+		return
+	}
+	Global.CurrentB.Undo = old.prev
+}
+
+func editorAddRegionUndo(ins bool, startc, endc, startl, endl int, str string) {
+	old := Global.CurrentB.Undo
+	ret := new(EditorUndo)
+	ret.endl = endl
+	ret.startl = startl
+	ret.endc = endc
+	ret.startc = startc
+	ret.str = str
+	ret.ins = ins
+	ret.region = true
+
+	if old == nil {
+		ret.prev = nil
+	} else {
+		ret.prev = old
+	}
+	Global.CurrentB.Undo = ret
+}
+
 func editorAddUndo(ins bool, startc, endc, startl, endl int, str string) {
 	old := Global.CurrentB.Undo
 	app := false
@@ -447,6 +477,7 @@ func editorAddUndo(ins bool, startc, endc, startl, endl int, str string) {
 		ret.startc = startc
 		ret.str = str
 		ret.ins = ins
+		ret.region = false
 
 		if old == nil {
 			ret.prev = nil
@@ -460,6 +491,16 @@ func editorAddUndo(ins bool, startc, endc, startl, endl int, str string) {
 func editorDoUndo(tree *EditorUndo, redo bool) bool {
 	if tree == nil {
 		return false
+	}
+	if tree.region {
+		if tree.ins {
+			bufKillRegion(Global.CurrentB, tree.startc, tree.endc, tree.startl, tree.endl)
+			editorPopUndo()
+		} else {
+			spitRegion(tree.startc, tree.startl, tree.str)
+			editorPopUndo()
+		}
+		return true
 	}
 	if tree.ins {
 		// Insertion
