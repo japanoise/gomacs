@@ -141,3 +141,17 @@ func spitRegion(cx, cy int, region string) {
 func doYankRegion() {
 	spitRegion(Global.CurrentB.cx, Global.CurrentB.cy, Global.Clipboard)
 }
+
+func killToEol() {
+	cx := Global.CurrentB.cx
+	cy := Global.CurrentB.cy
+	if cy == Global.CurrentB.NumRows {
+		return
+	}
+	if cx >= Global.CurrentB.Rows[cy].Size {
+		MoveCursor(1, 0)
+		editorDelChar()
+	} else {
+		rowDelRange(Global.CurrentB.Rows[cy], cx, Global.CurrentB.Rows[cy].Size, Global.CurrentB)
+	}
+}

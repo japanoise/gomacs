@@ -52,6 +52,7 @@ yet - I'll try to keep this list up to date!
 - `M-<backspace>` or `M-D` (Meta-Shift-D) - delete backward word (`M-<deletechar>`
   does not work due to a fault either in Termbox or my terminal. If it works in
   your terminal, feel free to bind it.)
+- `C-k` - Delete to end of line
 - `<f12>` - Panic key - quit emacs immediately without saving changes. Useful if
   Zygomys falls down (which may happen if you do a lot of hacking on the editor's
   internals)
