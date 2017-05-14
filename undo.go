@@ -187,8 +187,8 @@ func editorUndoAction() {
 	succ := editorDoUndo(Global.CurrentB.Undo)
 	if succ {
 		Global.CurrentB.Redo = Global.CurrentB.Undo
-		Global.CurrentB.Redo.prev = r
 		Global.CurrentB.Undo = Global.CurrentB.Undo.prev
+		Global.CurrentB.Redo.prev = r
 	} else {
 		Global.Input = "No further undo information."
 	}
