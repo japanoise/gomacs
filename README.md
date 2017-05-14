@@ -44,6 +44,7 @@ yet - I'll try to keep this list up to date!
 - `C-x 4 C-f` - find file in other window (creating one if there's only one window)
 - `C-x 4 b` - switch buffer in other window
 - `C-_` - Undo (`C-/` also works)
+- `C-x C-_` - Redo (`C-x C-/` also works)
 - `C-@` - Set Mark (`C-<space>` also works)
 - `C-w` - Kill (cut) region between mark and cursor
 - `M-w` - Copy region between mark and cursor

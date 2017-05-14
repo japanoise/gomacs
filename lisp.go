@@ -163,6 +163,7 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacscentreview", lispSingleton(editorCentreView))
 	env.AddFunction("emacskillbuffer", lispSingleton(killBuffer))
 	env.AddFunction("emacskilltoeol", lispSingleton(killToEol))
+	env.AddFunction("emacsredo", lispSingleton(editorRedoAction))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -237,6 +238,7 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "C-l" "(emacscentreview)")
 (emacsbindkey "C-x k" "(emacskillbuffer)")
 (emacsbindkey "C-k" "(emacskilltoeol)")
+(emacsbindkey "C-x C-_" "(emacsredo)")
 `)
 	env.Run()
 }
