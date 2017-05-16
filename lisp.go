@@ -3,8 +3,8 @@ package main
 import (
 	"errors"
 	"github.com/glycerine/zygomys/repl"
+	"github.com/mitchellh/go-homedir"
 	"io/ioutil"
-	"os/user"
 )
 
 func lispPrint(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
@@ -175,12 +175,12 @@ func NewLispInterp() *zygo.Glisp {
 }
 
 func LoadUserConfig(env *zygo.Glisp) {
-	usr, ue := user.Current()
+	usr, ue := homedir.Dir()
 	if ue != nil {
-		Global.Input = "Error getting current user: " + ue.Error()
+		Global.Input = "Error getting current user's home directory: " + ue.Error()
 		return
 	}
-	rc, err := ioutil.ReadFile(usr.HomeDir + "/.gomacs.lisp")
+	rc, err := ioutil.ReadFile(usr + "/.gomacs.lisp")
 	if err != nil {
 		Global.Input = "Error loading rc file: " + err.Error()
 		return

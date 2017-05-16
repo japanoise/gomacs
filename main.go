@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/mattn/go-runewidth"
+	"github.com/mitchellh/go-homedir"
 	"github.com/nsf/termbox-go"
 	"os"
 	"strings"
@@ -539,9 +540,13 @@ func editorInsertNewline() {
 }
 
 func EditorOpen(filename string) error {
-	Global.CurrentB.Filename = filename
+	path, perr := homedir.Expand(filename)
+	if perr != nil {
+		return perr
+	}
+	Global.CurrentB.Filename = path
 	editorSelectSyntaxHighlight(Global.CurrentB)
-	f, err := os.Open(filename)
+	f, err := os.Open(path)
 	if err != nil {
 		return err
 	}
