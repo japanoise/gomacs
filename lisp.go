@@ -165,6 +165,7 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacskilltoeol", lispSingleton(killToEol))
 	env.AddFunction("emacsredo", lispSingleton(editorRedoAction))
 	env.AddFunction("suspendemacs", lispSingleton(suspend))
+	env.AddFunction("unbindall", lispSingleton(func() { Emacs.UnbindAll() }))
 }
 
 func NewLispInterp() *zygo.Glisp {

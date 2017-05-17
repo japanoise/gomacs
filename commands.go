@@ -42,3 +42,7 @@ func (c *CommandList) GetCommand(key string) (string, error) {
 		return child.Command, nil
 	}
 }
+
+func (c *CommandList) UnbindAll() {
+	c.Children = make(map[string]*CommandList)
+}
