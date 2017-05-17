@@ -164,6 +164,7 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacskillbuffer", lispSingleton(killBuffer))
 	env.AddFunction("emacskilltoeol", lispSingleton(killToEol))
 	env.AddFunction("emacsredo", lispSingleton(editorRedoAction))
+	env.AddFunction("suspendemacs", lispSingleton(suspend))
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -239,6 +240,7 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "C-x k" "(emacskillbuffer)")
 (emacsbindkey "C-k" "(emacskilltoeol)")
 (emacsbindkey "C-x C-_" "(emacsredo)")
+(emacsbindkey "C-z" "(suspendemacs)")
 `)
 	env.Run()
 }

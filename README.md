@@ -57,6 +57,7 @@ yet - I'll try to keep this list up to date!
 - `<f12>` - Panic key - quit emacs immediately without saving changes. Useful if
   Zygomys falls down (which may happen if you do a lot of hacking on the editor's
   internals)
+- `C-z` - Suspend Gomacs (Linux only)
 
 ## Customization
 
@@ -95,3 +96,7 @@ Other terminal based Emacsen are available, but they each have their problems:
 Furthermore, apart from sandy, none of these editors support syntax highlighting.
 
 Finally, and most importantly, it's a fun project I've always wanted to do ;)
+
+## Credits
+
+Thanks to nsf for termbox and godit (from which the suspend code comes.)
