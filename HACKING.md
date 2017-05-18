@@ -3,7 +3,7 @@
 ## Files in Gomacs
 
 - commands.go - code to do with registering and storing mappings between
-  keypresses and lisp functions.
+  keypresses and lisp functions or commands.
 - input.go - input from the user. Translating a termbox key event into an emacs
   binding string.
 - lisp.go - dealing with the lisp interpreter.
@@ -141,6 +141,14 @@ editorFind and editorFindCallback.
 
 ## Commands
 
-Commands are stored as a mapping between a string that represents a keymap and a
-string that contains lisp code. This behaves like a tree; some nodes contain
-another map, some contain code. This allows us to specify keymaps like `C-x C-s`.
+Commands are stored:
+
+1. As a mapping between a string that represents a keymap and a function that
+has access to the lisp environment. This behaves like a tree; some nodes contain
+another map, some contain code. This allows us to specify keymaps like
+`C-x C-s`.
+2. As a string which names the command and a function with access to the lisp
+environment. This allows us to name commands for use with `M-x` or `C-h c`.
+
+It's strongly recommended that you define commands and then bind them to keys,
+rather than using lisp functions, because `C-h c` can't access the lisp code.

@@ -2,22 +2,37 @@ package main
 
 import (
 	"errors"
+	"github.com/glycerine/zygomys/repl"
 	"strings"
 )
 
 type CommandList struct {
 	Parent   bool
-	Command  string
+	Command  *CommandFunc
 	Children map[string]*CommandList
 }
 
-func (c *CommandList) PutCommand(key string, command string) {
+var funcnames map[string]*CommandFunc
+
+type CommandFunc struct {
+	Name string
+	Com  func(env *zygo.Glisp)
+}
+
+func DefineCommand(command *CommandFunc) {
+	funcnames[command.Name] = command
+}
+
+func (c *CommandList) PutCommand(key string, command *CommandFunc) {
+	if command.Name != "lisp code" && funcnames[command.Name] == nil {
+		DefineCommand(command)
+	}
 	if c.Children == nil {
 		c.Children = make(map[string]*CommandList)
 	}
 	keys := strings.Split(key, " ")
 	if c.Children[keys[0]] == nil {
-		c.Children[keys[0]] = &CommandList{false, "", nil}
+		c.Children[keys[0]] = &CommandList{false, nil, nil}
 	}
 	if len(keys) > 1 {
 		c.Children[keys[0]].Parent = true
@@ -27,12 +42,12 @@ func (c *CommandList) PutCommand(key string, command string) {
 	}
 }
 
-func (c *CommandList) GetCommand(key string) (string, error) {
+func (c *CommandList) GetCommand(key string) (*CommandFunc, error) {
 	Global.Input += key + " "
 	editorRefreshScreen()
 	child := c.Children[key]
 	if child == nil {
-		return "", errors.New("Bad command: " + Global.Input)
+		return nil, errors.New("Bad command: " + Global.Input)
 	}
 	if child.Parent {
 		nextkey := editorGetKey()
@@ -45,4 +60,33 @@ func (c *CommandList) GetCommand(key string) (string, error) {
 
 func (c *CommandList) UnbindAll() {
 	c.Children = make(map[string]*CommandList)
+}
+
+func DescribeKeyBriefly() {
+	editorSetPrompt("Describe key sequence")
+	Global.Input = ""
+	editorRefreshScreen()
+	com, comerr := Emacs.GetCommand(editorGetKey())
+	if comerr != nil {
+		Global.Input += "is not bound to a command"
+	} else if com != nil {
+		if com.Name == "lisp code" {
+			Global.Input += "runs anonymous lisp code"
+		} else {
+			Global.Input += "runs the command " + com.Name
+		}
+	} else {
+		Global.Input += "is a null command"
+	}
+	editorSetPrompt("")
+}
+
+func RunCommand(env *zygo.Glisp) {
+	cmdname := editorPrompt("Run command", nil)
+	cmd := funcnames[cmdname]
+	if cmd != nil && cmd.Com != nil {
+		cmd.Com(env)
+	} else {
+		Global.Input = cmdname + ": no such command."
+	}
 }

@@ -677,6 +677,7 @@ func InitEditor() {
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0, "", false}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
+	funcnames = make(map[string]*CommandFunc)
 }
 
 func dumpCrashLog(e string) {
@@ -742,18 +743,8 @@ func main() {
 			if comerr != nil {
 				Global.Input = comerr.Error()
 				continue
-			}
-			comerr = env.LoadString(com)
-			if comerr != nil {
-				Global.Input = comerr.Error()
-				continue
-			}
-			_, comerr = env.Run()
-			if comerr != nil {
-				Global.Input = comerr.Error()
-				dumpCrashLog(comerr.Error())
-				env = NewLispInterp()
-				continue
+			} else if com != nil {
+				com.Com(env)
 			}
 		}
 	}

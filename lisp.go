@@ -27,6 +27,11 @@ func lispSingleton(f func()) zygo.GlispUserFunction {
 	}
 }
 
+func cmdAndLispFunc(e *zygo.Glisp, cmdname, lispname string, f func()) {
+	e.AddFunction(lispname, lispSingleton(f))
+	DefineCommand(&CommandFunc{cmdname, func(env *zygo.Glisp) { f() }})
+}
+
 func lispMvCurs(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
 	if len(args) != 2 {
 		return zygo.SexpNull, zygo.WrongNargs
@@ -49,23 +54,67 @@ func lispMvCurs(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, erro
 }
 
 func lispBindKey(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
-	if len(args) != 2 {
+	if len(args) < 2 {
 		return zygo.SexpNull, zygo.WrongNargs
 	}
-	var arg1, arg2 string
+	var arg1 string
 	switch t := args[0].(type) {
 	case *zygo.SexpStr:
 		arg1 = t.S
 	default:
 		return zygo.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
+	var arg2 *zygo.SexpFunction
 	switch t := args[1].(type) {
+	case *zygo.SexpFunction:
+		arg2 = t
 	case *zygo.SexpStr:
-		arg2 = t.S
+		cmdname := t.S
+		cmd := funcnames[cmdname]
+		if cmd == nil {
+			return zygo.SexpNull, errors.New("Unknown command: " + cmdname)
+		} else {
+			Emacs.PutCommand(arg1, cmd)
+			return zygo.SexpNull, nil
+		}
 	default:
-		return zygo.SexpNull, errors.New("Arg 2 needs to be a string")
+		return zygo.SexpNull, errors.New("Arg 2 needs to be a string or function")
 	}
-	Emacs.PutCommand(arg1, arg2)
+	av := []zygo.Sexp{}
+	if len(args) > 2 {
+		av = args[2:]
+	}
+	Emacs.PutCommand(arg1, &CommandFunc{"lisp code", func(env *zygo.Glisp) {
+		env.Apply(arg2, av)
+	}})
+	return zygo.SexpNull, nil
+}
+
+func lispDefineCmd(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	if len(args) < 2 {
+		return zygo.SexpNull, zygo.WrongNargs
+	}
+	var arg1 string
+	switch t := args[0].(type) {
+	case *zygo.SexpStr:
+		arg1 = t.S
+	default:
+		return zygo.SexpNull, errors.New("Arg 1 needs to be a string")
+	}
+	var arg2 *zygo.SexpFunction
+	switch t := args[1].(type) {
+	case *zygo.SexpFunction:
+		arg2 = t
+	default:
+		return zygo.SexpNull, errors.New("Arg 2 needs to be a function")
+	}
+	av := []zygo.Sexp{}
+	if len(args) > 2 {
+		av = args[2:]
+	}
+	DefineCommand(&CommandFunc{arg1, func(env *zygo.Glisp) {
+		env.Apply(arg2, av)
+	}})
 	return zygo.SexpNull, nil
 }
 
@@ -124,7 +173,7 @@ func lispGetTabStr(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, e
 
 func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
-	env.AddFunction("emacsquit", lispSingleton(EditorQuit))
+	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", EditorQuit)
 	env.AddFunction("emacsmvcurs", lispMvCurs)
 	env.AddFunction("emacsbindkey", lispBindKey)
 	env.AddFunction("emacseol", lispSingleton(MoveCursorToEol))
@@ -166,6 +215,9 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacsredo", lispSingleton(editorRedoAction))
 	env.AddFunction("suspendemacs", lispSingleton(suspend))
 	env.AddFunction("unbindall", lispSingleton(func() { Emacs.UnbindAll() }))
+	env.AddFunction("emacsdefinecmd", lispDefineCmd)
+	DefineCommand(&CommandFunc{"describe-key-briefly", func(env *zygo.Glisp) { DescribeKeyBriefly() }})
+	DefineCommand(&CommandFunc{"run-command", RunCommand})
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -187,61 +239,72 @@ func LoadUserConfig(env *zygo.Glisp) {
 		Global.Input = "Error loading rc file: " + err.Error()
 		return
 	}
-	env.LoadString(string(rc))
-	env.Run()
+	err = env.LoadString(string(rc))
+	if err != nil {
+		Global.Input = "Error parsing rc file: " + err.Error()
+		return
+	}
+	_, err = env.Run()
+	if err != nil {
+		Global.Input = "Error executing rc file: " + err.Error()
+		return
+	}
 }
 
 func LoadDefaultConfig(env *zygo.Glisp) {
 	env.LoadString(`
-(emacsbindkey "C-s" "(emacssearch)")
-(emacsbindkey "C-x C-c" "(emacsquit)")
-(emacsbindkey "C-x C-s" "(emacssave)")
-(emacsbindkey "LEFT" "(emacsmvcurs -1 0)")
-(emacsbindkey "C-b" "(emacsmvcurs -1 0)")
-(emacsbindkey "RIGHT" "(emacsmvcurs 1 0)")
-(emacsbindkey "C-f" "(emacsmvcurs 1 0)")
-(emacsbindkey "DOWN" "(emacsmvcurs 0 1)")
-(emacsbindkey "C-n" "(emacsmvcurs 0 1)")
-(emacsbindkey "UP" "(emacsmvcurs 0 -1)")
-(emacsbindkey "C-p" "(emacsmvcurs 0 -1)")
-(emacsbindkey "Home" "(emacsbol)")
-(emacsbindkey "End" "(emacseol)")
-(emacsbindkey "C-a" "(emacsbol)")
-(emacsbindkey "C-e" "(emacseol)")
-(emacsbindkey "C-v" "(emacsforwardpage)")
-(emacsbindkey "M-v" "(emacsbackpage)")
-(emacsbindkey "next" "(emacsforwardpage)")
-(emacsbindkey "prior" "(emacsbackpage)")
-(emacsbindkey "DEL" "(emacsdelchar)")
-(emacsbindkey "deletechar" "(emacsmvcurs 1 0) (emacsdelchar)")
-(emacsbindkey "RET" "(emacsaddnl)")
-(emacsbindkey "C-x C-f" "(emacsfindfile)")
-(emacsbindkey "C-x b" "(emacsswitchbuffer)")
-(emacsbindkey "M-<" "(emacsbof)")
-(emacsbindkey "M->" "(emacseof)")
-(emacsbindkey "C-_" "(emacsundo)")
-(emacsbindkey "TAB" "(emacsindent)")
-(emacsbindkey "C-x o" "(emacsswitchwindow)")
-(emacsbindkey "C-x 0" "(emacsclosewindow)")
-(emacsbindkey "C-x 1" "(emacscloseotherwindows)")
-(emacsbindkey "C-x 2" "(emacssplit)")
-(emacsbindkey "C-x 4 C-f" "(emacsopenotherwindow)")
-(emacsbindkey "C-x 4 f" "(emacsopenotherwindow)")
-(emacsbindkey "C-x 4 b" "(emacsswitchbufferotherwindow)")
-(emacsbindkey "C-@" "(emacssetmark)")
-(emacsbindkey "C-w" "(emacskillregion)")
-(emacsbindkey "M-w" "(emacscopyregion)")
-(emacsbindkey "C-y" "(emacsyankregion)")
-(emacsbindkey "M-f" "(emacsforwardword)")
-(emacsbindkey "M-d" "(emacskillforwardword)")
-(emacsbindkey "M-b" "(emacsbackword)")
-(emacsbindkey "M-D" "(emacskillbackword)")
-(emacsbindkey "M-DEL" "(emacskillbackword)")
-(emacsbindkey "C-l" "(emacscentreview)")
-(emacsbindkey "C-x k" "(emacskillbuffer)")
-(emacsbindkey "C-k" "(emacskilltoeol)")
-(emacsbindkey "C-x C-_" "(emacsredo)")
-(emacsbindkey "C-z" "(suspendemacs)")
+(emacsbindkey "C-s" emacssearch)
+(emacsbindkey "C-x C-c" "save-buffers-kill-emacs")
+(emacsbindkey "C-x C-s" emacssave)
+(emacsbindkey "LEFT" emacsmvcurs -1 0)
+(emacsbindkey "C-b" emacsmvcurs -1 0)
+(emacsbindkey "RIGHT" emacsmvcurs 1 0)
+(emacsbindkey "C-f" emacsmvcurs 1 0)
+(emacsbindkey "DOWN" emacsmvcurs 0 1)
+(emacsbindkey "C-n" emacsmvcurs 0 1)
+(emacsbindkey "UP" emacsmvcurs 0 -1)
+(emacsbindkey "C-p" emacsmvcurs 0 -1)
+(emacsbindkey "Home" emacsbol)
+(emacsbindkey "End" emacseol)
+(emacsbindkey "C-a" emacsbol)
+(emacsbindkey "C-e" emacseol)
+(emacsbindkey "C-v" emacsforwardpage)
+(emacsbindkey "M-v" emacsbackpage)
+(emacsbindkey "next" emacsforwardpage)
+(emacsbindkey "prior" emacsbackpage)
+(emacsbindkey "DEL" emacsdelchar)
+(emacsbindkey "deletechar" (fn [] (emacsmvcurs 1 0) (emacsdelchar)))
+(emacsbindkey "RET" emacsaddnl)
+(emacsbindkey "C-x C-f" emacsfindfile)
+(emacsbindkey "C-x b" emacsswitchbuffer)
+(emacsbindkey "M-<" emacsbof)
+(emacsbindkey "M->" emacseof)
+(emacsbindkey "C-_" emacsundo)
+(emacsbindkey "TAB" emacsindent)
+(emacsbindkey "C-x o" emacsswitchwindow)
+(emacsbindkey "C-x 0" emacsclosewindow)
+(emacsbindkey "C-x 1" emacscloseotherwindows)
+(emacsbindkey "C-x 2" emacssplit)
+(emacsbindkey "C-x 4 C-f" emacsopenotherwindow)
+(emacsbindkey "C-x 4 f" emacsopenotherwindow)
+(emacsbindkey "C-x 4 b" emacsswitchbufferotherwindow)
+(emacsbindkey "C-@" emacssetmark)
+(emacsbindkey "C-w" emacskillregion)
+(emacsbindkey "M-w" emacscopyregion)
+(emacsbindkey "C-y" emacsyankregion)
+(emacsbindkey "M-f" emacsforwardword)
+(emacsbindkey "M-d" emacskillforwardword)
+(emacsbindkey "M-b" emacsbackword)
+(emacsbindkey "M-D" emacskillbackword)
+(emacsbindkey "M-DEL" emacskillbackword)
+(emacsbindkey "C-l" emacscentreview)
+(emacsbindkey "C-x k" emacskillbuffer)
+(emacsbindkey "C-k" emacskilltoeol)
+(emacsbindkey "C-x C-_" emacsredo)
+(emacsdefinecmd "suspend-emacs" suspendemacs)
+(emacsbindkey "C-z" "suspend-emacs")
+(emacsbindkey "C-h c" "describe-key-briefly")
+(emacsbindkey "M-x" "run-command")
 `)
 	env.Run()
 }

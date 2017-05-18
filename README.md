@@ -58,6 +58,8 @@ yet - I'll try to keep this list up to date!
   Zygomys falls down (which may happen if you do a lot of hacking on the editor's
   internals)
 - `C-z` - Suspend Gomacs (Linux only)
+- `M-x` - Run named command
+- `C-h c` - Describe keybinding briefly
 
 ## Customization
 
@@ -65,9 +67,13 @@ Emacs loads from ~/.gomacs.lisp on startup and executes the content of this file
 Check out the Zygomys documentation for information on how the language works!
 Some functions to get you started…
 
-- `(emacsbindkey arg1 arg2)` - Bind arg1 (in standard Emacs C-*/M-* notation,
-  subsequent keypresses space seperated) to the Lisp code in arg2. Both args
-  must be strings.
+- `(emacsbindkey arg1 arg2..)` - Bind arg1 (in standard Emacs C-*/M-* notation,
+  subsequent keypresses space seperated) to the Lisp function or named command
+  arg2. arg1 must be a string; arg2 can be a function or a string. If arg2 is a
+  function, any additional args will be used as its arguments when run.
+- `(emacsdefinecmd arg1 arg2..)` - Define a command with name arg1 that runs the
+  function arg2 with any aditional arguments as its arguments. arg1 must be a
+  string; arg2 must be a function.
 - `(setsofttab arg)` - Enable (true) or disable (false) the use of soft tabs
   (spaces for indentation). arg must be a boolean.
 - `(settabstop arg)` - Set the width of \t characters in cells. If using soft
