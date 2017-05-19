@@ -82,11 +82,15 @@ func DescribeKeyBriefly() {
 }
 
 func RunCommand(env *zygo.Glisp) {
-	cmdname := editorPrompt("Run command", nil)
+	cmdname := StrToCmdName(editorPrompt("Run command", nil))
 	cmd := funcnames[cmdname]
 	if cmd != nil && cmd.Com != nil {
 		cmd.Com(env)
 	} else {
 		Global.Input = cmdname + ": no such command."
 	}
+}
+
+func StrToCmdName(s string) string {
+	return strings.Replace(strings.ToLower(s), " ", "-", -1)
 }

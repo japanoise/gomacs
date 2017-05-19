@@ -69,7 +69,7 @@ func lispBindKey(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, err
 	case *zygo.SexpFunction:
 		arg2 = t
 	case *zygo.SexpStr:
-		cmdname := t.S
+		cmdname := StrToCmdName(t.S)
 		cmd := funcnames[cmdname]
 		if cmd == nil {
 			return zygo.SexpNull, errors.New("Unknown command: " + cmdname)
@@ -97,7 +97,7 @@ func lispDefineCmd(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, e
 	var arg1 string
 	switch t := args[0].(type) {
 	case *zygo.SexpStr:
-		arg1 = t.S
+		arg1 = StrToCmdName(t.S)
 	default:
 		return zygo.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
