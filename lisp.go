@@ -20,6 +20,23 @@ func lispPrint(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error
 	return zygo.SexpNull, nil
 }
 
+func lispRunCommand(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	if len(args) != 1 {
+		return zygo.SexpNull, zygo.WrongNargs
+	}
+	switch t := args[0].(type) {
+	case *zygo.SexpStr:
+		cn := StrToCmdName(t.S)
+		cmd := funcnames[cn]
+		if cmd != nil && cmd.Com != nil {
+			cmd.Com(env)
+		}
+	default:
+		return zygo.SexpNull, errors.New("Arg needs to be a string")
+	}
+	return zygo.SexpNull, nil
+}
+
 func lispSingleton(f func()) zygo.GlispUserFunction {
 	return func(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
 		f()
@@ -183,6 +200,7 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("disablesyntax", lispSetSyntaxOff)
 	env.AddFunction("unbindall", lispSingleton(func() { Emacs.UnbindAll() }))
 	env.AddFunction("emacsdefinecmd", lispDefineCmd)
+	env.AddFunction("runemacscmd", lispRunCommand)
 	DefineCommand(&CommandFunc{"describe-key-briefly", func(env *zygo.Glisp) { DescribeKeyBriefly() }})
 	DefineCommand(&CommandFunc{"run-command", RunCommand})
 	DefineCommand(&CommandFunc{"redo", func(env *zygo.Glisp) { editorRedoAction() }})
