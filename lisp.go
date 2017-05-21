@@ -239,6 +239,8 @@ func loadLispFunctions(env *zygo.Glisp) {
 	DefineCommand(&CommandFunc{"kill-line", func(env *zygo.Glisp) { killToEol() }})
 	DefineCommand(&CommandFunc{"downcase-region", func(*zygo.Glisp) { doLCRegion() }})
 	DefineCommand(&CommandFunc{"upcase-region", func(*zygo.Glisp) { doUCRegion() }})
+	DefineCommand(&CommandFunc{"upcase-word", func(*zygo.Glisp) { upcaseWord() }})
+	DefineCommand(&CommandFunc{"downcase-word", func(*zygo.Glisp) { downcaseWord() }})
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -328,6 +330,8 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "M-x" "run-command")
 (emacsbindkey "C-x C-u" "upcase-region")
 (emacsbindkey "C-x C-l" "downcase-region")
+(emacsbindkey "M-u" "upcase-word")
+(emacsbindkey "M-l" "downcase-word")
 `)
 	env.Run()
 }

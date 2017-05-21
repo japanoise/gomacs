@@ -59,9 +59,9 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 		bb.WriteString(Global.Clipboard)
 		Global.Clipboard = bb.String()
 		updateLineIndexes()
+		editorAddRegionUndo(false, startc, endc,
+			startl, endl, Global.Clipboard)
 	}
-	editorAddRegionUndo(false, startc, endc,
-		startl, endl, Global.Clipboard)
 	buf.cx = startc
 	buf.cy = startl
 }

@@ -71,6 +71,8 @@ yet - I'll try to keep this list up to date!
 
 ### Deletion and Transposition
 
+- `M-l` - Lowercase forward word
+- `M-u` - Uppercase forward word
 - `C-d` or `deletechar` - Delete forwards
 - `backspace` - Delete backwards
 - `M-d` - Delete forward word

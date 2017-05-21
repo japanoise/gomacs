@@ -1,6 +1,9 @@
 package main
 
-import "unicode/utf8"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 func indexEndOfBackwardWord() int {
 	cx, icy := Global.CurrentB.cx, Global.CurrentB.cy
@@ -79,4 +82,20 @@ func moveForwardWord() {
 		MoveCursor(1, 0)
 	}
 	Global.CurrentB.cx = indexEndOfForwardWord()
+}
+
+func upcaseWord() {
+	icx := Global.CurrentB.cx
+	endc := indexEndOfForwardWord()
+	if endc > icx {
+		transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.ToUpper)
+	}
+}
+
+func downcaseWord() {
+	icx := Global.CurrentB.cx
+	endc := indexEndOfForwardWord()
+	if endc > icx {
+		transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.ToLower)
+	}
 }
