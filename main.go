@@ -58,11 +58,20 @@ type EditorState struct {
 var Global EditorState
 var Emacs *CommandList
 
+func Runewidth(ru rune) int {
+	rw := runewidth.RuneWidth(ru)
+	if rw <= 0 {
+		return 1
+	} else {
+		return rw
+	}
+}
+
 func printstring(s string, x, y int) {
 	i := 0
 	for _, ru := range s {
 		termbox.SetCell(x+i, y, ru, termbox.ColorDefault, termbox.ColorDefault)
-		i += runewidth.RuneWidth(ru)
+		i += Runewidth(ru)
 	}
 }
 
@@ -92,7 +101,7 @@ func hlprint(s string, hl []EmacsColor, x, y int) {
 			col := editorSyntaxToColor(hl[in])
 			termbox.SetCell(x+i, y, ru, col, termbox.ColorDefault)
 		}
-		i += runewidth.RuneWidth(ru)
+		i += Runewidth(ru)
 	}
 }
 
@@ -141,7 +150,7 @@ func editorDrawStatusLine(x, y int, buf *EditorBuffer) {
 	rx := 0
 	for _, ru = range line {
 		termbox.SetCell(rx, y, ru, termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
-		rx += runewidth.RuneWidth(ru)
+		rx += Runewidth(ru)
 	}
 	termbox.SetCell(rx, y, ' ', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
 	for ix := rx + 1; ix < x; ix++ {
@@ -157,7 +166,7 @@ func editorDrawPrompt(y int) {
 	rx := 0
 	for _, ru := range Global.Prompt + "-> " + Global.Input {
 		termbox.SetCell(rx, y-1, ru, termbox.ColorDefault, termbox.ColorDefault)
-		rx += runewidth.RuneWidth(ru)
+		rx += Runewidth(ru)
 	}
 }
 
@@ -359,7 +368,7 @@ func editorRowCxToRx(row *EditorRow) int {
 			rx += (Global.Tabsize - 1) - (rx % Global.Tabsize)
 			rx++
 		} else {
-			rx += runewidth.RuneWidth(rv)
+			rx += Runewidth(rv)
 		}
 	}
 	return rx

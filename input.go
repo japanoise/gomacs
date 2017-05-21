@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
 	"unicode/utf8"
 )
@@ -67,14 +66,14 @@ func editorPrompt(prompt string, callback func(string, string)) string {
 				r, rs := utf8.DecodeLastRuneInString(buffer)
 				buffer = buffer[0 : buflen-rs]
 				buflen -= rs
-				cursor -= runewidth.RuneWidth(r)
+				cursor -= Runewidth(r)
 			}
 		default:
 			if utf8.RuneCountInString(key) == 1 {
 				r, _ := utf8.DecodeLastRuneInString(buffer)
 				buffer += key
 				buflen += len(key)
-				cursor += runewidth.RuneWidth(r)
+				cursor += Runewidth(r)
 			}
 		}
 		if callback != nil {
