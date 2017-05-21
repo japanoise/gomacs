@@ -67,10 +67,22 @@ func Runewidth(ru rune) int {
 	}
 }
 
+func PrintRune(x, y int, ru rune, col termbox.Attribute) {
+	if unicode.IsControl(ru) || !utf8.ValidRune(ru) {
+		sym := '?'
+		if ru <= rune(26) {
+			sym = '@' + ru
+		}
+		termbox.SetCell(x, y, sym, termbox.AttrReverse, termbox.ColorDefault)
+	} else {
+		termbox.SetCell(x, y, ru, col, termbox.ColorDefault)
+	}
+}
+
 func printstring(s string, x, y int) {
 	i := 0
 	for _, ru := range s {
-		termbox.SetCell(x+i, y, ru, termbox.ColorDefault, termbox.ColorDefault)
+		PrintRune(x+i, y, ru, termbox.ColorDefault)
 		i += Runewidth(ru)
 	}
 }
@@ -91,16 +103,7 @@ func trimString(s string, coloff int) (string, int) {
 func hlprint(s string, hl []EmacsColor, x, y int) {
 	i := 0
 	for in, ru := range s {
-		if unicode.IsControl(ru) || !utf8.ValidRune(ru) {
-			sym := '?'
-			if ru <= rune(26) {
-				sym = '@' + ru
-			}
-			termbox.SetCell(x+i, y, sym, termbox.AttrReverse, termbox.ColorDefault)
-		} else {
-			col := editorSyntaxToColor(hl[in])
-			termbox.SetCell(x+i, y, ru, col, termbox.ColorDefault)
-		}
+		PrintRune(x+i, y, ru, editorSyntaxToColor(hl[in]))
 		i += Runewidth(ru)
 	}
 }
@@ -163,11 +166,7 @@ func editorDrawStatusLine(x, y int, buf *EditorBuffer) {
 }
 
 func editorDrawPrompt(y int) {
-	rx := 0
-	for _, ru := range Global.Prompt + "-> " + Global.Input {
-		termbox.SetCell(rx, y-1, ru, termbox.ColorDefault, termbox.ColorDefault)
-		rx += Runewidth(ru)
-	}
+	printstring(Global.Prompt+"-> "+Global.Input, 0, y-1)
 }
 
 func editorScroll(sx, sy int) {
