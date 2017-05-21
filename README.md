@@ -64,7 +64,7 @@ yet - I'll try to keep this list up to date!
 - `C-p` or `UP` - Move cursor to previous line
 - `C-n` or `DOWN` - Move cursor to next line
 - `C-v` or `next` (Page Down) - Move cursor forward a screen
-- `M-v` or `prior` (Pagu Up) - Move cursor backward a screen
+- `M-v` or `prior` (Page Up) - Move cursor backward a screen
 - `C-s` - Incremental search
 - `M-<` - Go to start of buffer
 - `M->` - Go to end of buffer
