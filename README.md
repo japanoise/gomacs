@@ -28,12 +28,22 @@ Currently, the only supported option is -s, which disables syntax highlighting.
 Gomacs uses the standard Emacs keybindings. Of course, not all are implemented
 yet - I'll try to keep this list up to date!
 
-- `C-s` - Incremental search
-- `M-<` - Go to start of buffer
-- `M->` - Go to end of buffer
-- `C-l` - Centre view on current line
-- `C-x C-s` - save changes
-- `C-x C-c` - quit
+### Basics
+
+- `C-g` - Cancel an action/keybinding/whatever
+- `C-x C-c` - Save buffers and quit
+- `C-x C-s` - Save buffer
+- `C-_` - Undo (`C-/` also works)
+- `C-x C-_` - Redo (`C-x C-/` also works)
+- `C-z` - Suspend Gomacs (Linux only)
+- `M-x` - Run named command
+- `<f12>` - Panic key - quit emacs immediately without saving changes. Useful if
+  Zygomys falls down (which may happen if you do a lot of hacking on the editor's
+  internals)
+- `C-h c` - Describe keybinding briefly
+
+### View operations
+
 - `C-x C-f` - find file
 - `C-x b` - switch buffer
 - `C-x k` - kill buffer
@@ -43,23 +53,38 @@ yet - I'll try to keep this list up to date!
 - `C-x 1` - maximise selected window (deleting the others)
 - `C-x 4 C-f` - find file in other window (creating one if there's only one window)
 - `C-x 4 b` - switch buffer in other window
-- `C-_` - Undo (`C-/` also works)
-- `C-x C-_` - Redo (`C-x C-/` also works)
-- `C-@` - Set Mark (`C-<space>` also works)
-- `C-w` - Kill (cut) region between mark and cursor
-- `M-w` - Copy region between mark and cursor
-- `C-y` - Yank (paste) previously copied or killed region
+- `C-l` - Centre view on current line
+
+### Cursor Movement
+
+- `C-f` or `RIGHT` - Move cursor forward one character
+- `M-f` - Move cursor forward one word
+- `C-b` or `LEFT` - Move cursor backward one character
+- `M-b` - Move cursor backward one word
+- `C-p` or `UP` - Move cursor to previous line
+- `C-n` or `DOWN` - Move cursor to next line
+- `C-v` or `next` (Page Down) - Move cursor forward a screen
+- `M-v` or `prior` (Pagu Up) - Move cursor backward a screen
+- `C-s` - Incremental search
+- `M-<` - Go to start of buffer
+- `M->` - Go to end of buffer
+
+### Deletion
+
+- `C-d` or `deletechar` - Delete forwards
+- `backspace` - Delete backwards
 - `M-d` - Delete forward word
 - `M-<backspace>` or `M-D` (Meta-Shift-D) - delete backward word (`M-<deletechar>`
   does not work due to a fault either in Termbox or my terminal. If it works in
   your terminal, feel free to bind it.)
 - `C-k` - Delete to end of line
-- `<f12>` - Panic key - quit emacs immediately without saving changes. Useful if
-  Zygomys falls down (which may happen if you do a lot of hacking on the editor's
-  internals)
-- `C-z` - Suspend Gomacs (Linux only)
-- `M-x` - Run named command
-- `C-h c` - Describe keybinding briefly
+
+### Region operations
+
+- `C-@` - Set Mark (`C-<space>` also works)
+- `C-w` - Kill (cut) region between mark and cursor
+- `M-w` - Copy region between mark and cursor
+- `C-y` - Yank (paste) previously copied or killed region
 
 ## Customization
 
@@ -67,7 +92,7 @@ Emacs loads from ~/.gomacs.lisp on startup and executes the content of this file
 Check out the Zygomys documentation for information on how the language works!
 Some functions to get you started…
 
-- `(emacsbindkey arg1 arg2..)` - Bind arg1 (in standard Emacs C-*/M-* notation,
+- `(emacsbindkey arg1 arg2..)` - Bind arg1 (in standard Emacs C-\*/M-\* notation,
   subsequent keypresses space seperated) to the Lisp function or named command
   arg2. arg1 must be a string; arg2 can be a function or a string. If arg2 is a
   function, any additional args will be used as its arguments when run.
