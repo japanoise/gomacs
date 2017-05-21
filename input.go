@@ -133,49 +133,62 @@ func editorChoiceIndex(title string, choices []string, def int) int {
 
 func ParseTermboxEvent(ev termbox.Event) string {
 	if ev.Ch == 0 {
+		prefix := ""
+		if ev.Mod == termbox.ModAlt {
+			prefix = "M-"
+		}
 		switch ev.Key {
 		case termbox.KeyBackspace:
 		case termbox.KeyBackspace2:
-			if ev.Mod == termbox.ModAlt {
-				return fmt.Sprintf("M-DEL")
-			}
-			return "DEL"
+			return prefix + "DEL"
 		case termbox.KeyTab:
-			return "TAB"
+			return prefix + "TAB"
 		case termbox.KeyEnter:
-			return "RET"
+			return prefix + "RET"
 		case termbox.KeyArrowDown:
-			return "DOWN"
+			return prefix + "DOWN"
 		case termbox.KeyArrowUp:
-			return "UP"
+			return prefix + "UP"
 		case termbox.KeyArrowLeft:
-			return "LEFT"
+			return prefix + "LEFT"
 		case termbox.KeyArrowRight:
-			return "RIGHT"
+			return prefix + "RIGHT"
 		case termbox.KeyPgdn:
-			return "next"
+			return prefix + "next"
 		case termbox.KeyPgup:
-			return "prior"
+			return prefix + "prior"
 		case termbox.KeyHome:
-			return "Home"
+			return prefix + "Home"
 		case termbox.KeyEnd:
-			return "End"
+			return prefix + "End"
 		case termbox.KeyDelete:
-			if ev.Mod == termbox.ModAlt {
-				return fmt.Sprintf("M-deletechar")
-			}
-			return "deletechar"
+			return prefix + "deletechar"
 		case termbox.KeyInsert:
-			return "insert"
+			return prefix + "insert"
 		case termbox.KeyCtrlUnderscore:
-			return "C-_"
+			if ev.Mod == termbox.ModAlt {
+				return "C-M-_"
+			} else {
+				return "C-_"
+			}
 		case termbox.KeyCtrlSpace:
-			return "C-@" // ikr, weird. but try: C-h c, C-SPC. it's C-@.
+			if ev.Mod == termbox.ModAlt {
+				return "C-M-@" // ikr, weird. but try: C-h c, C-SPC. it's C-@.
+			} else {
+				return "C-@"
+			}
 		case termbox.KeySpace:
+			if ev.Mod == termbox.ModAlt {
+				return "M-SPC"
+			}
 			return " "
 		}
 		if ev.Key <= 0x1A {
-			return fmt.Sprintf("C-%c", 96+ev.Key)
+			if ev.Mod == termbox.ModAlt {
+				return fmt.Sprintf("C-M-%c", 96+ev.Key)
+			} else {
+				return fmt.Sprintf("C-%c", 96+ev.Key)
+			}
 		} else if ev.Key <= termbox.KeyF1 && ev.Key >= termbox.KeyF12 {
 			if ev.Mod == termbox.ModAlt {
 				return fmt.Sprintf("M-f%d", 1+(termbox.KeyF1-ev.Key))
