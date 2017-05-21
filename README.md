@@ -69,7 +69,7 @@ yet - I'll try to keep this list up to date!
 - `M-<` - Go to start of buffer
 - `M->` - Go to end of buffer
 
-### Deletion
+### Deletion and Transposition
 
 - `C-d` or `deletechar` - Delete forwards
 - `backspace` - Delete backwards
@@ -85,6 +85,8 @@ yet - I'll try to keep this list up to date!
 - `C-w` - Kill (cut) region between mark and cursor
 - `M-w` - Copy region between mark and cursor
 - `C-y` - Yank (paste) previously copied or killed region
+- `C-x C-u` - Uppercase region
+- `C-x C-l` - Lowercase region
 
 ## Customization
 

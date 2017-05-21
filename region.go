@@ -93,30 +93,25 @@ func markAhead(buf *EditorBuffer) bool {
 	}
 }
 
-func doKillRegion() {
+func regionCmd(c func(*EditorBuffer, int, int, int, int)) {
 	buf := Global.CurrentB
 	if !validMark(buf) {
 		Global.Input = "Invalid mark position"
 		return
 	}
 	if markAhead(buf) {
-		bufKillRegion(buf, buf.cx, buf.MarkX, buf.cy, buf.MarkY)
+		c(buf, buf.cx, buf.MarkX, buf.cy, buf.MarkY)
 	} else {
-		bufKillRegion(buf, buf.MarkX, buf.cx, buf.MarkY, buf.cy)
+		c(buf, buf.MarkX, buf.cx, buf.MarkY, buf.cy)
 	}
 }
 
+func doKillRegion() {
+	regionCmd(bufKillRegion)
+}
+
 func doCopyRegion() {
-	buf := Global.CurrentB
-	if !validMark(buf) {
-		Global.Input = "Invalid mark position"
-		return
-	}
-	if markAhead(buf) {
-		bufCopyRegion(buf, buf.cx, buf.MarkX, buf.cy, buf.MarkY)
-	} else {
-		bufCopyRegion(buf, buf.MarkX, buf.cx, buf.MarkY, buf.cy)
-	}
+	regionCmd(bufCopyRegion)
 }
 
 func spitRegion(cx, cy int, region string) {
@@ -154,4 +149,25 @@ func killToEol() {
 	} else {
 		rowDelRange(Global.CurrentB.Rows[cy], cx, Global.CurrentB.Rows[cy].Size, Global.CurrentB)
 	}
+}
+
+func transposeRegion(buf *EditorBuffer, startc, endc, startl, endl int, trans func(string) string) {
+	clip := Global.Clipboard
+	bufKillRegion(buf, startc, endc, startl, endl)
+	spitRegion(startc, startl, trans(Global.Clipboard))
+	Global.Clipboard = clip
+}
+
+func transposeRegionCmd(trans func(string) string) {
+	regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) {
+		transposeRegion(buf, startc, endc, startl, endl, trans)
+	})
+}
+
+func doUCRegion() {
+	transposeRegionCmd(strings.ToUpper)
+}
+
+func doLCRegion() {
+	transposeRegionCmd(strings.ToLower)
 }
