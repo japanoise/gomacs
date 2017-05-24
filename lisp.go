@@ -188,6 +188,54 @@ func lispGetTabStr(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, e
 	return zygo.GoToSexp(getTabString(), env)
 }
 
+func lispSetMode(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	if len(args) == 1 {
+		var modename string
+		switch t := args[0].(type) {
+		case *zygo.SexpStr:
+			modename = StrToCmdName(t.S)
+		default:
+			return zygo.SexpNull, errors.New("Arg needs to be a string")
+		}
+		Global.CurrentB.toggleMode(modename)
+		return zygo.SexpNull, nil
+	} else if len(args) == 2 {
+		var modename string
+		switch t := args[0].(type) {
+		case *zygo.SexpStr:
+			modename = StrToCmdName(t.S)
+		default:
+			return zygo.SexpNull, errors.New("Arg 1 needs to be a string")
+		}
+		var enabled bool
+		switch t := args[1].(type) {
+		case *zygo.SexpBool:
+			enabled = bool(t.Val)
+		default:
+			return zygo.SexpNull, errors.New("Arg 2 needs to be a bool")
+		}
+		Global.CurrentB.setMode(modename, enabled)
+		return zygo.SexpNull, nil
+	}
+	return zygo.SexpNull, zygo.WrongNargs
+}
+
+func lispHasMode(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	if len(args) != 1 {
+		return zygo.SexpNull, zygo.WrongNargs
+	}
+	switch t := args[0].(type) {
+	case *zygo.SexpStr:
+		return zygo.GoToSexp(Global.CurrentB.hasMode(StrToCmdName(t.S)), env)
+	default:
+		return zygo.SexpNull, errors.New("Arg needs to be a string")
+	}
+}
+
+func lispListModes(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	return zygo.GoToSexp(Global.CurrentB.getEnabledModes(), env)
+}
+
 func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
 	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", EditorQuit)
@@ -201,6 +249,9 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("unbindall", lispSingleton(func() { Emacs.UnbindAll() }))
 	env.AddFunction("emacsdefinecmd", lispDefineCmd)
 	env.AddFunction("runemacscmd", lispRunCommand)
+	env.AddFunction("setmode", lispSetMode)
+	env.AddFunction("hasmode", lispHasMode)
+	env.AddFunction("listmodes", lispListModes)
 	DefineCommand(&CommandFunc{"describe-key-briefly", func(env *zygo.Glisp) { DescribeKeyBriefly() }})
 	DefineCommand(&CommandFunc{"run-command", RunCommand})
 	DefineCommand(&CommandFunc{"redo", func(env *zygo.Glisp) { editorRedoAction() }})
@@ -241,6 +292,12 @@ func loadLispFunctions(env *zygo.Glisp) {
 	DefineCommand(&CommandFunc{"upcase-region", func(*zygo.Glisp) { doUCRegion() }})
 	DefineCommand(&CommandFunc{"upcase-word", func(*zygo.Glisp) { upcaseWord() }})
 	DefineCommand(&CommandFunc{"downcase-word", func(*zygo.Glisp) { downcaseWord() }})
+	DefineCommand(&CommandFunc{"toggle-mode", func(*zygo.Glisp) {
+		mode := editorPrompt("Which mode?", nil)
+		Global.CurrentB.toggleMode(StrToCmdName(mode))
+	}})
+	DefineCommand(&CommandFunc{"show-modes", func(*zygo.Glisp) { showModes() }})
+	DefineCommand(&CommandFunc{"indent-mode", func(*zygo.Glisp) { doToggleMode("indent-mode") }})
 }
 
 func NewLispInterp() *zygo.Glisp {

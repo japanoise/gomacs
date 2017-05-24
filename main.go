@@ -39,6 +39,7 @@ type EditorBuffer struct {
 	Redo     *EditorUndo
 	MarkX    int
 	MarkY    int
+	Modes    ModeList
 }
 
 type EditorState struct {
@@ -525,6 +526,16 @@ func editorDelChar() {
 	}
 }
 
+func getIndentation(s string) string {
+	ret := ""
+	for _, ru := range s {
+		if ru == ' ' || ru == '\t' {
+			ret += string(ru)
+		}
+	}
+	return ret
+}
+
 func editorInsertNewline() {
 	if Global.CurrentB.cy == Global.CurrentB.NumRows {
 		return
@@ -534,17 +545,22 @@ func editorInsertNewline() {
 		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx,
 			Global.CurrentB.cy, Global.CurrentB.cy+1, row.Data)
 		editorInsertRow(Global.CurrentB.cy, "")
+		Global.CurrentB.cx = 0
 	} else {
 		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx,
 			Global.CurrentB.cy, Global.CurrentB.cy+1, row.Data[Global.CurrentB.cx:])
-		editorInsertRow(Global.CurrentB.cy+1, row.Data[Global.CurrentB.cx:])
+		pre := ""
+		if Global.CurrentB.hasMode("indent-mode") {
+			pre = getIndentation(row.Data[:Global.CurrentB.cx])
+		}
+		editorInsertRow(Global.CurrentB.cy+1, pre+row.Data[Global.CurrentB.cx:])
 		row = Global.CurrentB.Rows[Global.CurrentB.cy]
 		row.Size = Global.CurrentB.cx
 		row.Data = row.Data[0:Global.CurrentB.cx]
 		editorUpdateRow(row)
+		Global.CurrentB.cx = len(pre)
 	}
 	Global.CurrentB.cy++
-	Global.CurrentB.cx = 0
 }
 
 func EditorOpen(filename string) error {
