@@ -330,6 +330,7 @@ func loadLispFunctions(env *zygo.Glisp) {
 	}})
 	DefineCommand(&CommandFunc{"show-modes", func(*zygo.Glisp) { showModes() }})
 	DefineCommand(&CommandFunc{"indent-mode", func(*zygo.Glisp) { doToggleMode("indent-mode") }})
+	DefineCommand(&CommandFunc{"line-number-mode", func(*zygo.Glisp) { doToggleMode("line-number-mode") }})
 }
 
 func NewLispInterp() *zygo.Glisp {

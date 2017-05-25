@@ -110,17 +110,28 @@ func hlprint(s string, hl []EmacsColor, x, y int) {
 	}
 }
 
-func editorDrawRows(starty, sy int, buf *EditorBuffer) {
+func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 	for y := starty; y < sy; y++ {
 		filerow := (y - starty) + buf.rowoff
 		if filerow >= buf.NumRows {
 			if buf.coloff == 0 {
-				termbox.SetCell(0, y, '~', termbox.ColorBlue, termbox.ColorDefault)
+				termbox.SetCell(gutsize, y, '~', termbox.ColorBlue, termbox.ColorDefault)
 			}
 		} else {
+			if gutsize > 0 {
+				if buf.hasMode("gdi") {
+					printstring(string(buf.Rows[filerow].idx), 0, y)
+				} else {
+					printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx), gutsize-2), 0, y)
+				}
+				PrintRune(gutsize-2, y, '│', termbox.ColorDefault)
+				if buf.coloff > 0 {
+					PrintRune(gutsize-1, y, '←', termbox.ColorDefault)
+				}
+			}
 			if buf.coloff < buf.Rows[filerow].RenderSize {
 				r, off := trimString(buf.Rows[filerow].Render, buf.coloff)
-				hlprint(r, buf.Rows[filerow].Hl[off:], 0, y)
+				hlprint(r, buf.Rows[filerow].Hl[off:], gutsize, y)
 			}
 		}
 	}
@@ -198,19 +209,23 @@ func editorRefreshScreen() {
 	numwin := len(Global.Windows)
 	winheight := yrows / numwin
 	for i, win := range Global.Windows {
+		gutter := 0
+		if win.hasMode("line-number-mode") {
+			gutter = GetGutterWidth(win.NumRows)
+		}
 		starth := 0
 		if i >= 1 {
 			starth = 1 + winheight*i
 			editorDrawStatusLine(x, winheight*i, Global.Windows[i-1])
-			editorScroll(x, winheight-1)
+			editorScroll(x-gutter, winheight-1)
 		} else {
-			editorScroll(x, winheight)
+			editorScroll(x-gutter, winheight)
 		}
 		if win == Global.CurrentB {
 			Global.CurrentBHeight = winheight
-			termbox.SetCursor(Global.CurrentB.rx-Global.CurrentB.coloff, starth+Global.CurrentB.cy-Global.CurrentB.rowoff)
+			termbox.SetCursor(Global.CurrentB.rx-Global.CurrentB.coloff+gutter, starth+Global.CurrentB.cy-Global.CurrentB.rowoff)
 		}
-		editorDrawRows(starth, winheight*(i+1)+1, win)
+		editorDrawRows(starth, winheight*(i+1)+1, win, gutter)
 	}
 	editorDrawStatusLine(x, y-2, Global.Windows[numwin-1])
 	editorDrawPrompt(y)
