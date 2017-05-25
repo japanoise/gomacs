@@ -531,6 +531,8 @@ func getIndentation(s string) string {
 	for _, ru := range s {
 		if ru == ' ' || ru == '\t' {
 			ret += string(ru)
+		} else {
+			return ret
 		}
 	}
 	return ret
