@@ -188,6 +188,36 @@ func lispGetTabStr(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, e
 	return zygo.GoToSexp(getTabString(), env)
 }
 
+func lispAddDefaultMode(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	if len(args) == 1 {
+		var modename string
+		switch t := args[0].(type) {
+		case *zygo.SexpStr:
+			modename = StrToCmdName(t.S)
+		default:
+			return zygo.SexpNull, errors.New("Arg needs to be a string")
+		}
+		addDefaultMode(modename)
+		return zygo.SexpNull, nil
+	}
+	return zygo.SexpNull, zygo.WrongNargs
+}
+
+func lispRemDefaultMode(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+	if len(args) == 1 {
+		var modename string
+		switch t := args[0].(type) {
+		case *zygo.SexpStr:
+			modename = StrToCmdName(t.S)
+		default:
+			return zygo.SexpNull, errors.New("Arg needs to be a string")
+		}
+		remDefaultMode(modename)
+		return zygo.SexpNull, nil
+	}
+	return zygo.SexpNull, zygo.WrongNargs
+}
+
 func lispSetMode(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
 	if len(args) == 1 {
 		var modename string
@@ -252,6 +282,8 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("setmode", lispSetMode)
 	env.AddFunction("hasmode", lispHasMode)
 	env.AddFunction("listmodes", lispListModes)
+	env.AddFunction("adddefaultmode", lispAddDefaultMode)
+	env.AddFunction("remdefaultmode", lispRemDefaultMode)
 	DefineCommand(&CommandFunc{"describe-key-briefly", func(env *zygo.Glisp) { DescribeKeyBriefly() }})
 	DefineCommand(&CommandFunc{"run-command", RunCommand})
 	DefineCommand(&CommandFunc{"redo", func(env *zygo.Glisp) { editorRedoAction() }})

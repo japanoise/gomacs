@@ -54,6 +54,7 @@ type EditorState struct {
 	CurrentBHeight int
 	Clipboard      string
 	SoftTab        bool
+	DefaultModes   map[string]bool
 }
 
 var Global EditorState
@@ -700,7 +701,8 @@ func getTabString() string {
 
 func InitEditor() {
 	buffer := &EditorBuffer{}
-	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "", false, []*EditorBuffer{buffer}, 0, "", false}
+	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
+		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool)}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
 	funcnames = make(map[string]*CommandFunc)

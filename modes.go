@@ -4,10 +4,16 @@ type ModeList map[string]bool
 
 func (e *EditorBuffer) hasMode(mode string) bool {
 	if e.Modes == nil {
-		e.Modes = make(ModeList)
-		return false
+		e.AddDefaultModes()
 	}
 	return e.Modes[mode]
+}
+
+func (e *EditorBuffer) AddDefaultModes() {
+	e.Modes = make(map[string]bool)
+	for mode, enabled := range Global.DefaultModes {
+		e.Modes[mode] = enabled
+	}
 }
 
 func (e *EditorBuffer) toggleMode(mode string) bool {
@@ -47,4 +53,12 @@ func (e *EditorBuffer) getEnabledModes() []string {
 
 func showModes() {
 	editorChoiceIndex("Modes in current buffer", Global.CurrentB.getEnabledModes(), 0)
+}
+
+func addDefaultMode(mode string) {
+	Global.DefaultModes[mode] = true
+}
+
+func remDefaultMode(mode string) {
+	Global.DefaultModes[mode] = false
 }
