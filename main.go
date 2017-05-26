@@ -210,7 +210,7 @@ func editorRefreshScreen() {
 	winheight := yrows / numwin
 	for i, win := range Global.Windows {
 		gutter := 0
-		if win.hasMode("line-number-mode") {
+		if win.hasMode("line-number-mode") && win.NumRows > 0 {
 			gutter = GetGutterWidth(win.NumRows)
 		}
 		starth := 0
