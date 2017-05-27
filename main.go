@@ -5,12 +5,12 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"github.com/japanoise/termbox-util"
 	"github.com/mattn/go-runewidth"
 	"github.com/mitchellh/go-homedir"
 	"github.com/nsf/termbox-go"
 	"os"
 	"strings"
-	"unicode"
 	"unicode/utf8"
 )
 
@@ -60,35 +60,6 @@ type EditorState struct {
 var Global EditorState
 var Emacs *CommandList
 
-func Runewidth(ru rune) int {
-	rw := runewidth.RuneWidth(ru)
-	if rw <= 0 {
-		return 1
-	} else {
-		return rw
-	}
-}
-
-func PrintRune(x, y int, ru rune, col termbox.Attribute) {
-	if unicode.IsControl(ru) || !utf8.ValidRune(ru) {
-		sym := '?'
-		if ru <= rune(26) {
-			sym = '@' + ru
-		}
-		termbox.SetCell(x, y, sym, termbox.AttrReverse, termbox.ColorDefault)
-	} else {
-		termbox.SetCell(x, y, ru, col, termbox.ColorDefault)
-	}
-}
-
-func printstring(s string, x, y int) {
-	i := 0
-	for _, ru := range s {
-		PrintRune(x+i, y, ru, termbox.ColorDefault)
-		i += Runewidth(ru)
-	}
-}
-
 func trimString(s string, coloff int) (string, int) {
 	if coloff == 0 {
 		return s, 0
@@ -105,8 +76,8 @@ func trimString(s string, coloff int) (string, int) {
 func hlprint(s string, hl []EmacsColor, x, y int) {
 	i := 0
 	for in, ru := range s {
-		PrintRune(x+i, y, ru, editorSyntaxToColor(hl[in]))
-		i += Runewidth(ru)
+		termutil.PrintRune(x+i, y, ru, editorSyntaxToColor(hl[in]))
+		i += termutil.Runewidth(ru)
 	}
 }
 
@@ -120,13 +91,13 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 		} else {
 			if gutsize > 0 {
 				if buf.hasMode("gdi") {
-					printstring(string(buf.Rows[filerow].idx), 0, y)
+					termutil.Printstring(string(buf.Rows[filerow].idx), 0, y)
 				} else {
-					printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx), gutsize-2), 0, y)
+					termutil.Printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx), gutsize-2), 0, y)
 				}
-				PrintRune(gutsize-2, y, '│', termbox.ColorDefault)
+				termutil.PrintRune(gutsize-2, y, '│', termbox.ColorDefault)
 				if buf.coloff > 0 {
-					PrintRune(gutsize-1, y, '←', termbox.ColorDefault)
+					termutil.PrintRune(gutsize-1, y, '←', termbox.ColorDefault)
 				}
 			}
 			if buf.coloff < buf.Rows[filerow].RenderSize {
@@ -166,7 +137,7 @@ func editorDrawStatusLine(x, y int, buf *EditorBuffer) {
 	rx := 0
 	for _, ru = range line {
 		termbox.SetCell(rx, y, ru, termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
-		rx += Runewidth(ru)
+		rx += termutil.Runewidth(ru)
 	}
 	termbox.SetCell(rx, y, ' ', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
 	for ix := rx + 1; ix < x; ix++ {
@@ -179,7 +150,7 @@ func editorDrawStatusLine(x, y int, buf *EditorBuffer) {
 }
 
 func editorDrawPrompt(y int) {
-	printstring(Global.Prompt+"-> "+Global.Input, 0, y-1)
+	termutil.Printstring(Global.Prompt+"-> "+Global.Input, 0, y-1)
 }
 
 func editorScroll(sx, sy int) {
@@ -384,7 +355,7 @@ func editorRowCxToRx(row *EditorRow) int {
 			rx += (Global.Tabsize - 1) - (rx % Global.Tabsize)
 			rx++
 		} else {
-			rx += Runewidth(rv)
+			rx += termutil.Runewidth(rv)
 		}
 	}
 	return rx
@@ -641,6 +612,7 @@ var saved_hl_line int
 var saved_hl []EmacsColor = nil
 
 func editorFindCallback(query string, key string) {
+	Global.Input = query
 	if saved_hl != nil {
 		Global.CurrentB.Rows[saved_hl_line].Hl = saved_hl
 		saved_hl = nil
@@ -649,8 +621,11 @@ func editorFindCallback(query string, key string) {
 		direction = 1
 	} else if key == "C-r" {
 		direction = -1
-		//If it's an unprintable character, and we're not just ammending the string...
-	} else if utf8.RuneCountInString(key) > 1 && key != "DEL" {
+		//If we cancelled or finished...
+	} else if key == "C-c" || key == "C-g" || key == "RET" {
+		if key == "C-c" || key == "C-g" {
+			Global.Input = "Cancelled search."
+		}
 		//...outta here!
 		last_match = -1
 		direction = 1
