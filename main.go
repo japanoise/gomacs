@@ -130,6 +130,9 @@ func GetScreenSize() (int, int) {
 
 func editorDrawStatusLine(x, y int, buf *EditorBuffer) {
 	line := editorUpdateStatus(buf)
+	if buf.hasMode("terminal-title-mode") {
+		fmt.Printf("\033]0;%s - gomacs\a", buf.getFilename())
+	}
 	var ru rune
 	rx := 0
 	for _, ru = range line {
@@ -690,6 +693,7 @@ func InitEditor() {
 	buffer := &EditorBuffer{}
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
 		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool)}
+	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true
 	funcnames = make(map[string]*CommandFunc)
