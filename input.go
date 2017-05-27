@@ -41,6 +41,11 @@ func editorChoiceIndex(title string, choices []string, def int) int {
 	return termutil.ChoiceIndex(title, choices, def)
 }
 
+func showMessages(mesgs ...string) {
+	termutil.DisplayScreenMessage(mesgs...)
+	termbox.PollEvent()
+}
+
 func ParseTermboxEvent(ev termbox.Event) string {
 	return termutil.ParseTermboxEvent(ev)
 }

@@ -52,7 +52,8 @@ func (e *EditorBuffer) getEnabledModes() []string {
 }
 
 func showModes() {
-	editorChoiceIndex("Modes in current buffer", Global.CurrentB.getEnabledModes(), 0)
+	showMessages(append([]string{"Modes for " + Global.CurrentB.Filename,
+		""}, Global.CurrentB.getEnabledModes()...)...)
 }
 
 func addDefaultMode(mode string) {
