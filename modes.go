@@ -52,8 +52,13 @@ func (e *EditorBuffer) getEnabledModes() []string {
 }
 
 func showModes() {
-	showMessages(append([]string{"Modes for " + Global.CurrentB.Filename,
-		""}, Global.CurrentB.getEnabledModes()...)...)
+	modes := Global.CurrentB.getEnabledModes()
+	if len(modes) == 0 {
+		Global.Input = "Current buffer has no modes enabled."
+	} else {
+		showMessages(append([]string{"Modes for " +
+			Global.CurrentB.getFilename(), ""}, modes...)...)
+	}
 }
 
 func addDefaultMode(mode string) {

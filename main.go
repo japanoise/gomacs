@@ -109,10 +109,7 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 }
 
 func editorUpdateStatus(buf *EditorBuffer) string {
-	fn := buf.Filename
-	if fn == "" {
-		fn = "*unnamed file*"
-	}
+	fn := buf.getFilename()
 	syn := "no ft"
 	if buf.Syntax != nil {
 		syn = buf.Syntax.filetype
@@ -295,7 +292,7 @@ func EditorQuit() {
 	nodirty := true
 	for _, buf := range Global.Buffers {
 		if buf.Dirty {
-			ds, cancel := editorYesNoPrompt(fmt.Sprintf("%s has unsaved changes; save them?", buf.Filename), true)
+			ds, cancel := editorYesNoPrompt(fmt.Sprintf("%s has unsaved changes; save them?", buf.getFilename()), true)
 			if ds && cancel == nil {
 				editorBufSave(buf)
 			} else if cancel != nil {

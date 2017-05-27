@@ -60,6 +60,13 @@ func editorFindFile() {
 	EditorOpen(fn)
 }
 
+func (e *EditorBuffer) getFilename() string {
+	if e.Filename == "" {
+		return "*unnamed buffer*"
+	}
+	return e.Filename
+}
+
 func bufferChoiceList() ([]string, int) {
 	choices := []string{}
 	def := 0
@@ -71,11 +78,7 @@ func bufferChoiceList() ([]string, int) {
 		if buf.Dirty {
 			d = "[M] "
 		}
-		if buf.Filename == "" {
-			choices = append(choices, d+"*unnamed buffer*")
-		} else {
-			choices = append(choices, d+buf.Filename)
-		}
+		choices = append(choices, d+buf.getFilename())
 	}
 	return choices, def
 }

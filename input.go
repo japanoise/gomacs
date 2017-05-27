@@ -34,7 +34,9 @@ func editorGetKeyNoRefresh() string {
 }
 
 func editorPrompt(prompt string, callback func(string, string)) string {
-	return termutil.PromptWithCallback(prompt, func(int, int) { editorRefreshScreen() }, callback)
+	ret := termutil.PromptWithCallback(prompt, func(int, int) { editorRefreshScreen() }, callback)
+	Global.Input = ret
+	return ret
 }
 
 func editorChoiceIndex(title string, choices []string, def int) int {
@@ -42,6 +44,7 @@ func editorChoiceIndex(title string, choices []string, def int) int {
 }
 
 func showMessages(mesgs ...string) {
+	termbox.HideCursor()
 	termutil.DisplayScreenMessage(mesgs...)
 	termbox.PollEvent()
 }
