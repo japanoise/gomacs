@@ -113,6 +113,9 @@ command.
 
 ## Input
 
+The input functionality comes from my library
+[termutil.](https://github.com/japanoise/termbox-util)
+
 ### Keys
 
 Key commands are generally expected to be stored in a string in the usual emacs
@@ -157,3 +160,15 @@ environment. This allows us to name commands for use with `M-x` or `C-h c`.
 
 It's strongly recommended that you define commands and then bind them to keys,
 rather than using lisp functions, because `C-h c` can't access the lisp code.
+
+## Modes
+
+Modes are stored as a simple map of strings to booleans, for fairly fast access.
+They can be toggled with the command `toggle-mode`, and you can view the current
+buffer's activated modes with the `show-modes` command. Here are the modes
+implemented in the Go code:
+
+- `terminal-title-mode` - use an escape sequence to set the terminal title.
+- `line-number-mode` - display line numbers on the left edge of the buffer.
+- `auto-indent-mode` - copy indentation from previous line when inserting a
+  newline.
