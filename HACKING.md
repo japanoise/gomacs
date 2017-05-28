@@ -10,7 +10,12 @@
 - main.go - big ball of tar! Most row editing, buffer actions, etc done here, as
   well as the main loop. An ongoing project is to extract code from here and into
   dedicated files.
+- modes.go - dealing with modes
 - region.go - functions and commands for acting upon the selected region.
+- render.go - rendering functions
+- suspend.go - placeholder for non-Linux platforms (which don't have suspend
+  functionality)
+- suspend_linux.go - suspend functionality for Linux
 - syntax.go - syntax highlighting functionality lives here.
 - undo.go - creating, storing and destroying undo data. Doing undos and redos.
 - window.go - window manipulation code.
