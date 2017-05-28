@@ -12,7 +12,7 @@
   dedicated files.
 - modes.go - dealing with modes
 - region.go - functions and commands for acting upon the selected region.
-- render.go - rendering functions
+- render.go - rendering and drawing functions
 - suspend.go - placeholder for non-Linux platforms (which don't have suspend
   functionality)
 - suspend_linux.go - suspend functionality for Linux
