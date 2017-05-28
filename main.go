@@ -568,7 +568,7 @@ func main() {
 				continue
 			}
 			// Hack fixed (though we won't support any encoding save utf8)
-			if utf8.RuneCountInString(key) == 1 {
+			if !Global.CurrentB.hasMode("no-self-insert-mode") && utf8.RuneCountInString(key) == 1 {
 				editorInsertStr(key)
 				continue
 			}
