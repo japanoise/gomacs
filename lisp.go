@@ -49,27 +49,6 @@ func cmdAndLispFunc(e *zygo.Glisp, cmdname, lispname string, f func()) {
 	DefineCommand(&CommandFunc{cmdname, func(env *zygo.Glisp) { f() }})
 }
 
-func lispMvCurs(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
-	if len(args) != 2 {
-		return zygo.SexpNull, zygo.WrongNargs
-	}
-	var x, y int
-	switch t := args[0].(type) {
-	case *zygo.SexpInt:
-		x = int(t.Val)
-	default:
-		return zygo.SexpNull, errors.New("Arg 1 needs to be an int")
-	}
-	switch t := args[1].(type) {
-	case *zygo.SexpInt:
-		y = int(t.Val)
-	default:
-		return zygo.SexpNull, errors.New("Arg 2 needs to be an int")
-	}
-	MoveCursor(x, y)
-	return zygo.SexpNull, nil
-}
-
 func lispBindKey(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
 	if len(args) < 2 {
 		return zygo.SexpNull, zygo.WrongNargs
@@ -269,7 +248,6 @@ func lispListModes(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, e
 func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
 	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", EditorQuit)
-	env.AddFunction("emacsmvcurs", lispMvCurs)
 	env.AddFunction("emacsbindkey", lispBindKey)
 	env.AddFunction("emacsonlywindow", lispOnlyWindow)
 	env.AddFunction("settabstop", lispSetTabStop)
@@ -331,6 +309,10 @@ func loadLispFunctions(env *zygo.Glisp) {
 	DefineCommand(&CommandFunc{"show-modes", func(*zygo.Glisp) { showModes() }})
 	DefineCommand(&CommandFunc{"indent-mode", func(*zygo.Glisp) { doToggleMode("indent-mode") }})
 	DefineCommand(&CommandFunc{"line-number-mode", func(*zygo.Glisp) { doToggleMode("line-number-mode") }})
+	DefineCommand(&CommandFunc{"forward-char", func(*zygo.Glisp) { MoveCursor(1, 0) }})
+	DefineCommand(&CommandFunc{"backward-char", func(*zygo.Glisp) { MoveCursor(-1, 0) }})
+	DefineCommand(&CommandFunc{"next-line", func(*zygo.Glisp) { MoveCursor(0, 1) }})
+	DefineCommand(&CommandFunc{"previous-line", func(*zygo.Glisp) { MoveCursor(0, -1) }})
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -369,14 +351,14 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "C-s" "isearch")
 (emacsbindkey "C-x C-c" "save-buffers-kill-emacs")
 (emacsbindkey "C-x C-s" "save-buffer")
-(emacsbindkey "LEFT" emacsmvcurs -1 0)
-(emacsbindkey "C-b" emacsmvcurs -1 0)
-(emacsbindkey "RIGHT" emacsmvcurs 1 0)
-(emacsbindkey "C-f" emacsmvcurs 1 0)
-(emacsbindkey "DOWN" emacsmvcurs 0 1)
-(emacsbindkey "C-n" emacsmvcurs 0 1)
-(emacsbindkey "UP" emacsmvcurs 0 -1)
-(emacsbindkey "C-p" emacsmvcurs 0 -1)
+(emacsbindkey "LEFT" "backward-char")
+(emacsbindkey "C-b" "backward-char")
+(emacsbindkey "RIGHT" "forward-char")
+(emacsbindkey "C-f" "forward-char")
+(emacsbindkey "DOWN" "next-line")
+(emacsbindkey "C-n" "next-line")
+(emacsbindkey "UP" "previous-line")
+(emacsbindkey "C-p" "previous-line")
 (emacsbindkey "Home" "move-beginning-of-line")
 (emacsbindkey "End" "move-end-of-line")
 (emacsbindkey "C-a" "move-beginning-of-line")
