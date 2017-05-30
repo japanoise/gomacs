@@ -48,6 +48,10 @@ func editorFindFile() {
 	if fn == "" {
 		return
 	}
+	openFile(fn)
+}
+
+func openFile(fn string) {
 	buffer := &EditorBuffer{}
 	Global.Buffers = append(Global.Buffers, buffer)
 	i := getCurrentWindow()

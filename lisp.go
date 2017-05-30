@@ -332,6 +332,7 @@ hold Meta (Alt on modern keyboards) and press n.
 Current key bindings:
 `, WalkCommandTree(Emacs, ""))
 	}})
+	DefineCommand(&CommandFunc{"dired-mode", func(*zygo.Glisp) { DiredMode() }})
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -426,6 +427,7 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "C-h m" "show-modes")
 (emacsbindkey "C-h b" "describe-bindings")
 (emacsbindkey "f1" "quick-help")
+(emacsbindkey "C-x d" "dired-mode")
 `)
 	env.Run()
 }
