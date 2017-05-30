@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"github.com/glycerine/zygomys/repl"
 	"strings"
@@ -17,6 +18,19 @@ var funcnames map[string]*CommandFunc
 type CommandFunc struct {
 	Name string
 	Com  func(env *zygo.Glisp)
+}
+
+func WalkCommandTree(root *CommandList, pre string) string {
+	buf := bytes.Buffer{}
+	for k, v := range root.Children {
+		if v.Parent {
+			buf.WriteString(WalkCommandTree(v, pre+" "+k))
+		} else {
+			buf.WriteString(pre + " " + k + " - " + v.Command.Name)
+			buf.WriteRune('\n')
+		}
+	}
+	return buf.String()
 }
 
 func DefineCommand(command *CommandFunc) {

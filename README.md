@@ -40,7 +40,13 @@ yet - I'll try to keep this list up to date!
 - `<f12>` - Panic key - quit emacs immediately without saving changes. Useful if
   Zygomys falls down (which may happen if you do a lot of hacking on the editor's
   internals)
+
+### Getting help
+
+- `<f1>` - Quickhelp
+- `C-h b` - Show key bindings
 - `C-h c` - Describe keybinding briefly
+- `C-h m` - Show modes active in buffer
 
 ### View operations
 

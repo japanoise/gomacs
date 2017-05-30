@@ -313,6 +313,25 @@ func loadLispFunctions(env *zygo.Glisp) {
 	DefineCommand(&CommandFunc{"backward-char", func(*zygo.Glisp) { MoveCursor(-1, 0) }})
 	DefineCommand(&CommandFunc{"next-line", func(*zygo.Glisp) { MoveCursor(0, 1) }})
 	DefineCommand(&CommandFunc{"previous-line", func(*zygo.Glisp) { MoveCursor(0, -1) }})
+	DefineCommand(&CommandFunc{"describe-bindings", func(*zygo.Glisp) { showMessages(WalkCommandTree(Emacs, "")) }})
+	DefineCommand(&CommandFunc{"quick-help", func(*zygo.Glisp) {
+		showMessages(`Welcome to Gomacs - Go-powered emacs!
+
+If you've not edited your rc file (~/.gomacs.lisp), here are some emergency
+commands that should help you out. C-n means hold Ctrl and press n, M-n means
+hold Meta (Alt on modern keyboards) and press n.
+
+- C-x C-c - Save all buffers and quit emacs
+- C-x C-s - Save currently selected buffer
+- C-x C-f - Open a file (prompt)
+- C-@ (control-space) - Set mark to current cursor position
+- C-w - Kill (cut) the region (the space between the mark and cursor)
+- M-w - Copy the region
+- C-y - Yank (paste) the last thing you killed or copied.
+
+Current key bindings:
+`, WalkCommandTree(Emacs, ""))
+	}})
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -404,6 +423,9 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "C-x C-l" "downcase-region")
 (emacsbindkey "M-u" "upcase-word")
 (emacsbindkey "M-l" "downcase-word")
+(emacsbindkey "C-h m" "show-modes")
+(emacsbindkey "C-h b" "describe-bindings")
+(emacsbindkey "f1" "quick-help")
 `)
 	env.Run()
 }
