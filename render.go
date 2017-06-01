@@ -152,12 +152,41 @@ func editorDrawStatusLine(x, y int, buf *EditorBuffer) {
 		rx += termutil.Runewidth(ru)
 	}
 	termbox.SetCell(rx, y, ' ', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
-	for ix := rx + 1; ix < x; ix++ {
+	var ix int
+	for ix = rx + 1; ix < x-7; ix++ {
 		if buf == Global.CurrentB {
 			termbox.SetCell(ix, y, '-', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
 		} else {
 			termbox.SetCell(ix, y, ' ', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
 		}
+	}
+	el := calcEndLabel(buf)
+	for _, ru := range el {
+		termbox.SetCell(ix, y, ru, termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+		ix++
+	}
+	for ix < x {
+		if buf == Global.CurrentB {
+			termbox.SetCell(ix, y, '-', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+		} else {
+			termbox.SetCell(ix, y, ' ', termbox.ColorDefault|termbox.AttrReverse, termbox.ColorDefault)
+		}
+		ix++
+	}
+}
+
+func calcEndLabel(buf *EditorBuffer) string {
+	if buf.NumRows == 0 {
+		return " Emp "
+	} else if Global.CurrentBHeight >= buf.NumRows {
+		return " All "
+	} else if buf.rowoff+Global.CurrentBHeight >= buf.NumRows {
+		return " Bot "
+	} else if buf.rowoff == 0 {
+		return " Top "
+	} else {
+		perc := float64(buf.rowoff) / float64(buf.NumRows)
+		return fmt.Sprintf(" %2d%% ", int(perc*100))
 	}
 }
 
