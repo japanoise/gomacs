@@ -2,250 +2,255 @@ package main
 
 import (
 	"errors"
-	"github.com/glycerine/zygomys/repl"
+	"fmt"
 	"github.com/mitchellh/go-homedir"
+	"github.com/zhemao/glisp/interpreter"
 	"io/ioutil"
 )
 
-func lispPrint(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispPrint(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
-		return zygo.SexpNull, zygo.WrongNargs
+		return glisp.SexpNull, glisp.WrongNargs
 	}
 	switch t := args[0].(type) {
-	case *zygo.SexpStr:
-		Global.Input = t.S
+	case glisp.SexpStr:
+		Global.Input = string(t)
 	default:
-		return zygo.SexpNull, errors.New("Arg needs to be a string")
+		return glisp.SexpNull, errors.New("Arg needs to be a string")
 	}
-	return zygo.SexpNull, nil
+	return glisp.SexpNull, nil
 }
 
-func lispRunCommand(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispRunCommand(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
-		return zygo.SexpNull, zygo.WrongNargs
+		return glisp.SexpNull, glisp.WrongNargs
 	}
 	switch t := args[0].(type) {
-	case *zygo.SexpStr:
-		cn := StrToCmdName(t.S)
+	case glisp.SexpStr:
+		cn := StrToCmdName(string(t))
 		cmd := funcnames[cn]
 		if cmd != nil && cmd.Com != nil {
 			cmd.Com(env)
 		}
 	default:
-		return zygo.SexpNull, errors.New("Arg needs to be a string")
+		return glisp.SexpNull, errors.New("Arg needs to be a string")
 	}
-	return zygo.SexpNull, nil
+	return glisp.SexpNull, nil
 }
 
-func lispSingleton(f func()) zygo.GlispUserFunction {
-	return func(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispSingleton(f func()) glisp.GlispUserFunction {
+	return func(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 		f()
-		return zygo.SexpNull, nil
+		return glisp.SexpNull, nil
 	}
 }
 
-func cmdAndLispFunc(e *zygo.Glisp, cmdname, lispname string, f func()) {
+func cmdAndLispFunc(e *glisp.Glisp, cmdname, lispname string, f func()) {
 	e.AddFunction(lispname, lispSingleton(f))
-	DefineCommand(&CommandFunc{cmdname, func(env *zygo.Glisp) { f() }})
+	DefineCommand(&CommandFunc{cmdname, func(env *glisp.Glisp) { f() }})
 }
 
-func lispBindKey(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispBindKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) < 2 {
-		return zygo.SexpNull, zygo.WrongNargs
+		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var arg1 string
 	switch t := args[0].(type) {
-	case *zygo.SexpStr:
-		arg1 = t.S
+	case glisp.SexpStr:
+		arg1 = string(t)
 	default:
-		return zygo.SexpNull, errors.New("Arg 1 needs to be a string")
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
-	var arg2 *zygo.SexpFunction
+	var arg2 glisp.SexpFunction
 	switch t := args[1].(type) {
-	case *zygo.SexpFunction:
+	case glisp.SexpFunction:
 		arg2 = t
-	case *zygo.SexpStr:
-		cmdname := StrToCmdName(t.S)
+	case glisp.SexpStr:
+		cmdname := StrToCmdName(string(t))
 		cmd := funcnames[cmdname]
 		if cmd == nil {
-			return zygo.SexpNull, errors.New("Unknown command: " + cmdname)
+			return glisp.SexpNull, errors.New("Unknown command: " + cmdname)
 		} else {
 			Emacs.PutCommand(arg1, cmd)
-			return zygo.SexpNull, nil
+			return glisp.SexpNull, nil
 		}
 	default:
-		return zygo.SexpNull, errors.New("Arg 2 needs to be a string or function")
+		return glisp.SexpNull, errors.New("Arg 2 needs to be a string or function")
 	}
-	av := []zygo.Sexp{}
+	av := []glisp.Sexp{}
 	if len(args) > 2 {
 		av = args[2:]
 	}
-	Emacs.PutCommand(arg1, &CommandFunc{"lisp code", func(env *zygo.Glisp) {
+	Emacs.PutCommand(arg1, &CommandFunc{"lisp code", func(env *glisp.Glisp) {
 		env.Apply(arg2, av)
 	}})
-	return zygo.SexpNull, nil
+	return glisp.SexpNull, nil
 }
 
-func lispDefineCmd(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispDefineCmd(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) < 2 {
-		return zygo.SexpNull, zygo.WrongNargs
+		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var arg1 string
 	switch t := args[0].(type) {
-	case *zygo.SexpStr:
-		arg1 = StrToCmdName(t.S)
+	case glisp.SexpStr:
+		arg1 = StrToCmdName(string(t))
 	default:
-		return zygo.SexpNull, errors.New("Arg 1 needs to be a string")
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
-	var arg2 *zygo.SexpFunction
+	var arg2 glisp.SexpFunction
 	switch t := args[1].(type) {
-	case *zygo.SexpFunction:
+	case glisp.SexpFunction:
 		arg2 = t
 	default:
-		return zygo.SexpNull, errors.New("Arg 2 needs to be a function")
+		return glisp.SexpNull, errors.New("Arg 2 needs to be a function")
 	}
-	av := []zygo.Sexp{}
+	av := []glisp.Sexp{}
 	if len(args) > 2 {
 		av = args[2:]
 	}
-	DefineCommand(&CommandFunc{arg1, func(env *zygo.Glisp) {
+	DefineCommand(&CommandFunc{arg1, func(env *glisp.Glisp) {
 		env.Apply(arg2, av)
 	}})
-	return zygo.SexpNull, nil
+	return glisp.SexpNull, nil
 }
 
-func lispOnlyWindow(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
-	return zygo.GoToSexp(len(Global.Windows) == 1, env)
+func lispOnlyWindow(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	return glisp.SexpBool(len(Global.Windows) == 1), nil
 }
 
-func lispSetTabStop(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispSetTabStop(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
-		return zygo.SexpNull, zygo.WrongNargs
+		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var x int
 	switch t := args[0].(type) {
-	case *zygo.SexpInt:
-		x = int(t.Val)
+	case glisp.SexpInt:
+		x = int(t)
 	default:
-		return zygo.SexpNull, errors.New("Arg 1 needs to be an int")
+		return glisp.SexpNull, errors.New("Arg 1 needs to be an int")
 	}
 	Global.Tabsize = x
-	return zygo.SexpNull, nil
+	return glisp.SexpNull, nil
 }
 
-func lispSetSoftTab(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispSetSoftTab(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
-		return zygo.SexpNull, zygo.WrongNargs
+		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var x bool
 	switch t := args[0].(type) {
-	case *zygo.SexpBool:
-		x = bool(t.Val)
+	case glisp.SexpBool:
+		x = bool(t)
 	default:
-		return zygo.SexpNull, errors.New("Arg 1 needs to be a bool")
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a bool")
 	}
 	Global.SoftTab = x
-	return zygo.SexpNull, nil
+	return glisp.SexpNull, nil
 }
 
-func lispSetSyntaxOff(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispSetSyntaxOff(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
-		return zygo.SexpNull, zygo.WrongNargs
+		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var x bool
 	switch t := args[0].(type) {
-	case *zygo.SexpBool:
-		x = bool(t.Val)
+	case glisp.SexpBool:
+		x = bool(t)
 	default:
-		return zygo.SexpNull, errors.New("Arg 1 needs to be a bool")
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a bool")
 	}
 	Global.NoSyntax = x
-	return zygo.SexpNull, nil
+	return glisp.SexpNull, nil
 }
 
-func lispGetTabStr(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
-	return zygo.GoToSexp(getTabString(), env)
+func lispGetTabStr(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	return glisp.SexpStr(getTabString()), nil
 }
 
-func lispAddDefaultMode(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispAddDefaultMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) == 1 {
 		var modename string
 		switch t := args[0].(type) {
-		case *zygo.SexpStr:
-			modename = StrToCmdName(t.S)
+		case glisp.SexpStr:
+			modename = StrToCmdName(string(t))
 		default:
-			return zygo.SexpNull, errors.New("Arg needs to be a string")
+			return glisp.SexpNull, errors.New("Arg needs to be a string")
 		}
 		addDefaultMode(modename)
-		return zygo.SexpNull, nil
+		return glisp.SexpNull, nil
 	}
-	return zygo.SexpNull, zygo.WrongNargs
+	return glisp.SexpNull, glisp.WrongNargs
 }
 
-func lispRemDefaultMode(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispRemDefaultMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) == 1 {
 		var modename string
 		switch t := args[0].(type) {
-		case *zygo.SexpStr:
-			modename = StrToCmdName(t.S)
+		case glisp.SexpStr:
+			modename = StrToCmdName(string(t))
 		default:
-			return zygo.SexpNull, errors.New("Arg needs to be a string")
+			return glisp.SexpNull, errors.New("Arg needs to be a string")
 		}
 		remDefaultMode(modename)
-		return zygo.SexpNull, nil
+		return glisp.SexpNull, nil
 	}
-	return zygo.SexpNull, zygo.WrongNargs
+	return glisp.SexpNull, glisp.WrongNargs
 }
 
-func lispSetMode(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispSetMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) == 1 {
 		var modename string
 		switch t := args[0].(type) {
-		case *zygo.SexpStr:
-			modename = StrToCmdName(t.S)
+		case glisp.SexpStr:
+			modename = StrToCmdName(string(t))
 		default:
-			return zygo.SexpNull, errors.New("Arg needs to be a string")
+			return glisp.SexpNull, errors.New("Arg needs to be a string")
 		}
 		Global.CurrentB.toggleMode(modename)
-		return zygo.SexpNull, nil
+		return glisp.SexpNull, nil
 	} else if len(args) == 2 {
 		var modename string
 		switch t := args[0].(type) {
-		case *zygo.SexpStr:
-			modename = StrToCmdName(t.S)
+		case glisp.SexpStr:
+			modename = StrToCmdName(string(t))
 		default:
-			return zygo.SexpNull, errors.New("Arg 1 needs to be a string")
+			return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 		}
 		var enabled bool
 		switch t := args[1].(type) {
-		case *zygo.SexpBool:
-			enabled = bool(t.Val)
+		case glisp.SexpBool:
+			enabled = bool(t)
 		default:
-			return zygo.SexpNull, errors.New("Arg 2 needs to be a bool")
+			return glisp.SexpNull, errors.New("Arg 2 needs to be a bool")
 		}
 		Global.CurrentB.setMode(modename, enabled)
-		return zygo.SexpNull, nil
+		return glisp.SexpNull, nil
 	}
-	return zygo.SexpNull, zygo.WrongNargs
+	return glisp.SexpNull, glisp.WrongNargs
 }
 
-func lispHasMode(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
+func lispHasMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
-		return zygo.SexpNull, zygo.WrongNargs
+		return glisp.SexpNull, glisp.WrongNargs
 	}
 	switch t := args[0].(type) {
-	case *zygo.SexpStr:
-		return zygo.GoToSexp(Global.CurrentB.hasMode(StrToCmdName(t.S)), env)
+	case glisp.SexpStr:
+		return glisp.SexpBool(Global.CurrentB.hasMode(StrToCmdName(string(t)))), nil
 	default:
-		return zygo.SexpNull, errors.New("Arg needs to be a string")
+		return glisp.SexpNull, errors.New("Arg needs to be a string")
 	}
 }
 
-func lispListModes(env *zygo.Glisp, name string, args []zygo.Sexp) (zygo.Sexp, error) {
-	return zygo.GoToSexp(Global.CurrentB.getEnabledModes(), env)
+func lispListModes(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	modes := []glisp.Sexp{}
+	for _, mode := range Global.CurrentB.getEnabledModes() {
+		modes = append(modes, glisp.SexpStr(mode))
+	}
+	return glisp.MakeList(modes), nil
 }
 
-func loadLispFunctions(env *zygo.Glisp) {
+func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
 	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", EditorQuit)
 	env.AddFunction("emacsbindkey", lispBindKey)
@@ -262,59 +267,59 @@ func loadLispFunctions(env *zygo.Glisp) {
 	env.AddFunction("listmodes", lispListModes)
 	env.AddFunction("adddefaultmode", lispAddDefaultMode)
 	env.AddFunction("remdefaultmode", lispRemDefaultMode)
-	DefineCommand(&CommandFunc{"describe-key-briefly", func(env *zygo.Glisp) { DescribeKeyBriefly() }})
+	DefineCommand(&CommandFunc{"describe-key-briefly", func(env *glisp.Glisp) { DescribeKeyBriefly() }})
 	DefineCommand(&CommandFunc{"run-command", RunCommand})
-	DefineCommand(&CommandFunc{"redo", func(env *zygo.Glisp) { editorRedoAction() }})
-	DefineCommand(&CommandFunc{"suspend-emacs", func(env *zygo.Glisp) { suspend() }})
-	DefineCommand(&CommandFunc{"move-end-of-line", func(env *zygo.Glisp) { MoveCursorToEol() }})
-	DefineCommand(&CommandFunc{"move-beginning-of-line", func(env *zygo.Glisp) { MoveCursorToBol() }})
-	DefineCommand(&CommandFunc{"scroll-up-command", func(env *zygo.Glisp) { MoveCursorBackPage() }})
-	DefineCommand(&CommandFunc{"scroll-down-command", func(env *zygo.Glisp) { MoveCursorForthPage() }})
-	DefineCommand(&CommandFunc{"save-buffer", func(env *zygo.Glisp) { EditorSave() }})
-	DefineCommand(&CommandFunc{"delete-char", func(env *zygo.Glisp) { MoveCursor(1, 0); editorDelChar() }})
-	DefineCommand(&CommandFunc{"delete-backward-char", func(env *zygo.Glisp) { editorDelChar() }})
-	DefineCommand(&CommandFunc{"find-file", func(env *zygo.Glisp) { editorFindFile() }})
-	DefineCommand(&CommandFunc{"insert-newline", func(env *zygo.Glisp) { editorInsertNewline() }})
-	DefineCommand(&CommandFunc{"isearch", func(env *zygo.Glisp) { editorFind() }})
-	DefineCommand(&CommandFunc{"buffers-list", func(env *zygo.Glisp) { editorSwitchBuffer() }})
-	DefineCommand(&CommandFunc{"end-of-buffer", func(env *zygo.Glisp) { Global.CurrentB.cy = Global.CurrentB.NumRows }})
-	DefineCommand(&CommandFunc{"beginning-of-buffer", func(env *zygo.Glisp) { Global.CurrentB.cy = 0 }})
-	DefineCommand(&CommandFunc{"undo", func(env *zygo.Glisp) { editorUndoAction() }})
-	DefineCommand(&CommandFunc{"indent", func(env *zygo.Glisp) { editorInsertStr(getTabString()) }})
-	DefineCommand(&CommandFunc{"other-window", func(env *zygo.Glisp) { switchWindow() }})
-	DefineCommand(&CommandFunc{"delete-window", func(env *zygo.Glisp) { closeThisWindow() }})
-	DefineCommand(&CommandFunc{"delete-other-windows", func(env *zygo.Glisp) { closeOtherWindows() }})
-	DefineCommand(&CommandFunc{"split-window", func(env *zygo.Glisp) { splitWindows() }})
-	DefineCommand(&CommandFunc{"find-file-other-window", func(env *zygo.Glisp) { callFunOtherWindow(editorFindFile) }})
-	DefineCommand(&CommandFunc{"switch-buffer-other-window", func(env *zygo.Glisp) { callFunOtherWindow(editorSwitchBuffer) }})
-	DefineCommand(&CommandFunc{"set-mark", func(env *zygo.Glisp) { setMark(Global.CurrentB) }})
-	DefineCommand(&CommandFunc{"kill-region", func(env *zygo.Glisp) { doKillRegion() }})
-	DefineCommand(&CommandFunc{"yank-region", func(env *zygo.Glisp) { doYankRegion() }})
-	DefineCommand(&CommandFunc{"copy-region", func(env *zygo.Glisp) { doCopyRegion() }})
-	DefineCommand(&CommandFunc{"forward-word", func(env *zygo.Glisp) { moveForwardWord() }})
-	DefineCommand(&CommandFunc{"backward-word", func(env *zygo.Glisp) { moveBackWord() }})
-	DefineCommand(&CommandFunc{"backward-kill-word", func(env *zygo.Glisp) { delBackWord() }})
-	DefineCommand(&CommandFunc{"kill-word", func(env *zygo.Glisp) { delForwardWord() }})
-	DefineCommand(&CommandFunc{"recenter-top-bottom", func(env *zygo.Glisp) { editorCentreView() }})
-	DefineCommand(&CommandFunc{"kill-buffer", func(env *zygo.Glisp) { killBuffer() }})
-	DefineCommand(&CommandFunc{"kill-line", func(env *zygo.Glisp) { killToEol() }})
-	DefineCommand(&CommandFunc{"downcase-region", func(*zygo.Glisp) { doLCRegion() }})
-	DefineCommand(&CommandFunc{"upcase-region", func(*zygo.Glisp) { doUCRegion() }})
-	DefineCommand(&CommandFunc{"upcase-word", func(*zygo.Glisp) { upcaseWord() }})
-	DefineCommand(&CommandFunc{"downcase-word", func(*zygo.Glisp) { downcaseWord() }})
-	DefineCommand(&CommandFunc{"toggle-mode", func(*zygo.Glisp) {
+	DefineCommand(&CommandFunc{"redo", func(env *glisp.Glisp) { editorRedoAction() }})
+	DefineCommand(&CommandFunc{"suspend-emacs", func(env *glisp.Glisp) { suspend() }})
+	DefineCommand(&CommandFunc{"move-end-of-line", func(env *glisp.Glisp) { MoveCursorToEol() }})
+	DefineCommand(&CommandFunc{"move-beginning-of-line", func(env *glisp.Glisp) { MoveCursorToBol() }})
+	DefineCommand(&CommandFunc{"scroll-up-command", func(env *glisp.Glisp) { MoveCursorBackPage() }})
+	DefineCommand(&CommandFunc{"scroll-down-command", func(env *glisp.Glisp) { MoveCursorForthPage() }})
+	DefineCommand(&CommandFunc{"save-buffer", func(env *glisp.Glisp) { EditorSave() }})
+	DefineCommand(&CommandFunc{"delete-char", func(env *glisp.Glisp) { MoveCursor(1, 0); editorDelChar() }})
+	DefineCommand(&CommandFunc{"delete-backward-char", func(env *glisp.Glisp) { editorDelChar() }})
+	DefineCommand(&CommandFunc{"find-file", func(env *glisp.Glisp) { editorFindFile() }})
+	DefineCommand(&CommandFunc{"insert-newline", func(env *glisp.Glisp) { editorInsertNewline() }})
+	DefineCommand(&CommandFunc{"isearch", func(env *glisp.Glisp) { editorFind() }})
+	DefineCommand(&CommandFunc{"buffers-list", func(env *glisp.Glisp) { editorSwitchBuffer() }})
+	DefineCommand(&CommandFunc{"end-of-buffer", func(env *glisp.Glisp) { Global.CurrentB.cy = Global.CurrentB.NumRows }})
+	DefineCommand(&CommandFunc{"beginning-of-buffer", func(env *glisp.Glisp) { Global.CurrentB.cy = 0 }})
+	DefineCommand(&CommandFunc{"undo", func(env *glisp.Glisp) { editorUndoAction() }})
+	DefineCommand(&CommandFunc{"indent", func(env *glisp.Glisp) { editorInsertStr(getTabString()) }})
+	DefineCommand(&CommandFunc{"other-window", func(env *glisp.Glisp) { switchWindow() }})
+	DefineCommand(&CommandFunc{"delete-window", func(env *glisp.Glisp) { closeThisWindow() }})
+	DefineCommand(&CommandFunc{"delete-other-windows", func(env *glisp.Glisp) { closeOtherWindows() }})
+	DefineCommand(&CommandFunc{"split-window", func(env *glisp.Glisp) { splitWindows() }})
+	DefineCommand(&CommandFunc{"find-file-other-window", func(env *glisp.Glisp) { callFunOtherWindow(editorFindFile) }})
+	DefineCommand(&CommandFunc{"switch-buffer-other-window", func(env *glisp.Glisp) { callFunOtherWindow(editorSwitchBuffer) }})
+	DefineCommand(&CommandFunc{"set-mark", func(env *glisp.Glisp) { setMark(Global.CurrentB) }})
+	DefineCommand(&CommandFunc{"kill-region", func(env *glisp.Glisp) { doKillRegion() }})
+	DefineCommand(&CommandFunc{"yank-region", func(env *glisp.Glisp) { doYankRegion() }})
+	DefineCommand(&CommandFunc{"copy-region", func(env *glisp.Glisp) { doCopyRegion() }})
+	DefineCommand(&CommandFunc{"forward-word", func(env *glisp.Glisp) { moveForwardWord() }})
+	DefineCommand(&CommandFunc{"backward-word", func(env *glisp.Glisp) { moveBackWord() }})
+	DefineCommand(&CommandFunc{"backward-kill-word", func(env *glisp.Glisp) { delBackWord() }})
+	DefineCommand(&CommandFunc{"kill-word", func(env *glisp.Glisp) { delForwardWord() }})
+	DefineCommand(&CommandFunc{"recenter-top-bottom", func(env *glisp.Glisp) { editorCentreView() }})
+	DefineCommand(&CommandFunc{"kill-buffer", func(env *glisp.Glisp) { killBuffer() }})
+	DefineCommand(&CommandFunc{"kill-line", func(env *glisp.Glisp) { killToEol() }})
+	DefineCommand(&CommandFunc{"downcase-region", func(*glisp.Glisp) { doLCRegion() }})
+	DefineCommand(&CommandFunc{"upcase-region", func(*glisp.Glisp) { doUCRegion() }})
+	DefineCommand(&CommandFunc{"upcase-word", func(*glisp.Glisp) { upcaseWord() }})
+	DefineCommand(&CommandFunc{"downcase-word", func(*glisp.Glisp) { downcaseWord() }})
+	DefineCommand(&CommandFunc{"toggle-mode", func(*glisp.Glisp) {
 		mode := editorPrompt("Which mode?", nil)
 		Global.CurrentB.toggleMode(StrToCmdName(mode))
 	}})
-	DefineCommand(&CommandFunc{"show-modes", func(*zygo.Glisp) { showModes() }})
-	DefineCommand(&CommandFunc{"indent-mode", func(*zygo.Glisp) { doToggleMode("indent-mode") }})
-	DefineCommand(&CommandFunc{"line-number-mode", func(*zygo.Glisp) { doToggleMode("line-number-mode") }})
-	DefineCommand(&CommandFunc{"forward-char", func(*zygo.Glisp) { MoveCursor(1, 0) }})
-	DefineCommand(&CommandFunc{"backward-char", func(*zygo.Glisp) { MoveCursor(-1, 0) }})
-	DefineCommand(&CommandFunc{"next-line", func(*zygo.Glisp) { MoveCursor(0, 1) }})
-	DefineCommand(&CommandFunc{"previous-line", func(*zygo.Glisp) { MoveCursor(0, -1) }})
-	DefineCommand(&CommandFunc{"describe-bindings", func(*zygo.Glisp) { showMessages(WalkCommandTree(Emacs, "")) }})
-	DefineCommand(&CommandFunc{"quick-help", func(*zygo.Glisp) {
+	DefineCommand(&CommandFunc{"show-modes", func(*glisp.Glisp) { showModes() }})
+	DefineCommand(&CommandFunc{"indent-mode", func(*glisp.Glisp) { doToggleMode("indent-mode") }})
+	DefineCommand(&CommandFunc{"line-number-mode", func(*glisp.Glisp) { doToggleMode("line-number-mode") }})
+	DefineCommand(&CommandFunc{"forward-char", func(*glisp.Glisp) { MoveCursor(1, 0) }})
+	DefineCommand(&CommandFunc{"backward-char", func(*glisp.Glisp) { MoveCursor(-1, 0) }})
+	DefineCommand(&CommandFunc{"next-line", func(*glisp.Glisp) { MoveCursor(0, 1) }})
+	DefineCommand(&CommandFunc{"previous-line", func(*glisp.Glisp) { MoveCursor(0, -1) }})
+	DefineCommand(&CommandFunc{"describe-bindings", func(*glisp.Glisp) { showMessages(WalkCommandTree(Emacs, "")) }})
+	DefineCommand(&CommandFunc{"quick-help", func(*glisp.Glisp) {
 		showMessages(`Welcome to Gomacs - Go-powered emacs!
 
 If you've not edited your rc file (~/.gomacs.lisp), here are some emergency
@@ -332,20 +337,20 @@ hold Meta (Alt on modern keyboards) and press n.
 Current key bindings:
 `, WalkCommandTree(Emacs, ""))
 	}})
-	DefineCommand(&CommandFunc{"dired-mode", func(*zygo.Glisp) { DiredMode() }})
-	DefineCommand(&CommandFunc{"goto-line", func(*zygo.Glisp) { gotoLine() }})
-	DefineCommand(&CommandFunc{"goto-char", func(*zygo.Glisp) { gotoChar() }})
+	DefineCommand(&CommandFunc{"dired-mode", func(*glisp.Glisp) { DiredMode() }})
+	DefineCommand(&CommandFunc{"goto-line", func(*glisp.Glisp) { gotoLine() }})
+	DefineCommand(&CommandFunc{"goto-char", func(*glisp.Glisp) { gotoChar() }})
 }
 
-func NewLispInterp() *zygo.Glisp {
-	ret := zygo.NewGlisp()
+func NewLispInterp() *glisp.Glisp {
+	ret := glisp.NewGlisp()
 	loadLispFunctions(ret)
 	LoadDefaultConfig(ret)
 	LoadUserConfig(ret)
 	return ret
 }
 
-func LoadUserConfig(env *zygo.Glisp) {
+func LoadUserConfig(env *glisp.Glisp) {
 	usr, ue := homedir.Dir()
 	if ue != nil {
 		Global.Input = "Error getting current user's home directory: " + ue.Error()
@@ -368,8 +373,8 @@ func LoadUserConfig(env *zygo.Glisp) {
 	}
 }
 
-func LoadDefaultConfig(env *zygo.Glisp) {
-	env.LoadString(`
+func LoadDefaultConfig(env *glisp.Glisp) {
+	_, err := env.EvalString(`
 (emacsbindkey "C-s" "isearch")
 (emacsbindkey "C-x C-c" "save-buffers-kill-emacs")
 (emacsbindkey "C-x C-s" "save-buffer")
@@ -434,5 +439,7 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "M-g g" "goto-line")
 (emacsbindkey "M-g c" "goto-char")
 `)
-	env.Run()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }

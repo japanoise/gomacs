@@ -3,7 +3,7 @@
 ![A screenshot showing Gomacs editing this README and its own source code](gomacs.png)
 
 Gomacs is an Emacs clone for the terminal. Unlike many other mini-Emacsen, it
-has an embedded Lisp, [powered by Zygomys.](https://github.com/glycerine/zygomys)
+has an embedded Lisp, [powered by Glisp.](https://github.com/zhemao/glisp)
 This puts it in the realm of true Emacs! It also supports primitive syntax
 highlighting for C and Go.
 
@@ -38,7 +38,7 @@ yet - I'll try to keep this list up to date!
 - `C-z` - Suspend Gomacs (Linux only)
 - `M-x` - Run named command
 - `<f12>` - Panic key - quit emacs immediately without saving changes. Useful if
-  Zygomys falls down (which may happen if you do a lot of hacking on the editor's
+  Glisp falls down (which may happen if you do a lot of hacking on the editor's
   internals)
 
 ### Getting help
@@ -101,7 +101,7 @@ yet - I'll try to keep this list up to date!
 ## Customization
 
 Emacs loads from ~/.gomacs.lisp on startup and executes the content of this file.
-Check out the Zygomys documentation for information on how the language works!
+Check out the Glisp documentation for information on how the language works!
 Some functions to get you started…
 
 - `(emacsbindkey arg1 arg2..)` - Bind arg1 (in standard Emacs C-\*/M-\* notation,

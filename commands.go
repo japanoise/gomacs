@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"errors"
-	"github.com/glycerine/zygomys/repl"
+	"github.com/zhemao/glisp/interpreter"
 	"strings"
 )
 
@@ -17,7 +17,7 @@ var funcnames map[string]*CommandFunc
 
 type CommandFunc struct {
 	Name string
-	Com  func(env *zygo.Glisp)
+	Com  func(env *glisp.Glisp)
 }
 
 func WalkCommandTree(root *CommandList, pre string) string {
@@ -95,7 +95,7 @@ func DescribeKeyBriefly() {
 	editorSetPrompt("")
 }
 
-func RunCommand(env *zygo.Glisp) {
+func RunCommand(env *glisp.Glisp) {
 	cmdname := StrToCmdName(editorPrompt("Run command", nil))
 	cmd := funcnames[cmdname]
 	if cmd != nil && cmd.Com != nil {
