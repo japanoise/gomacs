@@ -105,7 +105,7 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 				if buf.hasMode("gdi") {
 					termutil.Printstring(string(buf.Rows[filerow].idx), 0, y)
 				} else {
-					termutil.Printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx), gutsize-2), 0, y)
+					termutil.Printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx+1), gutsize-2), 0, y)
 				}
 				termutil.PrintRune(gutsize-2, y, '│', termbox.ColorDefault)
 				if buf.coloff > 0 {
@@ -128,10 +128,10 @@ func editorUpdateStatus(buf *EditorBuffer) string {
 	}
 	if buf.Dirty {
 		return fmt.Sprintf("%s [Modified] - (%s) %d:%d", fn, syn,
-			buf.cy, buf.cx)
+			buf.cy+1, buf.cx)
 	} else {
 		return fmt.Sprintf("%s - (%s) %d:%d", fn, syn,
-			buf.cy, buf.cx)
+			buf.cy+1, buf.cx)
 	}
 }
 
