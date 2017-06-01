@@ -11,6 +11,7 @@
   well as the main loop. An ongoing project is to extract code from here and into
   dedicated files.
 - modes.go - dealing with modes
+- nav.go - navigation code
 - region.go - functions and commands for acting upon the selected region.
 - render.go - rendering and drawing functions
 - suspend.go - placeholder for non-Linux platforms (which don't have suspend
