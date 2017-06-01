@@ -333,6 +333,8 @@ Current key bindings:
 `, WalkCommandTree(Emacs, ""))
 	}})
 	DefineCommand(&CommandFunc{"dired-mode", func(*zygo.Glisp) { DiredMode() }})
+	DefineCommand(&CommandFunc{"goto-line", func(*zygo.Glisp) { gotoLine() }})
+	DefineCommand(&CommandFunc{"goto-char", func(*zygo.Glisp) { gotoChar() }})
 }
 
 func NewLispInterp() *zygo.Glisp {
@@ -428,6 +430,9 @@ func LoadDefaultConfig(env *zygo.Glisp) {
 (emacsbindkey "C-h b" "describe-bindings")
 (emacsbindkey "f1" "quick-help")
 (emacsbindkey "C-x d" "dired-mode")
+(emacsbindkey "M-g M-g" "goto-line")
+(emacsbindkey "M-g g" "goto-line")
+(emacsbindkey "M-g c" "goto-char")
 `)
 	env.Run()
 }

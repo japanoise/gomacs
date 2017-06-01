@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strconv"
 	"strings"
 	"unicode/utf8"
 )
@@ -183,4 +184,39 @@ func editorFind() {
 		Global.CurrentB.coloff = saved_co
 		Global.CurrentB.rowoff = saved_ro
 	}
+}
+
+func gotoLine() {
+	line, err := strconv.Atoi(editorPrompt("Go to line", nil))
+	if err != nil {
+		Global.Input = "Cancelled."
+		return
+	}
+	line--
+	if line < 0 {
+		line = 0
+	} else if line > Global.CurrentB.NumRows {
+		line = Global.CurrentB.NumRows
+	}
+	Global.CurrentB.cy = line
+	Global.Input = "Jumping to line " + strconv.Itoa(line+1)
+}
+
+func gotoChar() {
+	line, err := strconv.Atoi(editorPrompt("Go to char", nil))
+	if err != nil {
+		Global.Input = "Cancelled."
+		return
+	}
+	if Global.CurrentB.cy == Global.CurrentB.NumRows {
+		return
+	}
+	datalen := len(Global.CurrentB.Rows[Global.CurrentB.cy].Data)
+	if line < 0 {
+		line = 0
+	} else if line >= datalen {
+		line = datalen
+	}
+	Global.CurrentB.cx = line
+	Global.Input = "Jumping to char " + strconv.Itoa(line)
 }
