@@ -98,6 +98,12 @@ yet - I'll try to keep this list up to date!
 - `C-x C-u` - Uppercase region
 - `C-x C-l` - Lowercase region
 
+### Misc
+
+- `C-x (` - Start recording a macro
+- `C-x )` - Stop recording a macro
+- `C-x e` - Stop recording a macro and execute it (repeat by pressing `e`)
+
 ## Customization
 
 Emacs loads from ~/.gomacs.lisp on startup and executes the content of this file.
