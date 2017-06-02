@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/mitchellh/go-homedir"
 	"github.com/nsf/termbox-go"
+	"github.com/zhemao/glisp/interpreter"
 	"os"
 	"strings"
 	"unicode/utf8"
@@ -344,6 +345,30 @@ func dumpCrashLog(e string) {
 	f.Close()
 }
 
+func RunCommandForKey(key string, env *glisp.Glisp) {
+	//use f12 as panic button
+	if key == "f12" {
+		Global.quit = true
+		return
+	}
+	// Hack fixed (though we won't support any encoding save utf8)
+	if !Global.CurrentB.hasMode("no-self-insert-mode") && utf8.RuneCountInString(key) == 1 {
+		editorInsertStr(key)
+		return
+	}
+	Global.Input = ""
+	com, comerr := Emacs.GetCommand(key)
+	if comerr != nil {
+		Global.Input = comerr.Error()
+		return
+	} else if com != nil {
+		if macrorec {
+			macro = append(macro, com)
+		}
+		com.Com(env)
+	}
+}
+
 func main() {
 	InitEditor()
 	fs := flag.NewFlagSet("", flag.ExitOnError)
@@ -382,24 +407,7 @@ func main() {
 			return
 		} else {
 			key := editorGetKey()
-			//use f12 as panic button
-			if key == "f12" {
-				Global.quit = true
-				continue
-			}
-			// Hack fixed (though we won't support any encoding save utf8)
-			if !Global.CurrentB.hasMode("no-self-insert-mode") && utf8.RuneCountInString(key) == 1 {
-				editorInsertStr(key)
-				continue
-			}
-			Global.Input = ""
-			com, comerr := Emacs.GetCommand(key)
-			if comerr != nil {
-				Global.Input = comerr.Error()
-				continue
-			} else if com != nil {
-				com.Com(env)
-			}
+			RunCommandForKey(key, env)
 		}
 	}
 }

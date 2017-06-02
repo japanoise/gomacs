@@ -340,6 +340,9 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"dired-mode", func(*glisp.Glisp) { DiredMode() }})
 	DefineCommand(&CommandFunc{"goto-line", func(*glisp.Glisp) { gotoLine() }})
 	DefineCommand(&CommandFunc{"goto-char", func(*glisp.Glisp) { gotoChar() }})
+	DefineCommand(&CommandFunc{"start-macro", func(*glisp.Glisp) { recMacro() }})
+	DefineCommand(&CommandFunc{"end-macro", func(*glisp.Glisp) { stopRecMacro() }})
+	DefineCommand(&CommandFunc{"end-macro-and-run", func(e *glisp.Glisp) { doRunMacro(e) }})
 }
 
 func NewLispInterp() *glisp.Glisp {
@@ -438,6 +441,9 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "M-g M-g" "goto-line")
 (emacsbindkey "M-g g" "goto-line")
 (emacsbindkey "M-g c" "goto-char")
+(emacsbindkey "C-x (" "start-macro")
+(emacsbindkey "C-x )" "end-macro")
+(emacsbindkey "C-x e" "end-macro-and-run")
 `)
 	if err != nil {
 		fmt.Println(err.Error())
