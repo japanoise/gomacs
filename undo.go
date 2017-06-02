@@ -1,5 +1,7 @@
 package main
 
+import "github.com/zhemao/glisp/interpreter"
+
 type EditorUndo struct {
 	ins    bool
 	region bool
@@ -197,7 +199,7 @@ func editorUndoAction() {
 	}
 }
 
-func editorRedoAction() {
+func doOneRedo(_ *glisp.Glisp) {
 	if Global.CurrentB.Redo == nil {
 		Global.Input = "No further redo information."
 	} else {
@@ -207,4 +209,8 @@ func editorRedoAction() {
 		r.prev = Global.CurrentB.Undo
 		Global.CurrentB.Undo = r
 	}
+}
+
+func editorRedoAction(env *glisp.Glisp) {
+	micromode("C-_", "Press C-_ or C-/ to redo again", env, doOneRedo)
 }

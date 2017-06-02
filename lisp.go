@@ -269,7 +269,7 @@ func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("remdefaultmode", lispRemDefaultMode)
 	DefineCommand(&CommandFunc{"describe-key-briefly", func(env *glisp.Glisp) { DescribeKeyBriefly() }})
 	DefineCommand(&CommandFunc{"run-command", RunCommand})
-	DefineCommand(&CommandFunc{"redo", func(env *glisp.Glisp) { editorRedoAction() }})
+	DefineCommand(&CommandFunc{"redo", editorRedoAction})
 	DefineCommand(&CommandFunc{"suspend-emacs", func(env *glisp.Glisp) { suspend() }})
 	DefineCommand(&CommandFunc{"move-end-of-line", func(env *glisp.Glisp) { MoveCursorToEol() }})
 	DefineCommand(&CommandFunc{"move-beginning-of-line", func(env *glisp.Glisp) { MoveCursorToBol() }})

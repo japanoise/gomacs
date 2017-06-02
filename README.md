@@ -34,7 +34,8 @@ yet - I'll try to keep this list up to date!
 - `C-x C-c` - Save buffers and quit
 - `C-x C-s` - Save buffer
 - `C-_` - Undo (`C-/` also works)
-- `C-x C-_` - Redo (`C-x C-/` also works)
+- `C-x C-_` - Redo (`C-x C-/` also works) - press `C-_` or `C-/` again to redo
+  more actions
 - `C-z` - Suspend Gomacs (Linux only)
 - `M-x` - Run named command
 - `<f12>` - Panic key - quit emacs immediately without saving changes. Useful if
