@@ -46,7 +46,6 @@ func editorChoiceIndex(title string, choices []string, def int) int {
 func showMessages(mesgs ...string) {
 	termbox.HideCursor()
 	termutil.DisplayScreenMessage(mesgs...)
-	termbox.PollEvent()
 }
 
 func ParseTermboxEvent(ev termbox.Event) string {
