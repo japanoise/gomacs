@@ -25,6 +25,8 @@ to run:
 
 Currently, the only supported option is -s, which disables syntax highlighting.
 
+## Keybindings
+
 Gomacs uses the standard Emacs keybindings. Of course, not all are implemented
 yet - I'll try to keep this list up to date!
 
@@ -127,6 +129,21 @@ Some functions to get you started…
   of spaces.
 - `(disablesyntax arg)` - Enable (false) or disable (true) syntax highlighting.
   arg must be a boolean.
+
+## Modes
+
+Each buffer has a number of modes activated. When a new buffer is opened, the
+modes are copied from the "default" set. Modes are added to this set with the
+lisp function `(adddefaultmode <mode>)` and removed with the function
+`(remdefaultmode <mode>)`.
+They can be toggled with the command `toggle-mode`, and you can view the current
+buffer's activated modes with the `show-modes` command. Here's what each mode
+does:
+
+- `terminal-title-mode` - use an escape sequence to set the terminal title.
+- `line-number-mode` - display line numbers on the left edge of the buffer.
+- `auto-indent-mode` - copy indentation from previous line when inserting a
+  newline.
 
 ## Why?
 
