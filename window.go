@@ -71,6 +71,13 @@ func (e *EditorBuffer) getFilename() string {
 	return e.Filename
 }
 
+func (e *EditorBuffer) getRenderName() string {
+	if e.Filename == "" {
+		return "*unnamed buffer*"
+	}
+	return e.Rendername
+}
+
 func bufferChoiceList() ([]string, int) {
 	choices := []string{}
 	def := 0

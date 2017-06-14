@@ -121,7 +121,7 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 }
 
 func editorUpdateStatus(buf *EditorBuffer) string {
-	fn := buf.getFilename()
+	fn := buf.getRenderName()
 	syn := "no ft"
 	if buf.Syntax != nil {
 		syn = buf.Syntax.filetype

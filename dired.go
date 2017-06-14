@@ -37,6 +37,7 @@ func DiredMode() {
 			dir += "/" + files[filechosen].Name()
 		} else {
 			openFile(dir + "/" + files[filechosen].Name())
+			Global.CurrentB.Rendername = files[filechosen].Name()
 			done = true
 		}
 		dir, err = filepath.Abs(dir)

@@ -24,21 +24,22 @@ type EditorRow struct {
 }
 
 type EditorBuffer struct {
-	Filename string
-	Dirty    bool
-	cx       int
-	cy       int
-	rx       int
-	rowoff   int
-	coloff   int
-	NumRows  int
-	Rows     []*EditorRow
-	Syntax   *EditorSyntax
-	Undo     *EditorUndo
-	Redo     *EditorUndo
-	MarkX    int
-	MarkY    int
-	Modes    ModeList
+	Filename   string
+	Rendername string
+	Dirty      bool
+	cx         int
+	cy         int
+	rx         int
+	rowoff     int
+	coloff     int
+	NumRows    int
+	Rows       []*EditorRow
+	Syntax     *EditorSyntax
+	Undo       *EditorUndo
+	Redo       *EditorUndo
+	MarkX      int
+	MarkY      int
+	Modes      ModeList
 }
 
 type EditorState struct {
@@ -270,6 +271,7 @@ func EditorOpen(filename string) error {
 		return perr
 	}
 	Global.CurrentB.Filename = path
+	Global.CurrentB.Rendername = path
 	editorSelectSyntaxHighlight(Global.CurrentB)
 	f, err := os.Open(path)
 	if err != nil {
