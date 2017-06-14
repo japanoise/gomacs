@@ -144,6 +144,7 @@ does:
 - `line-number-mode` - display line numbers on the left edge of the buffer.
 - `auto-indent-mode` - copy indentation from previous line when inserting a
   newline.
+- `tilde-mode` - draw `vi`-style blue tildes on lines outside the file
 
 ## Why?
 

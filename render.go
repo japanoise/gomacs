@@ -97,7 +97,7 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 	for y := starty; y < sy; y++ {
 		filerow := (y - starty) + buf.rowoff
 		if filerow >= buf.NumRows {
-			if buf.coloff == 0 {
+			if buf.coloff == 0 && buf.hasMode("tilde-mode") {
 				termbox.SetCell(gutsize, y, '~', termbox.ColorBlue, termbox.ColorDefault)
 			}
 		} else {
