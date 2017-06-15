@@ -312,8 +312,6 @@ func loadLispFunctions(env *glisp.Glisp) {
 		Global.CurrentB.toggleMode(StrToCmdName(mode))
 	}})
 	DefineCommand(&CommandFunc{"show-modes", func(*glisp.Glisp) { showModes() }})
-	DefineCommand(&CommandFunc{"indent-mode", func(*glisp.Glisp) { doToggleMode("indent-mode") }})
-	DefineCommand(&CommandFunc{"line-number-mode", func(*glisp.Glisp) { doToggleMode("line-number-mode") }})
 	DefineCommand(&CommandFunc{"forward-char", func(*glisp.Glisp) { MoveCursor(1, 0) }})
 	DefineCommand(&CommandFunc{"backward-char", func(*glisp.Glisp) { MoveCursor(-1, 0) }})
 	DefineCommand(&CommandFunc{"next-line", func(*glisp.Glisp) { MoveCursor(0, 1) }})

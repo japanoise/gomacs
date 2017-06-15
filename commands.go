@@ -97,11 +97,27 @@ func DescribeKeyBriefly() {
 
 func RunCommand(env *glisp.Glisp) {
 	cmdname := StrToCmdName(editorPrompt("Run command", nil))
+	err := RunNamedCommand(env, cmdname)
+	if err != nil {
+		Global.Input = cmdname + err.Error()
+	}
+}
+
+func RunNamedCommand(env *glisp.Glisp, cmdname string) error {
 	cmd := funcnames[cmdname]
+	if cmd == nil && strings.HasSuffix(cmdname, "mode") {
+		cmd = &CommandFunc{
+			cmdname,
+			func(*glisp.Glisp) {
+				doToggleMode(cmdname)
+			},
+		}
+	}
 	if cmd != nil && cmd.Com != nil {
 		cmd.Com(env)
+		return nil
 	} else {
-		Global.Input = cmdname + ": no such command."
+		return errors.New("no such command")
 	}
 }
 
