@@ -40,36 +40,47 @@ func (buf *EditorBuffer) Highlight() {
 	buf.Highlighter.HighlightMatches(buf, 0, buf.NumRows)
 }
 
+func getColorForGroup(group highlight.Group) termbox.Attribute {
+	color := termbox.ColorDefault
+	switch group {
+	case 255:
+		// Special case here for search results
+		color = termbox.AttrReverse
+	case highlight.Groups["type.extended"]:
+		color = termbox.ColorDefault
+	case highlight.Groups["preproc"], highlight.Groups["special"]:
+		color = termbox.ColorYellow
+	case highlight.Groups["comment"], highlight.Groups["preproc.shebang"]:
+		color = termbox.ColorBlue
+	case highlight.Groups["constant.string"], highlight.Groups["constant"], highlight.Groups["constant.number"], highlight.Groups["constant.specialChar"]:
+		color = termbox.ColorRed
+	case highlight.Groups["type"]:
+		color = termbox.ColorGreen
+	case highlight.Groups["identifier"]:
+		color = termbox.ColorCyan
+	case highlight.Groups["statement"]:
+		color = termbox.ColorMagenta
+	default:
+		color = termbox.ColorDefault
+	}
+	return color
+}
+
 func (row *EditorRow) HlPrint(x, y, offset, runeoff int) {
-	if offset >= row.RenderSize-1 {
+	if offset > row.Size-1 || runeoff > row.RenderSize-1 {
 		return
 	}
 	color := termbox.ColorDefault
 	os := 0
 	for in, ru := range row.Render[runeoff:] {
 		if group, ok := row.HlMatches[in+runeoff]; ok {
-			switch group {
-			case 255:
-				// Special case here for search results
-				color = termbox.AttrReverse
-			case highlight.Groups["type.extended"]:
-				color = termbox.ColorDefault
-			case highlight.Groups["preproc"], highlight.Groups["special"]:
-				color = termbox.ColorYellow
-			case highlight.Groups["comment"], highlight.Groups["preproc.shebang"]:
-				color = termbox.ColorBlue
-			case highlight.Groups["constant.string"], highlight.Groups["constant"], highlight.Groups["constant.number"], highlight.Groups["constant.specialChar"]:
-				color = termbox.ColorRed
-			case highlight.Groups["type"]:
-				color = termbox.ColorGreen
-			case highlight.Groups["identifier"]:
-				color = termbox.ColorCyan
-			case highlight.Groups["statement"]:
-				color = termbox.ColorMagenta
-			default:
-				color = termbox.ColorDefault
+			color = getColorForGroup(group)
+		} else if in == 0 && runeoff != 0 {
+			groupi, oki := row.HlMatches[runeoff]
+			for i := 1; !oki && i <= runeoff; i++ {
+				groupi, oki = row.HlMatches[runeoff-i]
 			}
-
+			color = getColorForGroup(groupi)
 		}
 		termutil.PrintRune(x+os, y, ru, color)
 		os += termutil.Runewidth(ru)
