@@ -66,13 +66,10 @@ func getColorForGroup(group highlight.Group) termbox.Attribute {
 	return color
 }
 
-func (row *EditorRow) HlPrint(x, y, offset, runeoff int) {
-	if offset > row.Size-1 || runeoff > row.RenderSize-1 {
-		return
-	}
+func (row *EditorRow) HlPrint(x, y, offset, runeoff int, ts string) {
 	color := termbox.ColorDefault
 	os := 0
-	for in, ru := range row.Render[runeoff:] {
+	for in, ru := range ts {
 		if group, ok := row.HlMatches[in+runeoff]; ok {
 			color = getColorForGroup(group)
 		} else if in == 0 && runeoff != 0 {
