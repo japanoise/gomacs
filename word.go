@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/japanoise/termbox-util"
 	"strings"
 	"unicode/utf8"
 )
@@ -14,7 +15,7 @@ func indexEndOfBackwardWord() int {
 	for cx > 0 {
 		r, rs :=
 			utf8.DecodeLastRuneInString(Global.CurrentB.Rows[icy].Data[:cx])
-		if r == ' ' && !pre {
+		if !termutil.WordCharacter(r) && !pre {
 			return cx
 		} else {
 			pre = false
@@ -33,7 +34,7 @@ func indexEndOfForwardWord() int {
 	pre := true
 	for cx < l {
 		r, rs := utf8.DecodeRuneInString(Global.CurrentB.Rows[icy].Data[cx:])
-		if r == ' ' && !pre {
+		if !termutil.WordCharacter(r) && !pre {
 			return cx
 		} else {
 			pre = false
