@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/zyedidia/highlight"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -114,12 +115,12 @@ func MoveCursorForthPage() {
 var last_match int = -1
 var direction int = 1
 var saved_hl_line int
-var saved_hl []EmacsColor = nil
+var saved_hl highlight.LineMatch = nil
 
 func editorFindCallback(query string, key string) {
 	Global.Input = query
 	if saved_hl != nil {
-		Global.CurrentB.Rows[saved_hl_line].Hl = saved_hl
+		Global.CurrentB.Rows[saved_hl_line].HlMatches = saved_hl
 		saved_hl = nil
 	}
 	if key == "C-s" {
@@ -159,10 +160,25 @@ func editorFindCallback(query string, key string) {
 			Global.CurrentB.cx = editorRowRxToCx(row, match)
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			saved_hl_line = current
-			saved_hl = make([]EmacsColor, len(Global.CurrentB.Rows[current].Hl))
-			copy(saved_hl, Global.CurrentB.Rows[current].Hl)
-			for i := range query {
-				Global.CurrentB.Rows[current].Hl[match+i] = HlSearch
+			saved_hl = make(highlight.LineMatch)
+			for k, v := range row.HlMatches {
+				saved_hl[k] = v
+			}
+			var c highlight.Group
+			row.HlMatches[match] = 255
+			ql := len(query)
+			for i := 0; i <= match+ql; i++ {
+				if i >= match {
+					row.HlMatches[i] = 255
+				}
+				if saved_hl[i] != 0 {
+					c = saved_hl[i]
+				}
+			}
+			if ql == 0 {
+				row.HlMatches[match] = saved_hl[match]
+			} else {
+				row.HlMatches[match+ql] = c
 			}
 			break
 		}

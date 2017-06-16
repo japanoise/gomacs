@@ -8,38 +8,39 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/nsf/termbox-go"
 	"github.com/zhemao/glisp/interpreter"
+	"github.com/zyedidia/highlight"
 	"os"
 	"strings"
 	"unicode/utf8"
 )
 
 type EditorRow struct {
-	idx             int
-	Size            int
-	Data            string
-	RenderSize      int
-	Render          string
-	Hl              []EmacsColor
-	hl_open_comment bool
+	idx        int
+	Size       int
+	Data       string
+	RenderSize int
+	Render     string
+	HlState    highlight.State
+	HlMatches  highlight.LineMatch
 }
 
 type EditorBuffer struct {
-	Filename   string
-	Rendername string
-	Dirty      bool
-	cx         int
-	cy         int
-	rx         int
-	rowoff     int
-	coloff     int
-	NumRows    int
-	Rows       []*EditorRow
-	Syntax     *EditorSyntax
-	Undo       *EditorUndo
-	Redo       *EditorUndo
-	MarkX      int
-	MarkY      int
-	Modes      ModeList
+	Filename    string
+	Rendername  string
+	Dirty       bool
+	cx          int
+	cy          int
+	rx          int
+	rowoff      int
+	coloff      int
+	NumRows     int
+	Rows        []*EditorRow
+	Undo        *EditorUndo
+	Redo        *EditorUndo
+	MarkX       int
+	MarkY       int
+	Modes       ModeList
+	Highlighter *highlight.Highlighter
 }
 
 type EditorState struct {
@@ -89,7 +90,7 @@ func EditorQuit() {
 	}
 }
 
-func editorUpdateRow(row *EditorRow) {
+func editorUpdateRow(row *EditorRow, buf *EditorBuffer) {
 	tabs := 0
 	for _, rv := range row.Data {
 		if rv == '\t' {
@@ -108,7 +109,10 @@ func editorUpdateRow(row *EditorRow) {
 		}
 	}
 	row.Render = buffer.String()
-	editorUpdateSyntax(row)
+	if buf.Highlighter != nil {
+		buf.Highlighter.ReHighlightStates(buf, row.idx)
+		buf.Highlighter.HighlightMatches(buf, row.idx, buf.NumRows)
+	}
 }
 
 func updateLineIndexes() {
@@ -119,8 +123,8 @@ func updateLineIndexes() {
 
 func editorAppendRow(line string) {
 	Global.CurrentB.Rows = append(Global.CurrentB.Rows, &EditorRow{Global.CurrentB.NumRows,
-		len(line), line, 0, "", []EmacsColor{}, false})
-	editorUpdateRow(Global.CurrentB.Rows[Global.CurrentB.NumRows])
+		len(line), line, 0, "", nil, nil})
+	editorUpdateRow(Global.CurrentB.Rows[Global.CurrentB.NumRows], Global.CurrentB)
 	Global.CurrentB.NumRows++
 	Global.CurrentB.Dirty = true
 }
@@ -143,21 +147,21 @@ func editorInsertRow(at int, line string) {
 	}
 	Global.CurrentB.Rows = append(Global.CurrentB.Rows, nil)
 	copy(Global.CurrentB.Rows[at+1:], Global.CurrentB.Rows[at:])
-	Global.CurrentB.Rows[at] = &EditorRow{at, len(line), line, 0, "", []EmacsColor{}, false}
-	editorUpdateRow(Global.CurrentB.Rows[at])
+	Global.CurrentB.Rows[at] = &EditorRow{at, len(line), line, 0, "", nil, nil}
+	editorUpdateRow(Global.CurrentB.Rows[at], Global.CurrentB)
 	Global.CurrentB.NumRows++
 	Global.CurrentB.Dirty = true
 	updateLineIndexes()
 }
 
-func editorRowAppendStr(row *EditorRow, s string) {
+func editorRowAppendStr(row *EditorRow, buf *EditorBuffer, s string) {
 	row.Data += s
 	row.Size += len(s)
-	editorUpdateRow(row)
+	editorUpdateRow(row, buf)
 	Global.CurrentB.Dirty = true
 }
 
-func editorRowInsertStr(row *EditorRow, at int, s string) {
+func editorRowInsertStr(row *EditorRow, buf *EditorBuffer, at int, s string) {
 	var buffer bytes.Buffer
 	if row.Size > 0 && at < row.Size {
 		buffer.WriteString(row.Data[0:at])
@@ -170,11 +174,11 @@ func editorRowInsertStr(row *EditorRow, at int, s string) {
 	}
 	row.Data = buffer.String()
 	row.Size = len(row.Data)
-	editorUpdateRow(row)
+	editorUpdateRow(row, buf)
 	Global.CurrentB.Dirty = true
 }
 
-func editorRowDelChar(row *EditorRow, at int, rw int) {
+func editorRowDelChar(row *EditorRow, buf *EditorBuffer, at int, rw int) {
 	if at < 0 || row.Size < 0 || at >= row.Size {
 		return
 	}
@@ -183,7 +187,7 @@ func editorRowDelChar(row *EditorRow, at int, rw int) {
 	buffer.WriteString(row.Data[at+rw:])
 	row.Data = buffer.String()
 	row.Size = len(row.Data)
-	editorUpdateRow(row)
+	editorUpdateRow(row, buf)
 	Global.CurrentB.Dirty = true
 }
 
@@ -198,7 +202,7 @@ func editorInsertStr(s string) {
 	}
 	editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx+len(s),
 		Global.CurrentB.cy, Global.CurrentB.cy, s)
-	editorRowInsertStr(Global.CurrentB.Rows[Global.CurrentB.cy], Global.CurrentB.cx, s)
+	editorRowInsertStr(Global.CurrentB.Rows[Global.CurrentB.cy], Global.CurrentB, Global.CurrentB.cx, s)
 	Global.CurrentB.cx += len(s)
 }
 
@@ -214,13 +218,13 @@ func editorDelChar() {
 		_, rs := utf8.DecodeLastRuneInString(Global.CurrentB.Rows[Global.CurrentB.cy].Data[:Global.CurrentB.cx])
 		editorAddUndo(false, Global.CurrentB.cx-rs, Global.CurrentB.cx, Global.CurrentB.cy,
 			Global.CurrentB.cy, row.Data[Global.CurrentB.cx-rs:Global.CurrentB.cx])
-		editorRowDelChar(row, Global.CurrentB.cx-rs, rs)
+		editorRowDelChar(row, Global.CurrentB, Global.CurrentB.cx-rs, rs)
 		Global.CurrentB.cx -= rs
 	} else {
 		editorAddUndo(false, Global.CurrentB.cx, Global.CurrentB.Rows[Global.CurrentB.cy-1].Size,
 			Global.CurrentB.cy-1, Global.CurrentB.cy, row.Data)
 		Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy-1].Size
-		editorRowAppendStr(Global.CurrentB.Rows[Global.CurrentB.cy-1], row.Data)
+		editorRowAppendStr(Global.CurrentB.Rows[Global.CurrentB.cy-1], Global.CurrentB, row.Data)
 		editorDelRow(Global.CurrentB.cy)
 		Global.CurrentB.cy--
 	}
@@ -259,7 +263,7 @@ func editorInsertNewline() {
 		row = Global.CurrentB.Rows[Global.CurrentB.cy]
 		row.Size = Global.CurrentB.cx
 		row.Data = row.Data[0:Global.CurrentB.cx]
-		editorUpdateRow(row)
+		editorUpdateRow(row, Global.CurrentB)
 		Global.CurrentB.cx = len(pre)
 	}
 	Global.CurrentB.cy++
@@ -272,7 +276,6 @@ func EditorOpen(filename string) error {
 	}
 	Global.CurrentB.Filename = path
 	Global.CurrentB.Rendername = path
-	editorSelectSyntaxHighlight(Global.CurrentB)
 	f, err := os.Open(path)
 	if err != nil {
 		return err
@@ -283,6 +286,7 @@ func EditorOpen(filename string) error {
 		editorAppendRow(scanner.Text())
 	}
 	Global.CurrentB.Dirty = false
+	editorSelectSyntaxHighlight(Global.CurrentB)
 	return nil
 }
 
@@ -376,6 +380,9 @@ func main() {
 	fs := flag.NewFlagSet("", flag.ExitOnError)
 	fs.BoolVar(&Global.NoSyntax, "s", false, "disable syntax highlighting")
 	fs.Parse(os.Args[1:])
+	if !Global.NoSyntax {
+		LoadSyntaxDefs()
+	}
 	args := fs.Args()
 	env := NewLispInterp()
 	if Global.Input == "" {

@@ -19,7 +19,7 @@ func rowDelRange(row *EditorRow, startc, endc int, buf *EditorBuffer) {
 	editorAddUndo(false, startc, endc,
 		row.idx, row.idx, row.Data[startc:endc])
 	Global.Clipboard = row.Data[startc:endc]
-	editorRowDelChar(row, startc, endc-startc)
+	editorRowDelChar(row, buf, startc, endc-startc)
 }
 
 func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {

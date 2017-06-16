@@ -85,14 +85,6 @@ func trimString(s string, coloff int) (string, int) {
 	}
 }
 
-func hlprint(s string, hl []EmacsColor, x, y int) {
-	i := 0
-	for in, ru := range s {
-		termutil.PrintRune(x+i, y, ru, editorSyntaxToColor(hl[in]))
-		i += termutil.Runewidth(ru)
-	}
-}
-
 func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 	for y := starty; y < sy; y++ {
 		filerow := (y - starty) + buf.rowoff
@@ -112,9 +104,10 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 					termutil.PrintRune(gutsize-1, y, '←', termbox.ColorDefault)
 				}
 			}
-			if buf.coloff < buf.Rows[filerow].RenderSize {
-				r, off := trimString(buf.Rows[filerow].Render, buf.coloff)
-				hlprint(r, buf.Rows[filerow].Hl[off:], gutsize, y)
+			row := buf.Rows[filerow]
+			if buf.coloff < row.RenderSize {
+				_, off := trimString(row.Render, buf.coloff)
+				row.HlPrint(gutsize, y, off)
 			}
 		}
 	}
@@ -123,8 +116,8 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 func editorUpdateStatus(buf *EditorBuffer) string {
 	fn := buf.getRenderName()
 	syn := "no ft"
-	if buf.Syntax != nil {
-		syn = buf.Syntax.filetype
+	if buf.Highlighter != nil {
+		syn = buf.Highlighter.Def.FileType
 	}
 	if buf.Dirty {
 		return fmt.Sprintf("%s [Modified] - (%s) %d:%d", fn, syn,

@@ -2,6 +2,9 @@
 
 ## Files in Gomacs
 
+- bindata.go - syntax highlighting data to be embedded into the executable.
+  Leave this file alone! If you add a new syntax highlighting definition,
+  though, you can run `go-bindata syntax_files/*.yaml`
 - commands.go - code to do with registering and storing mappings between
   keypresses and lisp functions or commands.
 - input.go - input from the user. Translating a termbox key event into an emacs

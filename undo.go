@@ -104,7 +104,7 @@ func editorDoUndo(tree *EditorUndo) bool {
 		// Insertion
 		if tree.startl == tree.endl {
 			// Basic string insertion
-			editorRowDelChar(Global.CurrentB.Rows[tree.startl],
+			editorRowDelChar(Global.CurrentB.Rows[tree.startl], Global.CurrentB,
 				tree.startc, len(tree.str))
 			Global.CurrentB.cx = tree.startc
 			Global.CurrentB.cy = tree.startl
@@ -119,7 +119,7 @@ func editorDoUndo(tree *EditorUndo) bool {
 			// inserting a line
 			Global.CurrentB.cx = tree.startc
 			Global.CurrentB.cy = tree.startl
-			editorRowAppendStr(Global.CurrentB.Rows[tree.startl], tree.str)
+			editorRowAppendStr(Global.CurrentB.Rows[tree.startl], Global.CurrentB, tree.str)
 			editorDelRow(tree.endl)
 			return true
 		}
@@ -127,7 +127,7 @@ func editorDoUndo(tree *EditorUndo) bool {
 		// Deletion
 		if tree.startl == tree.endl {
 			// Character or word deletion
-			editorRowInsertStr(Global.CurrentB.Rows[tree.startl],
+			editorRowInsertStr(Global.CurrentB.Rows[tree.startl], Global.CurrentB,
 				tree.startc, tree.str)
 			Global.CurrentB.cx = tree.endc
 			Global.CurrentB.cy = tree.startl
@@ -139,8 +139,8 @@ func editorDoUndo(tree *EditorUndo) bool {
 			row.Data = tree.str
 			row.Size = len(row.Data)
 			Global.CurrentB.Rows[tree.startl].Size = len(Global.CurrentB.Rows[tree.startl].Data)
-			editorUpdateRow(row)
-			editorUpdateRow(Global.CurrentB.Rows[tree.startl])
+			editorUpdateRow(row, Global.CurrentB)
+			editorUpdateRow(Global.CurrentB.Rows[tree.startl], Global.CurrentB)
 			return true
 		}
 	}

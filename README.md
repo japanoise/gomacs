@@ -169,3 +169,6 @@ Finally, and most importantly, it's a fun project I've always wanted to do ;)
 ## Credits
 
 Thanks to nsf for termbox and godit (from which the suspend code comes.)
+
+Thanks to zyedidia and the rest of the micro team for the syntax highlighting
+code; see the LICENSE file for their full credits + copyright notice.
