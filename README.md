@@ -60,6 +60,7 @@ yet - I'll try to keep this list up to date!
 - `C-x o` - switch to other window
 - `C-x 0` - delete selected window
 - `C-x 1` - maximise selected window (deleting the others)
+- `C-x 4 0` - delete selected window and current buffer
 - `C-x 4 C-f` - find file in other window (creating one if there's only one window)
 - `C-x 4 b` - switch buffer in other window
 - `C-l` - Centre view on current line

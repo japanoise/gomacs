@@ -9,6 +9,15 @@ func getCurrentWindow() int {
 	return -1
 }
 
+func getIndexOfCurrentBuffer() int {
+	for i, buf := range Global.Buffers {
+		if buf == Global.CurrentB {
+			return i
+		}
+	}
+	return -1
+}
+
 func splitWindows() {
 	Global.Windows = append(Global.Windows, Global.CurrentB)
 }
@@ -102,17 +111,14 @@ func editorSwitchBuffer() {
 	Global.CurrentB = Global.Buffers[in]
 }
 
-func killBuffer() {
+func killGivenBuffer(i int) {
 	// Deleting the last buffer will result in painful death!
 	if len(Global.Buffers) == 1 {
 		Global.Input = "Can't kill the last buffer!"
 		return
 	}
 
-	// Choose a buffer to kill, and leave if the user cancels.
-	choices, _ := bufferChoiceList()
-	i := editorChoiceIndex("Kill buffer", choices, -1)
-	if i == -1 {
+	if i <= -1 || i >= len(Global.Buffers) {
 		Global.Input = "Cancel."
 		return
 	}
@@ -152,10 +158,28 @@ func killBuffer() {
 	}
 }
 
+func killBuffer() {
+	// Deleting the last buffer will result in painful death!
+	if len(Global.Buffers) == 1 {
+		Global.Input = "Can't kill the last buffer!"
+		return
+	}
+
+	// Choose a buffer to kill
+	choices, _ := bufferChoiceList()
+	killGivenBuffer(editorChoiceIndex("Kill buffer", choices, -1))
+}
+
 func callFunOtherWindow(f func()) {
 	if len(Global.Windows) == 1 {
 		splitWindows()
 	}
 	switchWindow()
 	f()
+}
+
+func KillBufferAndWindow() {
+	bufi := getIndexOfCurrentBuffer()
+	closeThisWindow()
+	killGivenBuffer(bufi)
 }
