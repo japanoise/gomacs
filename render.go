@@ -107,7 +107,7 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 			row := buf.Rows[filerow]
 			if buf.coloff < row.RenderSize {
 				_, off := trimString(row.Render, buf.coloff)
-				row.HlPrint(gutsize, y, off)
+				row.HlPrint(gutsize, y, buf.coloff, off)
 			}
 		}
 	}

@@ -40,11 +40,14 @@ func (buf *EditorBuffer) Highlight() {
 	buf.Highlighter.HighlightMatches(buf, 0, buf.NumRows)
 }
 
-func (row *EditorRow) HlPrint(x, y, offset int) {
+func (row *EditorRow) HlPrint(x, y, offset, runeoff int) {
+	if offset >= row.RenderSize-1 {
+		return
+	}
 	color := termbox.ColorDefault
 	os := 0
-	for in, ru := range row.Render[offset:] {
-		if group, ok := row.HlMatches[in+offset]; ok {
+	for in, ru := range row.Render[runeoff:] {
+		if group, ok := row.HlMatches[in+runeoff]; ok {
 			switch group {
 			case 255:
 				// Special case here for search results
