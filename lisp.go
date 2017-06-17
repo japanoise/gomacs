@@ -360,7 +360,6 @@ func LoadUserConfig(env *glisp.Glisp) {
 	}
 	rc, err := ioutil.ReadFile(usr + "/.gomacs.lisp")
 	if err != nil {
-		Global.Input = "Error loading rc file: " + err.Error()
 		return
 	}
 	err = env.LoadString(string(rc))
