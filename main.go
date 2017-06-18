@@ -56,6 +56,8 @@ type EditorState struct {
 	Clipboard      string
 	SoftTab        bool
 	DefaultModes   map[string]bool
+	messages       []string
+	debug          bool
 }
 
 var Global EditorState
@@ -309,6 +311,7 @@ func editorBufSave(buf *EditorBuffer) {
 	f, err := os.Create(fn)
 	if err != nil {
 		Global.Input = err.Error()
+		AddErrorMessage(err.Error())
 		return
 	}
 	defer f.Close()
@@ -320,6 +323,7 @@ func editorBufSave(buf *EditorBuffer) {
 		l++
 	}
 	Global.Input = fmt.Sprintf("Wrote %d lines (%d bytes) to %s", l, b, fn)
+	AddErrorMessage(Global.Input)
 	buf.Dirty = false
 }
 
@@ -334,7 +338,8 @@ func getTabString() string {
 func InitEditor() {
 	buffer := &EditorBuffer{}
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
-		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool)}
+		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool),
+		[]string{}, false}
 	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true
@@ -342,13 +347,16 @@ func InitEditor() {
 }
 
 func dumpCrashLog(e string) {
-	f, err := os.Create("crash.log")
-	if err != nil {
-		Global.Input = err.Error()
-		return
+	AddErrorMessage(e)
+	if Global.debug {
+		f, err := os.Create("crash.log")
+		if err != nil {
+			Global.Input = err.Error()
+			return
+		}
+		f.WriteString(e)
+		f.Close()
 	}
-	f.WriteString(e)
-	f.Close()
 }
 
 func RunCommandForKey(key string, env *glisp.Glisp) {
@@ -375,10 +383,15 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 	}
 }
 
+func AddErrorMessage(msg string) {
+	Global.messages = append(Global.messages, msg)
+}
+
 func main() {
 	InitEditor()
 	fs := flag.NewFlagSet("", flag.ExitOnError)
 	fs.BoolVar(&Global.NoSyntax, "s", false, "disable syntax highlighting")
+	fs.BoolVar(&Global.debug, "d", false, "enable dumps of crash logs")
 	fs.Parse(os.Args[1:])
 	if !Global.NoSyntax {
 		LoadSyntaxDefs()
@@ -392,6 +405,7 @@ func main() {
 		ferr := EditorOpen(args[0])
 		if ferr != nil {
 			Global.Input = ferr.Error()
+			AddErrorMessage(ferr.Error())
 		}
 		if len(args) > 1 {
 			for _, fn := range args[1:] {
@@ -401,6 +415,7 @@ func main() {
 				ferr = EditorOpen(fn)
 				if ferr != nil {
 					Global.Input = ferr.Error()
+					AddErrorMessage(ferr.Error())
 				}
 			}
 			Global.CurrentB = Global.Buffers[0]

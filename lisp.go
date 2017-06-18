@@ -342,6 +342,7 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"end-macro", func(*glisp.Glisp) { stopRecMacro() }})
 	DefineCommand(&CommandFunc{"end-macro-and-run", func(e *glisp.Glisp) { doRunMacro(e) }})
 	DefineCommand(&CommandFunc{"kill-buffer-and-window", func(*glisp.Glisp) { KillBufferAndWindow() }})
+	DefineCommand(&CommandFunc{"view-messages", func(*glisp.Glisp) { showMessages(Global.messages...) }})
 }
 
 func NewLispInterp() *glisp.Glisp {
@@ -356,20 +357,24 @@ func LoadUserConfig(env *glisp.Glisp) {
 	usr, ue := homedir.Dir()
 	if ue != nil {
 		Global.Input = "Error getting current user's home directory: " + ue.Error()
+		AddErrorMessage(Global.Input)
 		return
 	}
 	rc, err := ioutil.ReadFile(usr + "/.gomacs.lisp")
 	if err != nil {
+		AddErrorMessage(err.Error())
 		return
 	}
 	err = env.LoadString(string(rc))
 	if err != nil {
 		Global.Input = "Error parsing rc file: " + err.Error()
+		AddErrorMessage(Global.Input)
 		return
 	}
 	_, err = env.Run()
 	if err != nil {
 		Global.Input = "Error executing rc file: " + err.Error()
+		AddErrorMessage(Global.Input)
 		return
 	}
 }

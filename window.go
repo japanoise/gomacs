@@ -105,10 +105,14 @@ func bufferChoiceList() ([]string, int) {
 
 func editorSwitchBuffer() {
 	choices, def := bufferChoiceList()
-	in := editorChoiceIndex("Switch buffer", choices, def)
-	i := getCurrentWindow()
-	Global.Windows[i] = Global.Buffers[in]
-	Global.CurrentB = Global.Buffers[in]
+	in := editorChoiceIndex("Switch buffer", append([]string{"View Messages"}, choices...), def+1)
+	if in == 0 {
+		showMessages(Global.messages...)
+	} else {
+		i := getCurrentWindow()
+		Global.Windows[i] = Global.Buffers[in-1]
+		Global.CurrentB = Global.Buffers[in-1]
+	}
 }
 
 func killGivenBuffer(i int) {

@@ -9,6 +9,7 @@ func DiredMode() {
 	dir, perr := filepath.Abs("./")
 	if perr != nil {
 		Global.Input = perr.Error()
+		AddErrorMessage(perr.Error())
 		return
 	}
 	done := false
@@ -16,6 +17,7 @@ func DiredMode() {
 		files, err := ioutil.ReadDir(dir)
 		if err != nil {
 			Global.Input = err.Error()
+			AddErrorMessage(err.Error())
 			return
 		}
 		choices := []string{"<Cancel>", "../"}
@@ -43,6 +45,7 @@ func DiredMode() {
 		dir, err = filepath.Abs(dir)
 		if err != nil {
 			Global.Input = err.Error()
+			AddErrorMessage(err.Error())
 			return
 		}
 	}
