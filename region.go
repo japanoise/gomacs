@@ -68,6 +68,7 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 	}
 	buf.cx = startc
 	buf.cy = startl
+	buf.Dirty = true
 }
 
 func bufCopyRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
@@ -119,6 +120,7 @@ func doCopyRegion() {
 }
 
 func spitRegion(cx, cy int, region string) {
+	Global.CurrentB.Dirty = true
 	Global.CurrentB.cx = cx
 	Global.CurrentB.cy = cy
 	clipLines := strings.Split(region, "\n")
