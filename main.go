@@ -92,7 +92,7 @@ func EditorQuit() {
 	}
 }
 
-func editorUpdateRow(row *EditorRow, buf *EditorBuffer) {
+func rowUpdateRender(row *EditorRow) {
 	tabs := 0
 	for _, rv := range row.Data {
 		if rv == '\t' {
@@ -111,10 +111,18 @@ func editorUpdateRow(row *EditorRow, buf *EditorBuffer) {
 		}
 	}
 	row.Render = buffer.String()
+}
+
+func editorReHighlightRow(row *EditorRow, buf *EditorBuffer) {
 	if buf.Highlighter != nil {
 		buf.Highlighter.ReHighlightStates(buf, row.idx)
 		buf.Highlighter.HighlightMatches(buf, row.idx, buf.NumRows)
 	}
+}
+
+func editorUpdateRow(row *EditorRow, buf *EditorBuffer) {
+	rowUpdateRender(row)
+	editorReHighlightRow(row, buf)
 }
 
 func updateLineIndexes() {

@@ -28,37 +28,41 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 	} else {
 		var bb bytes.Buffer
 		row := buf.Rows[startl]
-		rowDelRange(row, startc, row.Size, buf)
-		editorPopUndo()
-		bb.WriteString(Global.Clipboard)
+
+		// Delete from first line
+		bb.WriteString(row.Data[startc:])
+		row.Data = row.Data[:startc]
 		bb.WriteRune('\n')
+
+		// Collect data from middle rows
 		for i := startl + 1; i < endl; i++ {
-			row = buf.Rows[startl+1] //it deletes as they go!
-			hasdata := false
-			if row.Size > 0 {
-				hasdata = true
-				rowDelRange(row, 0, row.Size, buf)
-				editorPopUndo()
-			}
-			buf.cy = startl + 1
-			buf.cx = 0
-			editorDelChar()
-			editorPopUndo()
-			if hasdata {
-				bb.WriteString(Global.Clipboard)
-			}
+			bb.WriteString(buf.Rows[i].Data)
 			bb.WriteRune('\n')
 		}
-		row = buf.Rows[startl+1]
-		rowDelRange(row, 0, endc, buf)
-		editorPopUndo()
-		buf.cy = startl + 1
-		buf.cx = 0
-		editorDelChar()
-		editorPopUndo()
-		bb.WriteString(Global.Clipboard)
+
+		// Collect data from last row
+		row = buf.Rows[endl]
+		bb.WriteString(row.Data[:endc])
+		row.Data = row.Data[endc:]
+
+		// Append last row's data to first row
+		buf.Rows[startl].Data += row.Data
+		buf.Rows[startl].Size = len(buf.Rows[startl].Data)
+		rowUpdateRender(buf.Rows[startl])
 		Global.Clipboard = bb.String()
+
+		// Cut region out of rows
+		i, j := startl+1, endl+1
+		copy(buf.Rows[i:], buf.Rows[j:])
+		for k, n := len(buf.Rows)-j+i, len(buf.Rows); k < n; k++ {
+			buf.Rows[k] = nil // or the zero value of T
+		}
+		buf.Rows = buf.Rows[:len(buf.Rows)-j+i]
+		buf.NumRows = len(buf.Rows)
+
+		// Update the buffer and return
 		updateLineIndexes()
+		editorReHighlightRow(buf.Rows[startl], buf)
 		editorAddRegionUndo(false, startc, endc,
 			startl, endl, Global.Clipboard)
 	}
@@ -118,16 +122,56 @@ func spitRegion(cx, cy int, region string) {
 	Global.CurrentB.cx = cx
 	Global.CurrentB.cy = cy
 	clipLines := strings.Split(region, "\n")
-	editorInsertStr(clipLines[0])
-	editorPopUndo()
+	if cy == Global.CurrentB.NumRows {
+		editorAppendRow("")
+	}
+	row := Global.CurrentB.Rows[cy]
+	data := row.Data
+	row.Data = data[:cx] + clipLines[0]
+	row.Size = len(row.Data)
+	Global.CurrentB.cx = row.Size
 	if len(clipLines) > 1 {
 		// Insert more lines...
-		for i := 1; i < len(clipLines); i++ {
-			editorInsertNewline()
-			editorPopUndo()
-			editorInsertStr(clipLines[i])
-			editorPopUndo()
+		rowUpdateRender(row)
+		myrows := make([]*EditorRow, len(clipLines)-1)
+		mrlen := len(myrows)
+		for i := 0; i < mrlen; i++ {
+			newrow := &EditorRow{}
+			newrow.Data = clipLines[i+1]
+			newrow.Size = len(newrow.Data)
+			rowUpdateRender(newrow)
+			myrows[i] = newrow
 		}
+		Global.CurrentB.cy += mrlen
+		Global.CurrentB.cx = myrows[mrlen-1].Size
+		if cx < len(data) {
+			myrows[mrlen-1].Data += data[cx:]
+			myrows[mrlen-1].Size = len(myrows[mrlen-1].Data)
+			rowUpdateRender(myrows[mrlen-1])
+		}
+
+		if cy < Global.CurrentB.NumRows {
+			Global.CurrentB.Rows = append(Global.CurrentB.Rows[:cy+1], append(myrows, Global.CurrentB.Rows[cy+1:]...)...)
+
+		} else {
+			Global.CurrentB.Rows = append(Global.CurrentB.Rows[:cy], myrows...)
+		}
+		Global.CurrentB.NumRows = len(Global.CurrentB.Rows)
+		updateLineIndexes()
+		if Global.CurrentB.Highlighter != nil {
+			Global.CurrentB.Highlighter.HighlightStates(Global.CurrentB)
+			if cy == 0 {
+				Global.CurrentB.Highlighter.HighlightMatches(Global.CurrentB, 0, Global.CurrentB.NumRows)
+
+			} else {
+				Global.CurrentB.Highlighter.HighlightMatches(Global.CurrentB, cy-1, Global.CurrentB.NumRows)
+
+			}
+		}
+	} else {
+		row.Data += data[cx:]
+		row.Size = len(row.Data)
+		editorUpdateRow(row, Global.CurrentB)
 	}
 	editorAddRegionUndo(true, cx, Global.CurrentB.cx,
 		cy, Global.CurrentB.cy, region)
