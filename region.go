@@ -12,7 +12,7 @@ func setMark(buf *EditorBuffer) {
 }
 
 func validMark(buf *EditorBuffer) bool {
-	return buf.MarkY < buf.NumRows && buf.MarkX <= len(buf.Rows[buf.MarkY].Data)
+	return buf.cy < buf.NumRows && buf.MarkY < buf.NumRows && buf.MarkX <= len(buf.Rows[buf.MarkY].Data)
 }
 
 func rowDelRange(row *EditorRow, startc, endc int, buf *EditorBuffer) {
