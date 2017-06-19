@@ -4,8 +4,8 @@
 
 Gomacs is an Emacs clone for the terminal. Unlike many other mini-Emacsen, it
 has an embedded Lisp, [powered by Glisp.](https://github.com/zhemao/glisp)
-This puts it in the realm of true Emacs! It also supports primitive syntax
-highlighting for C and Go.
+This puts it in the realm of true Emacs! It also supports syntax highlighting
+for a wide array of languages; see the `syntax-files/` directory.
 
 Closely follows
 [the modified version of Kilo found in this tutorial](http://viewsourcecode.org/snaptoken/kilo)
