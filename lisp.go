@@ -8,6 +8,117 @@ import (
 	"io/ioutil"
 )
 
+func lispGetKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	return glisp.SexpStr(editorGetKey()), nil
+}
+
+func lispChoiceIndex(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) != 3 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var prompt string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		prompt = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
+	}
+	var choices []string
+	switch t := args[1].(type) {
+	case glisp.SexpArray:
+		choices = make([]string, len(t))
+		for i, csexp := range t {
+			switch choice := csexp.(type) {
+			case glisp.SexpStr:
+				choices[i] = string(choice)
+			default:
+				return glisp.SexpNull, errors.New("Arg 2 needs to be a list of strings")
+			}
+		}
+	default:
+		return glisp.SexpNull, errors.New("Arg 2 needs to be a list")
+	}
+	var def int
+	switch t := args[2].(type) {
+	case glisp.SexpInt:
+		def = int(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg 3 needs to be an int")
+	}
+	return glisp.SexpInt(editorChoiceIndex(prompt, choices, def)), nil
+}
+
+func lispPrompt(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) != 1 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var prompt string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		prompt = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg needs to be a string")
+	}
+	return glisp.SexpStr(editorPrompt(prompt, nil)), nil
+}
+
+func lispPromptWithCallback(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) != 2 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var prompt string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		prompt = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
+	}
+	var callback glisp.SexpFunction
+	switch t := args[1].(type) {
+	case glisp.SexpFunction:
+		callback = t
+	default:
+		return glisp.SexpNull, errors.New("Arg 2 needs to be a function")
+	}
+	return glisp.SexpStr(editorPrompt(prompt, func(a, b string) {
+		env.Apply(callback, []glisp.Sexp{glisp.SexpStr(a), glisp.SexpStr(b)})
+	})), nil
+}
+
+func lispYesNoCancelPrompt(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) != 1 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var prompt string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		prompt = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg needs to be a string")
+	}
+	res, err := editorYesNoPrompt(prompt, true)
+	if err == nil {
+		return glisp.SexpBool(res), nil
+	} else {
+		return glisp.SexpStr("Cancelled"), nil
+	}
+}
+
+func lispYesNoPrompt(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) != 1 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var prompt string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		prompt = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg needs to be a string")
+	}
+	res, _ := editorYesNoPrompt(prompt, false)
+	return glisp.SexpBool(res), nil
+}
+
 func lispPrint(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
@@ -267,6 +378,12 @@ func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("listmodes", lispListModes)
 	env.AddFunction("adddefaultmode", lispAddDefaultMode)
 	env.AddFunction("remdefaultmode", lispRemDefaultMode)
+	env.AddFunction("yesnoprompt", lispYesNoPrompt)
+	env.AddFunction("yesnocancelprompt", lispYesNoCancelPrompt)
+	env.AddFunction("getkey", lispGetKey)
+	env.AddFunction("stringprompt", lispPrompt)
+	env.AddFunction("stringpromptcallback", lispPromptWithCallback)
+	env.AddFunction("choiceindex", lispChoiceIndex)
 	DefineCommand(&CommandFunc{"describe-key-briefly", func(env *glisp.Glisp) { DescribeKeyBriefly() }})
 	DefineCommand(&CommandFunc{"run-command", RunCommand})
 	DefineCommand(&CommandFunc{"redo", editorRedoAction})
