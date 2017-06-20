@@ -52,8 +52,8 @@ func ParseTermboxEvent(ev termbox.Event) string {
 	return termutil.ParseTermboxEvent(ev)
 }
 
-func editorYesNoPrompt(p string, allowcancel bool) (bool, error) {
-	if allowcancel {
+func editorYesNoPrompt(p string, noallowcancel bool) (bool, error) {
+	if noallowcancel {
 		return termutil.YesNo(p, func(int, int) { editorRefreshScreen() }), nil
 	} else {
 		r, err := termutil.YesNoCancel(p, func(int, int) { editorRefreshScreen() })

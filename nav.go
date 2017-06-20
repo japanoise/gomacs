@@ -165,20 +165,22 @@ func editorFindCallback(query string, key string) {
 				saved_hl[k] = v
 			}
 			var c highlight.Group
-			row.HlMatches[match] = 255
-			ql := len(query)
-			for i := 0; i <= match+ql; i++ {
-				if i >= match {
-					row.HlMatches[i] = 255
+			if row.HlMatches != nil {
+				row.HlMatches[match] = 255
+				ql := len(query)
+				for i := 0; i <= match+ql; i++ {
+					if i >= match {
+						row.HlMatches[i] = 255
+					}
+					if saved_hl[i] != 0 {
+						c = saved_hl[i]
+					}
 				}
-				if saved_hl[i] != 0 {
-					c = saved_hl[i]
+				if ql == 0 {
+					row.HlMatches[match] = saved_hl[match]
+				} else {
+					row.HlMatches[match+ql] = c
 				}
-			}
-			if ql == 0 {
-				row.HlMatches[match] = saved_hl[match]
-			} else {
-				row.HlMatches[match+ql] = c
 			}
 			break
 		}
@@ -199,6 +201,59 @@ func editorFind() {
 		Global.CurrentB.cy = saved_cy
 		Global.CurrentB.coloff = saved_co
 		Global.CurrentB.rowoff = saved_ro
+	}
+}
+
+func doQueryReplace() {
+	orig := editorPrompt("Find", nil)
+	if orig == "" {
+		Global.Input = "Can't query-replace with an empty query"
+		return
+	}
+	replace := editorPrompt("Replace "+orig+" with", nil)
+	ql := len(orig)
+	for cy, row := range Global.CurrentB.Rows {
+		match := strings.Index(row.Render, orig)
+		if match != -1 {
+			Global.CurrentB.cy = cy
+			Global.CurrentB.cx = editorRowRxToCx(row, match)
+			Global.CurrentB.rowoff = Global.CurrentB.NumRows
+			saved_hl_line = cy
+			saved_hl = make(highlight.LineMatch)
+			for k, v := range row.HlMatches {
+				saved_hl[k] = v
+			}
+			var c highlight.Group
+			if row.HlMatches != nil {
+				row.HlMatches[match] = 255
+
+				for i := 0; i <= match+ql; i++ {
+					if i >= match {
+						row.HlMatches[i] = 255
+					}
+					if saved_hl[i] != 0 {
+						c = saved_hl[i]
+					}
+				}
+				if ql == 0 {
+					row.HlMatches[match] = saved_hl[match]
+				} else {
+					row.HlMatches[match+ql] = c
+				}
+			}
+			yes, err := editorYesNoPrompt("Replace with "+replace+"?", false)
+			if err != nil {
+				row.HlMatches = saved_hl
+				return
+			} else if yes {
+				Global.CurrentB.Dirty = true
+				row.Data = strings.Replace(row.Data, orig, replace, -1)
+				row.Size = len(row.Data)
+				editorUpdateRow(row, Global.CurrentB)
+			} else {
+				row.HlMatches = saved_hl
+			}
+		}
 	}
 }
 

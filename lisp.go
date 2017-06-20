@@ -460,6 +460,7 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"end-macro-and-run", func(e *glisp.Glisp) { doRunMacro(e) }})
 	DefineCommand(&CommandFunc{"kill-buffer-and-window", func(*glisp.Glisp) { KillBufferAndWindow() }})
 	DefineCommand(&CommandFunc{"view-messages", func(*glisp.Glisp) { showMessages(Global.messages...) }})
+	DefineCommand(&CommandFunc{"query-replace", func(*glisp.Glisp) { doQueryReplace() }})
 }
 
 func NewLispInterp() *glisp.Glisp {
@@ -565,6 +566,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x )" "end-macro")
 (emacsbindkey "C-x e" "end-macro-and-run")
 (emacsbindkey "C-x 4 0" "kill-buffer-and-window")
+(emacsbindkey "M-%" "query-replace")
 `)
 	if err != nil {
 		fmt.Println(err.Error())
