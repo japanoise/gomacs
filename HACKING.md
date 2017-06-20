@@ -10,6 +10,7 @@
 - input.go - input from the user. Translating a termbox key event into an emacs
   binding string.
 - lisp.go - dealing with the lisp interpreter.
+- macro.go - macro and micromode functionality
 - main.go - big ball of tar! Most row editing, buffer actions, etc done here, as
   well as the main loop. An ongoing project is to extract code from here and into
   dedicated files.
@@ -38,14 +39,22 @@ also uses this to determine which window is currently focused.
 Another way Gomacs is not like Kilo is in the drawing code. We actually delegate
 this to a library, [Termbox.](https://github.com/nsf/termbox-go) Termbox
 provides us with some drawing primitives, but it mostly leaves us on our own.
-The first few functions in main.go are to do with drawing the screen.
+Most of this functionality is in render.go. Some stuff is delegated to my
+library [termutil;](https://github.com/japanoise/termbox-util) this can be
+found in input.go, with a little in render.go and small parts scattered around
+the other files.
 
 Now, apart from these differences, a Kilo hacker will notice a lot of
 similarities. Buffers are a wrapper around a list of EditorRows. Each of these
 has a data field (the actual string from the file), a render string (what's
 shown on screen, determined from the data) and a highlighting data array (which
-helps the editor determine what colour to print strings in on screen). Syntax
-highlighting is nearly exactly the same as Kilo.
+helps the editor determine what colour to print strings in on screen). 
+
+Syntax highlighting is broadly similar to [Micro,](https://github.com/zyedidia/micro)
+Gomacs' other main parent (we even both share some code from [Godit,](https://github.com/nsf/godit)
+namely the suspend-on-Linux functionality). Syntax files live in the `syntax_files/`
+directory, but are built into bindata.go so that Gomacs will work without needing
+to install them anywhere. They are written in a simple yaml format.
 
 The undo struct is based at least in part on the one in [the suckless editor Sandy.](http://tools.suckless.org/sandy)
 However, most of the undo logic is custom.
@@ -103,10 +112,11 @@ together, as in GNU Emacs, to avoid making the undoing of long edits tedious.
 
 ## Region
 
-The region commands are composed of calls to the other editing functions in the
-program. They make sure that these function's undos are kept off the stack by
-using editorPopUndo. After this is done, they push their own undo onto the stack,
-allowing region operations to be undone/redone in one keypress.
+Region commands are in region.go. They were rewritten recently to free them
+from the helpful extra functionality in the editing commands, namely the 
+indentation and syntax highlighting updates - the latter of which they now
+save until the end. These commands use their own logic for acting on the
+buffer.
 
 Region commands tend to take startc, startl, endc, endl. They assume that the
 start numbers =< end numbers, and will probably fail spectacularly if this is
@@ -176,3 +186,4 @@ implemented in the Go code:
 - `line-number-mode` - display line numbers on the left edge of the buffer.
 - `auto-indent-mode` - copy indentation from previous line when inserting a
   newline.
+- `tilde-mode` - draw `vi`-style blue tildes on lines outside the file.
