@@ -461,6 +461,7 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"kill-buffer-and-window", func(*glisp.Glisp) { KillBufferAndWindow() }})
 	DefineCommand(&CommandFunc{"view-messages", func(*glisp.Glisp) { showMessages(Global.messages...) }})
 	DefineCommand(&CommandFunc{"query-replace", func(*glisp.Glisp) { doQueryReplace() }})
+	DefineCommand(&CommandFunc{"replace-string", func(*glisp.Glisp) { doReplaceString() }})
 }
 
 func NewLispInterp() *glisp.Glisp {

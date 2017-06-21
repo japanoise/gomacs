@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/zyedidia/highlight"
 	"strconv"
 	"strings"
@@ -247,13 +248,51 @@ func doQueryReplace() {
 				return
 			} else if yes {
 				Global.CurrentB.Dirty = true
+				editorAddUndo(false, 0, row.Size, cy, cy, row.Data)
 				row.Data = strings.Replace(row.Data, orig, replace, -1)
 				row.Size = len(row.Data)
+				editorAddUndo(true, 0, row.Size, cy, cy, row.Data)
 				editorUpdateRow(row, Global.CurrentB)
 			} else {
 				row.HlMatches = saved_hl
 			}
 		}
+	}
+}
+
+func doReplaceString() {
+	orig := editorPrompt("Find", nil)
+	if orig == "" {
+		Global.Input = "Can't string-replace with an empty query"
+		return
+	}
+	replace := editorPrompt("Replace "+orig+" with", nil)
+	matches := 0
+	lines := 0
+	ql := len(orig)
+	nl := len(replace)
+	for cy, row := range Global.CurrentB.Rows {
+		match := strings.LastIndex(row.Render, orig)
+		if match != -1 {
+			count := strings.Count(row.Render, orig)
+			matches += count
+			lines++
+			Global.CurrentB.cy = cy
+			Global.CurrentB.cx = editorRowRxToCx(row, match+ql-(count*(ql-nl)))
+			Global.CurrentB.rowoff = Global.CurrentB.NumRows
+			Global.CurrentB.Dirty = true
+			editorAddUndo(false, 0, row.Size, cy, cy, row.Data)
+			row.Data = strings.Replace(row.Data, orig, replace, -1)
+			row.Size = len(row.Data)
+			editorAddUndo(true, 0, row.Size, cy, cy, row.Data)
+			editorUpdateRow(row, Global.CurrentB)
+		}
+	}
+	if matches > 0 {
+		Global.Input = fmt.Sprintf("Replaced %d occurences on %d lines",
+			matches, lines)
+	} else {
+		Global.Input = "No matches found"
 	}
 }
 
