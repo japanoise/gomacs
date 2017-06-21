@@ -52,7 +52,7 @@ func getColorForGroup(group highlight.Group) termbox.Attribute {
 		color = termbox.ColorYellow
 	case highlight.Groups["comment"], highlight.Groups["preproc.shebang"]:
 		color = termbox.ColorBlue
-	case highlight.Groups["constant.string"], highlight.Groups["constant"], highlight.Groups["constant.number"], highlight.Groups["constant.specialChar"]:
+	case highlight.Groups["constant.string"], highlight.Groups["constant"], highlight.Groups["constant.number"], highlight.Groups["constant.specialChar"], highlight.Groups["constant.bool"]:
 		color = termbox.ColorRed
 	case highlight.Groups["type"]:
 		color = termbox.ColorGreen
