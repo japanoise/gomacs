@@ -10,6 +10,8 @@ import (
 	"github.com/zhemao/glisp/interpreter"
 	"github.com/zyedidia/highlight"
 	"os"
+	"path"
+	"path/filepath"
 	"strings"
 	"unicode/utf8"
 )
@@ -279,14 +281,29 @@ func editorInsertNewline() {
 	Global.CurrentB.cy++
 }
 
+func AbsPath(filename string) (string, error) {
+	hdpath, perr := homedir.Expand(filename)
+	if perr != nil {
+		return filename, perr
+	}
+	if len(hdpath) > 0 && hdpath[0] == '/' {
+		return hdpath, nil
+	}
+	cwd, cerr := os.Getwd()
+	if cerr != nil {
+		return filename, cerr
+	}
+	return path.Join(cwd, filename), nil
+}
+
 func EditorOpen(filename string) error {
-	path, perr := homedir.Expand(filename)
+	fpath, perr := AbsPath(filename)
 	if perr != nil {
 		return perr
 	}
-	Global.CurrentB.Filename = path
-	Global.CurrentB.Rendername = path
-	f, err := os.Open(path)
+	Global.CurrentB.Filename = fpath
+	Global.CurrentB.Rendername = filepath.Base(fpath)
+	f, err := os.Open(fpath)
 	if err != nil {
 		return err
 	}

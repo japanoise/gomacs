@@ -136,7 +136,7 @@ func GetScreenSize() (int, int) {
 func editorDrawStatusLine(x, y int, buf *EditorBuffer) {
 	line := editorUpdateStatus(buf)
 	if buf == Global.CurrentB && buf.hasMode("terminal-title-mode") {
-		fmt.Printf("\033]0;%s - gomacs\a", buf.getFilename())
+		fmt.Printf("\033]0;%s - gomacs\a", buf.getRenderName())
 	}
 	var ru rune
 	rx := 0
