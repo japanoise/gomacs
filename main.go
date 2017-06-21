@@ -39,6 +39,7 @@ type EditorBuffer struct {
 	Rows        []*EditorRow
 	Undo        *EditorUndo
 	Redo        *EditorUndo
+	SaveUndo    *EditorUndo // The undo at which we can undirty the buffer
 	MarkX       int
 	MarkY       int
 	Modes       ModeList
@@ -358,6 +359,7 @@ func editorBufSave(buf *EditorBuffer) {
 	Global.Input = fmt.Sprintf("Wrote %d lines (%d bytes) to %s", l, b, fn)
 	AddErrorMessage(Global.Input)
 	buf.Dirty = false
+	buf.SaveUndo = buf.Undo
 }
 
 func getTabString() string {

@@ -47,7 +47,7 @@ func editorAddUndo(ins bool, startc, endc, startl, endl int, str string) {
 	old := Global.CurrentB.Undo
 	app := false
 	if old != nil {
-		app = old.startl == startl && old.endl == endl && old.ins == ins
+		app = old.startl == startl && old.endl == endl && old.ins == ins && old != Global.CurrentB.SaveUndo
 		if app {
 			if ins {
 				app = old.endc == startc
@@ -194,7 +194,7 @@ func editorUndoAction() {
 	} else {
 		Global.Input = "No further undo information."
 	}
-	if Global.CurrentB.Undo == nil {
+	if Global.CurrentB.Undo == Global.CurrentB.SaveUndo {
 		Global.CurrentB.Dirty = false
 	}
 }
@@ -208,6 +208,9 @@ func doOneRedo(_ *glisp.Glisp) {
 		Global.CurrentB.Redo = r.prev
 		r.prev = Global.CurrentB.Undo
 		Global.CurrentB.Undo = r
+		if r == Global.CurrentB.SaveUndo {
+			Global.CurrentB.Dirty = false
+		}
 	}
 }
 
