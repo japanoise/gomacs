@@ -329,7 +329,15 @@ func editorBufSave(buf *EditorBuffer) {
 			Global.Input = "Save aborted"
 			return
 		} else {
-			buf.Filename = fn
+			fpath, perr := AbsPath(fn)
+			if perr != nil {
+				Global.Input = perr.Error()
+				AddErrorMessage(Global.Input)
+				return
+			}
+			buf.Filename = fpath
+			fn = buf.Filename
+			buf.Rendername = filepath.Base(fpath)
 			editorSelectSyntaxHighlight(buf)
 		}
 	}
