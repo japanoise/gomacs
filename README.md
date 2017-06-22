@@ -23,7 +23,10 @@ to run:
 
     gomacs [options] file
 
-Currently, the only supported option is -s, which disables syntax highlighting.
+### Options
+
+- `-s` - Disable syntax highlighting
+- `-d` - Enable dumping of crash logs
 
 ## Keybindings
 
