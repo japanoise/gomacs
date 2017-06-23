@@ -330,3 +330,40 @@ func gotoChar() {
 	Global.CurrentB.cx = line
 	Global.Input = "Jumping to char " + strconv.Itoa(line)
 }
+
+func getOffsetInBuffer(buf *EditorBuffer) (int, int) {
+	offset, total := 0, 0
+	for i, row := range buf.Rows {
+		total += row.Size
+		if i == buf.cy {
+			offset += buf.cx
+		} else if i < buf.cy {
+			offset += row.Size
+		}
+	}
+	return offset, total
+}
+
+func describeRune(ru rune) string {
+	ri := int(ru)
+	return fmt.Sprintf("%c (%d dec, %#o oct, %#02x hex)", ru, ri, ri, ri)
+}
+
+func whatCursorPosition() {
+	cx, cy := Global.CurrentB.cx, Global.CurrentB.cy
+	if cy >= Global.CurrentB.NumRows {
+		Global.Input = "End of buffer"
+		return
+	}
+	row := Global.CurrentB.Rows[cy]
+	var ru rune
+	if cx >= row.Size {
+		ru = '\n'
+	} else {
+		ru, _ = utf8.DecodeRuneInString(row.Data[cx:])
+	}
+	offset, total := getOffsetInBuffer(Global.CurrentB)
+	pc := (offset * 100) / (total)
+	Global.Input = fmt.Sprintf("Char: %s Byte: %d of %d (%d%%)", describeRune(ru),
+		offset, total, pc)
+}

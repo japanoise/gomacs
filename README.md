@@ -67,10 +67,8 @@ yet - I'll try to keep this list up to date!
 - `C-x 4 C-f` - find file in other window (creating one if there's only one window)
 - `C-x 4 b` - switch buffer in other window
 - `C-l` - Centre view on current line
-- `M-g g` or `M-g M-g` - Go to line (prompt)
-- `M-g c` - Go to char (prompt)
 
-### Cursor Movement
+### Cursor, navigation, search & replace
 
 - `C-f` or `RIGHT` - Move cursor forward one character
 - `M-f` - Move cursor forward one word
@@ -81,8 +79,13 @@ yet - I'll try to keep this list up to date!
 - `C-v` or `next` (Page Down) - Move cursor forward a screen
 - `M-v` or `prior` (Page Up) - Move cursor backward a screen
 - `C-s` - Incremental search
+- `M-%` - Query replace
 - `M-<` - Go to start of buffer
 - `M->` - Go to end of buffer
+- `M-g g` or `M-g M-g` - Go to line (prompt)
+- `M-g c` - Go to char (prompt)
+- `C-x =` - Print location of cursor & information about the character at the
+  cursor.
 
 ### Deletion and Transposition
 
