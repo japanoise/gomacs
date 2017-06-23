@@ -44,6 +44,7 @@ type EditorBuffer struct {
 	MarkY       int
 	Modes       ModeList
 	Highlighter *highlight.Highlighter
+	prefcx      int
 }
 
 type EditorState struct {

@@ -67,6 +67,7 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 			startl, endl, Global.Clipboard)
 	}
 	buf.cx = startc
+	buf.prefcx = startc
 	buf.cy = startl
 	buf.Dirty = true
 }
@@ -122,6 +123,7 @@ func doCopyRegion() {
 func spitRegion(cx, cy int, region string) {
 	Global.CurrentB.Dirty = true
 	Global.CurrentB.cx = cx
+	Global.CurrentB.prefcx = cx
 	Global.CurrentB.cy = cy
 	clipLines := strings.Split(region, "\n")
 	if cy == Global.CurrentB.NumRows {
@@ -132,6 +134,7 @@ func spitRegion(cx, cy int, region string) {
 	row.Data = data[:cx] + clipLines[0]
 	row.Size = len(row.Data)
 	Global.CurrentB.cx = row.Size
+	Global.CurrentB.prefcx = row.Size
 	if len(clipLines) > 1 {
 		// Insert more lines...
 		rowUpdateRender(row)
@@ -146,6 +149,7 @@ func spitRegion(cx, cy int, region string) {
 		}
 		Global.CurrentB.cy += mrlen
 		Global.CurrentB.cx = myrows[mrlen-1].Size
+		Global.CurrentB.prefcx = Global.CurrentB.cx
 		if cx < len(data) {
 			myrows[mrlen-1].Data += data[cx:]
 			myrows[mrlen-1].Size = len(myrows[mrlen-1].Data)
@@ -190,7 +194,7 @@ func killToEol() {
 		return
 	}
 	if cx >= Global.CurrentB.Rows[cy].Size {
-		MoveCursor(1, 0)
+		Global.CurrentB.MoveCursorRight()
 		editorDelChar()
 	} else {
 		rowDelRange(Global.CurrentB.Rows[cy], cx, Global.CurrentB.Rows[cy].Size, Global.CurrentB)

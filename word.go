@@ -58,9 +58,10 @@ func delBackWord() {
 
 func moveBackWord() {
 	if Global.CurrentB.cx == 0 {
-		MoveCursor(-1, 0)
+		Global.CurrentB.MoveCursorLeft()
 	}
 	Global.CurrentB.cx = indexEndOfBackwardWord()
+	Global.CurrentB.prefcx = Global.CurrentB.cx
 }
 
 func delForwardWord() {
@@ -80,9 +81,10 @@ func moveForwardWord() {
 		return
 	}
 	if Global.CurrentB.cx == Global.CurrentB.Rows[icy].Size {
-		MoveCursor(1, 0)
+		Global.CurrentB.MoveCursorRight()
 	}
 	Global.CurrentB.cx = indexEndOfForwardWord()
+	Global.CurrentB.prefcx = Global.CurrentB.cx
 }
 
 func upcaseWord() {

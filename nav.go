@@ -35,49 +35,67 @@ func editorCentreView() {
 	}
 }
 
-func MoveCursor(x, y int) {
-	// Initial position of the cursor
-	icx, icy := Global.CurrentB.cx, Global.CurrentB.cy
-	// Regular cursor movement - most cases
-	realline := icy < Global.CurrentB.NumRows && Global.CurrentB.NumRows != 0
-	nx, ny := icx+x, icy+y
-	if realline && icx <= Global.CurrentB.Rows[icy].Size {
-		if x >= 1 {
-			_, rs := utf8.DecodeRuneInString(Global.CurrentB.Rows[icy].Data[icx:])
-			nx = icx + rs
-		} else if x <= -1 {
-			_, rs :=
-				utf8.DecodeLastRuneInString(Global.CurrentB.Rows[icy].Data[:icx])
-			nx = icx - rs
-		}
+func (buf *EditorBuffer) UpdateRowToPrefCX() {
+	row := buf.Rows[buf.cy]
+	if buf.prefcx == -1 || buf.prefcx > row.Size {
+		buf.cx = row.Size
+	} else {
+		buf.cx = buf.prefcx
 	}
-	if nx >= 0 && ny < Global.CurrentB.NumRows && realline && nx <= Global.CurrentB.Rows[icy].Size {
-		Global.CurrentB.cx = nx
-	}
-	if ny >= 0 && ny <= Global.CurrentB.NumRows {
-		Global.CurrentB.cy = ny
-	}
+}
 
-	// Edge cases
-	realline = Global.CurrentB.cy < Global.CurrentB.NumRows && Global.CurrentB.NumRows != 0
-	if x < 0 && Global.CurrentB.cy > 0 && icx == 0 {
-		// Left at the beginning of a line
-		Global.CurrentB.cy--
-		MoveCursorToEol()
-	} else if realline && y == 0 && icx == Global.CurrentB.Rows[Global.CurrentB.cy].Size && x > 0 {
-		// Right at the end of a line
-		Global.CurrentB.cy++
-		MoveCursorToBol()
-	} else if realline && Global.CurrentB.cx > Global.CurrentB.Rows[Global.CurrentB.cy].Size {
-		// Snapping to the end of the line when coming from a longer line
-		MoveCursorToEol()
-	} else if !realline && y == 1 {
-		// Moving cursor down to the EOF
-		MoveCursorToBol()
+func (buf *EditorBuffer) MoveCursorDown() {
+	if buf.cy == buf.NumRows-1 {
+		buf.cy++
+		buf.cx = 0
+	} else if buf.cy >= buf.NumRows {
+		Global.Input = "End of buffer"
+	} else {
+		buf.cy++
+		buf.UpdateRowToPrefCX()
+	}
+}
+
+func (buf *EditorBuffer) MoveCursorUp() {
+	if buf.cy == 0 {
+		Global.Input = "Beginning of buffer"
+	} else {
+		buf.cy--
+		buf.UpdateRowToPrefCX()
+	}
+}
+
+func (buf *EditorBuffer) MoveCursorLeft() {
+	if buf.cy == 0 && buf.cx == 0 {
+		Global.Input = "Beginning of buffer"
+	} else if buf.cx == 0 {
+		buf.cy--
+		buf.prefcx = -1
+		buf.cx = buf.Rows[buf.cy].Size
+	} else {
+		_, rs :=
+			utf8.DecodeLastRuneInString(buf.Rows[buf.cy].Data[:buf.cx])
+		buf.cx -= rs
+		buf.prefcx = buf.cx
+	}
+}
+
+func (buf *EditorBuffer) MoveCursorRight() {
+	if buf.cy >= buf.NumRows {
+		Global.Input = "End of buffer"
+	} else if buf.cx == buf.Rows[buf.cy].Size {
+		buf.cy++
+		buf.prefcx = 0
+		buf.cx = 0
+	} else {
+		_, rs := utf8.DecodeRuneInString(buf.Rows[buf.cy].Data[buf.cx:])
+		buf.cx += rs
+		buf.prefcx = buf.cx
 	}
 }
 
 func MoveCursorToEol() {
+	Global.CurrentB.prefcx = -1
 	if Global.CurrentB.cy < Global.CurrentB.NumRows {
 		Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy].Size
 	}
@@ -85,14 +103,15 @@ func MoveCursorToEol() {
 
 func MoveCursorToBol() {
 	Global.CurrentB.cx = 0
+	Global.CurrentB.prefcx = 0
 }
 
 func MovePage(back bool, sy int) {
 	for i := 0; i < sy; i++ {
 		if back {
-			MoveCursor(0, -1)
+			Global.CurrentB.MoveCursorUp()
 		} else {
-			MoveCursor(0, 1)
+			Global.CurrentB.MoveCursorDown()
 		}
 	}
 }
@@ -159,6 +178,7 @@ func editorFindCallback(query string, key string) {
 			last_match = current
 			Global.CurrentB.cy = current
 			Global.CurrentB.cx = editorRowRxToCx(row, match)
+			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			saved_hl_line = current
 			saved_hl = make(highlight.LineMatch)
@@ -199,6 +219,7 @@ func editorFind() {
 	if query == "" {
 		//Search cancelled, go back to where we were
 		Global.CurrentB.cx = saved_cx
+		Global.CurrentB.prefcx = Global.CurrentB.cx
 		Global.CurrentB.cy = saved_cy
 		Global.CurrentB.coloff = saved_co
 		Global.CurrentB.rowoff = saved_ro
@@ -218,6 +239,7 @@ func doQueryReplace() {
 		if match != -1 {
 			Global.CurrentB.cy = cy
 			Global.CurrentB.cx = editorRowRxToCx(row, match)
+			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			saved_hl_line = cy
 			saved_hl = make(highlight.LineMatch)
@@ -279,6 +301,7 @@ func doReplaceString() {
 			lines++
 			Global.CurrentB.cy = cy
 			Global.CurrentB.cx = editorRowRxToCx(row, match+ql-(count*(ql-nl)))
+			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			Global.CurrentB.Dirty = true
 			editorAddUndo(false, 0, row.Size, cy, cy, row.Data)
@@ -328,6 +351,7 @@ func gotoChar() {
 		line = datalen
 	}
 	Global.CurrentB.cx = line
+	Global.CurrentB.prefcx = Global.CurrentB.cx
 	Global.Input = "Jumping to char " + strconv.Itoa(line)
 }
 
