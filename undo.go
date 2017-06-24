@@ -168,7 +168,7 @@ func editorDoRedo(tree *EditorUndo) {
 		} else {
 			Global.CurrentB.cx = tree.startc
 			Global.CurrentB.cy = tree.startl
-			editorInsertNewline()
+			editorInsertNewline(false)
 			editorPopUndo()
 		}
 	} else {

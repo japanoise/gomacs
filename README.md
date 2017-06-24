@@ -113,6 +113,7 @@ yet - I'll try to keep this list up to date!
 - `C-x (` - Start recording a macro
 - `C-x )` - Stop recording a macro
 - `C-x e` - Stop recording a macro and execute it (repeat by pressing `e`)
+- `C-j` - Insert a newline and indent the new row
 
 ## Customization
 

@@ -261,7 +261,7 @@ func getIndentation(s string) string {
 	return ret
 }
 
-func editorInsertNewline() {
+func editorInsertNewline(indent bool) {
 	if Global.CurrentB.cy == Global.CurrentB.NumRows {
 		return
 	}
@@ -275,10 +275,13 @@ func editorInsertNewline() {
 		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx,
 			Global.CurrentB.cy, Global.CurrentB.cy+1, row.Data[Global.CurrentB.cx:])
 		pre := ""
-		if Global.CurrentB.hasMode("indent-mode") {
+		if indent {
 			pre = getIndentation(row.Data[:Global.CurrentB.cx])
 		}
 		editorInsertRow(Global.CurrentB.cy+1, pre+row.Data[Global.CurrentB.cx:])
+		if indent {
+			editorAddUndo(true, 0, 0, Global.CurrentB.cy+1, Global.CurrentB.cy+1, pre)
+		}
 		row = Global.CurrentB.Rows[Global.CurrentB.cy]
 		row.Size = Global.CurrentB.cx
 		row.Data = row.Data[0:Global.CurrentB.cx]
