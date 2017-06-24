@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"github.com/zhemao/glisp/interpreter"
+	"sort"
 	"strings"
 )
 
@@ -123,4 +124,21 @@ func RunNamedCommand(env *glisp.Glisp, cmdname string) error {
 
 func StrToCmdName(s string) string {
 	return strings.Replace(strings.ToLower(s), " ", "-", -1)
+}
+
+func AproposCommand() {
+	search := editorPrompt("Search for a command", nil)
+	results := []string{}
+	for cmd := range funcnames {
+		if strings.Contains(cmd, search) {
+			results = append(results, cmd)
+		}
+	}
+	sort.Strings(results)
+	if len(results) == 0 {
+		Global.Input = "Nothing found for " + search
+	} else {
+		showMessages(results...)
+		Global.Input = ""
+	}
 }

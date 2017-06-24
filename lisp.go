@@ -466,6 +466,7 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"replace-string", func(*glisp.Glisp) { doReplaceString() }})
 	DefineCommand(&CommandFunc{"what-cursor-position", func(*glisp.Glisp) { whatCursorPosition() }})
 	DefineCommand(&CommandFunc{"save-some-buffers", func(*glisp.Glisp) { saveSomeBuffers() }})
+	DefineCommand(&CommandFunc{"apropos-command", func(*glisp.Glisp) { AproposCommand() }})
 }
 
 func NewLispInterp() *glisp.Glisp {
@@ -575,6 +576,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "M-%" "query-replace")
 (emacsbindkey "C-x =" "what-cursor-position")
 (emacsbindkey "C-x s" "save-some-buffers")
+(emacsbindkey "C-h a" "apropos-command")
 `)
 	if err != nil {
 		fmt.Println(err.Error())
