@@ -71,19 +71,24 @@ func editorSetPrompt(prompt string) {
 	Global.Prompt = prompt
 }
 
-func EditorQuit() {
+func saveSomeBuffers() bool {
 	nodirty := true
 	for _, buf := range Global.Buffers {
 		if buf.Dirty {
-			ds, cancel := editorYesNoPrompt(fmt.Sprintf("%s has unsaved changes; save them?", buf.getFilename()), true)
+			ds, cancel := editorYesNoPrompt(fmt.Sprintf("%s has unsaved changes; save them?", buf.getRenderName()), true)
 			if ds && cancel == nil {
 				editorBufSave(buf)
 			} else if cancel != nil {
-				return
+				return false
 			}
 		}
 		nodirty = nodirty && !buf.Dirty
 	}
+	return nodirty
+}
+
+func saveBuffersKillEmacs() {
+	nodirty := saveSomeBuffers()
 	if !nodirty {
 		dq, cancel := editorYesNoPrompt("Unsaved buffers exist; really quit?", false)
 		if dq && cancel == nil {

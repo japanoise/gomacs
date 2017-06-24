@@ -363,7 +363,7 @@ func lispListModes(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp
 
 func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
-	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", EditorQuit)
+	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", saveBuffersKillEmacs)
 	env.AddFunction("emacsbindkey", lispBindKey)
 	env.AddFunction("emacsonlywindow", lispOnlyWindow)
 	env.AddFunction("settabstop", lispSetTabStop)
@@ -463,6 +463,7 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"query-replace", func(*glisp.Glisp) { doQueryReplace() }})
 	DefineCommand(&CommandFunc{"replace-string", func(*glisp.Glisp) { doReplaceString() }})
 	DefineCommand(&CommandFunc{"what-cursor-position", func(*glisp.Glisp) { whatCursorPosition() }})
+	DefineCommand(&CommandFunc{"save-some-buffers", func(*glisp.Glisp) { saveSomeBuffers() }})
 }
 
 func NewLispInterp() *glisp.Glisp {
@@ -570,6 +571,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x 4 0" "kill-buffer-and-window")
 (emacsbindkey "M-%" "query-replace")
 (emacsbindkey "C-x =" "what-cursor-position")
+(emacsbindkey "C-x s" "save-some-buffers")
 `)
 	if err != nil {
 		fmt.Println(err.Error())
