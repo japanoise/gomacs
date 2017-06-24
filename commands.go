@@ -99,7 +99,7 @@ func RunCommand(env *glisp.Glisp) {
 	cmdname := StrToCmdName(editorPrompt("Run command", nil))
 	err := RunNamedCommand(env, cmdname)
 	if err != nil {
-		Global.Input = cmdname + err.Error()
+		Global.Input = cmdname + ": " + err.Error()
 	}
 }
 
