@@ -21,17 +21,24 @@ type CommandFunc struct {
 	Com  func(env *glisp.Glisp)
 }
 
-func WalkCommandTree(root *CommandList, pre string) string {
+func getSortedBindings(root *CommandList, pre string) []string {
 	buf := bytes.Buffer{}
+	cmdlist := []string{}
 	for k, v := range root.Children {
 		if v.Parent {
-			buf.WriteString(WalkCommandTree(v, pre+" "+k))
+			cmdlist = append(cmdlist, getSortedBindings(v, pre+" "+k)...)
 		} else {
 			buf.WriteString(pre + " " + k + " - " + v.Command.Name)
-			buf.WriteRune('\n')
+			cmdlist = append(cmdlist, buf.String())
+			buf = bytes.Buffer{}
 		}
 	}
-	return buf.String()
+	sort.Strings(cmdlist)
+	return cmdlist
+}
+
+func WalkCommandTree(root *CommandList, pre string) string {
+	return strings.Join(getSortedBindings(root, pre), "\n")
 }
 
 func DefineCommand(command *CommandFunc) {
