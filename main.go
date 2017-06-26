@@ -12,6 +12,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"runtime/pprof"
 	"strings"
 	"unicode/utf8"
 )
@@ -432,11 +433,22 @@ func AddErrorMessage(msg string) {
 }
 
 func main() {
+	cpuprofile := ""
 	InitEditor()
 	fs := flag.NewFlagSet("", flag.ExitOnError)
 	fs.BoolVar(&Global.NoSyntax, "s", false, "disable syntax highlighting")
 	fs.BoolVar(&Global.debug, "d", false, "enable dumps of crash logs")
+	fs.StringVar(&cpuprofile, "cpuprofile", "", "write cpu profile to file")
 	fs.Parse(os.Args[1:])
+	if cpuprofile != "" {
+		f, err := os.Create(cpuprofile)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
 	if !Global.NoSyntax {
 		LoadSyntaxDefs()
 	}
