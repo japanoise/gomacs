@@ -63,3 +63,36 @@ func editorYesNoPrompt(p string, noallowcancel bool) (bool, error) {
 		return r, err
 	}
 }
+
+func InsertRaw() {
+	if Global.CurrentB.hasMode("no-self-insert-mode") {
+		Global.Input = "Can't insert right now"
+		return
+	}
+	done := false
+	chara := ""
+	for !done {
+		data := make([]byte, 4)
+		termbox.PollRawEvent(data)
+		parsed := termbox.ParseEvent(data)
+		if parsed.Type == termbox.EventKey {
+			if data[3] == 0 {
+				if data[2] == 0 {
+					if data[1] == 0 {
+						chara = string(data[:1])
+					} else {
+						chara = string(data[:2])
+					}
+				} else {
+					chara = string(data[:3])
+				}
+			} else {
+				chara = string(data)
+			}
+			done = true
+		} else if parsed.Type == termbox.EventResize {
+			editorRefreshScreen()
+		}
+	}
+	editorInsertStr(chara)
+}

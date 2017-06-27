@@ -114,6 +114,8 @@ yet - I'll try to keep this list up to date!
 - `C-x )` - Stop recording a macro
 - `C-x e` - Stop recording a macro and execute it (repeat by pressing `e`)
 - `C-j` - Insert a newline and indent the new row
+- `C-q` - Interpret the next keystroke literally and insert it (so you can enter
+  escape sequences)
 
 ## Customization
 
