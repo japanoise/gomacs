@@ -64,6 +64,10 @@ func editorYesNoPrompt(p string, noallowcancel bool) (bool, error) {
 	}
 }
 
+func editorPressKey(p string, keys ...string) string {
+	return termutil.PressKey(p, func(int, int) { editorRefreshScreen() }, keys...)
+}
+
 func InsertRaw() {
 	if Global.CurrentB.hasMode("no-self-insert-mode") {
 		Global.Input = "Can't insert right now"

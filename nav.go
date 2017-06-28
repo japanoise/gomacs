@@ -233,6 +233,7 @@ func doQueryReplace() {
 		return
 	}
 	replace := editorPrompt("Replace "+orig+" with", nil)
+	all := false
 	ql := len(orig)
 	for cy, row := range Global.CurrentB.Rows {
 		match := strings.Index(row.Render, orig)
@@ -264,17 +265,26 @@ func doQueryReplace() {
 					row.HlMatches[match+ql] = c
 				}
 			}
-			yes, err := editorYesNoPrompt("Replace with "+replace+"?", false)
-			if err != nil {
+			var pressed string
+			if !all {
+				pressed = editorPressKey("Replace with "+replace+"?", "y", "n", "C-g", "q", ".", "!")
+				if pressed == "!" {
+					all = true
+				}
+			}
+			if pressed == "C-g" || pressed == "q" {
 				row.HlMatches = saved_hl
 				return
-			} else if yes {
+			} else if pressed == "y" || pressed == "." || all {
 				Global.CurrentB.Dirty = true
 				editorAddUndo(false, 0, row.Size, cy, cy, row.Data)
 				row.Data = strings.Replace(row.Data, orig, replace, -1)
 				row.Size = len(row.Data)
 				editorAddUndo(true, 0, row.Size, cy, cy, row.Data)
 				editorUpdateRow(row, Global.CurrentB)
+				if pressed == "." {
+					return
+				}
 			} else {
 				row.HlMatches = saved_hl
 			}
