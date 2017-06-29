@@ -119,13 +119,12 @@ func editorUpdateStatus(buf *EditorBuffer) string {
 	if buf.Highlighter != nil {
 		syn = buf.Highlighter.Def.FileType
 	}
+	dc := '-'
 	if buf.Dirty {
-		return fmt.Sprintf("%s [Modified] - (%s) %d:%d", fn, syn,
-			buf.cy+1, buf.cx)
-	} else {
-		return fmt.Sprintf("%s - (%s) %d:%d", fn, syn,
-			buf.cy+1, buf.cx)
+		dc = '*'
 	}
+	return fmt.Sprintf("-%c %s - (%s) %d:%d", dc, fn, syn,
+		buf.cy+1, buf.cx)
 }
 
 func GetScreenSize() (int, int) {
