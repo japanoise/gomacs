@@ -125,8 +125,16 @@ func rowUpdateRender(row *EditorRow) {
 
 func editorReHighlightRow(row *EditorRow, buf *EditorBuffer) {
 	if buf.Highlighter != nil {
+		curstate := buf.State(row.idx)
 		buf.Highlighter.ReHighlightStates(buf, row.idx)
-		buf.Highlighter.HighlightMatches(buf, row.idx, buf.NumRows)
+		if curstate != buf.State(row.idx) {
+			// If the EOL state changed, the buffer needs rehighlighting
+			// as this was probably multiline comment or string.
+			buf.Highlighter.HighlightMatches(buf, row.idx, buf.NumRows)
+		} else {
+			// Probably only this line changed.
+			buf.Highlighter.ReHighlightLine(buf, row.idx)
+		}
 	}
 }
 
