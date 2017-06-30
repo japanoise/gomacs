@@ -468,6 +468,9 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"save-some-buffers", func(*glisp.Glisp) { saveSomeBuffers() }})
 	DefineCommand(&CommandFunc{"apropos-command", func(*glisp.Glisp) { AproposCommand() }})
 	DefineCommand(&CommandFunc{"quoted-insert", func(*glisp.Glisp) { InsertRaw() }})
+	if Global.debug {
+		DefineCommand(&CommandFunc{"debug-undo", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.CurrentB.Undo)) }})
+	}
 }
 
 func NewLispInterp() *glisp.Glisp {

@@ -277,10 +277,10 @@ func doQueryReplace() {
 				return
 			} else if pressed == "y" || pressed == "." || all {
 				Global.CurrentB.Dirty = true
-				editorAddUndo(false, 0, row.Size, cy, cy, row.Data)
+				editorAddDeleteUndo(0, row.Size, cy, cy, row.Data)
 				row.Data = strings.Replace(row.Data, orig, replace, -1)
 				row.Size = len(row.Data)
-				editorAddUndo(true, 0, row.Size, cy, cy, row.Data)
+				editorAddInsertUndo(0, cy, row.Data)
 				editorUpdateRow(row, Global.CurrentB)
 				if pressed == "." {
 					return
@@ -314,10 +314,10 @@ func doReplaceString() {
 			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			Global.CurrentB.Dirty = true
-			editorAddUndo(false, 0, row.Size, cy, cy, row.Data)
+			editorAddDeleteUndo(0, row.Size, cy, cy, row.Data)
 			row.Data = strings.Replace(row.Data, orig, replace, -1)
 			row.Size = len(row.Data)
-			editorAddUndo(true, 0, row.Size, cy, cy, row.Data)
+			editorAddInsertUndo(0, cy, row.Data)
 			editorUpdateRow(row, Global.CurrentB)
 		}
 	}

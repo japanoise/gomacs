@@ -222,14 +222,12 @@ func editorRowDelChar(row *EditorRow, buf *EditorBuffer, at int, rw int) {
 func editorInsertStr(s string) {
 	Global.Input = "Insert " + s
 	if Global.CurrentB.cy == Global.CurrentB.NumRows {
-		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx+len(s),
-			-1, Global.CurrentB.cy, s)
+		editorAddInsertUndo(Global.CurrentB.cx, Global.CurrentB.cy, s)
 		editorInsertRow(Global.CurrentB.cy, s)
 		Global.CurrentB.cx += len(s)
 		return
 	}
-	editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx+len(s),
-		Global.CurrentB.cy, Global.CurrentB.cy, s)
+	editorAddInsertUndo(Global.CurrentB.cx, Global.CurrentB.cy, s)
 	editorRowInsertStr(Global.CurrentB.Rows[Global.CurrentB.cy], Global.CurrentB, Global.CurrentB.cx, s)
 	Global.CurrentB.cx += len(s)
 }
@@ -244,12 +242,12 @@ func editorDelChar() {
 	row := Global.CurrentB.Rows[Global.CurrentB.cy]
 	if Global.CurrentB.cx > 0 {
 		_, rs := utf8.DecodeLastRuneInString(Global.CurrentB.Rows[Global.CurrentB.cy].Data[:Global.CurrentB.cx])
-		editorAddUndo(false, Global.CurrentB.cx-rs, Global.CurrentB.cx, Global.CurrentB.cy,
+		editorAddDeleteUndo(Global.CurrentB.cx-rs, Global.CurrentB.cx, Global.CurrentB.cy,
 			Global.CurrentB.cy, row.Data[Global.CurrentB.cx-rs:Global.CurrentB.cx])
 		editorRowDelChar(row, Global.CurrentB, Global.CurrentB.cx-rs, rs)
 		Global.CurrentB.cx -= rs
 	} else {
-		editorAddUndo(false, Global.CurrentB.cx, Global.CurrentB.Rows[Global.CurrentB.cy-1].Size,
+		editorAddDeleteUndo(Global.CurrentB.cx, Global.CurrentB.Rows[Global.CurrentB.cy-1].Size,
 			Global.CurrentB.cy-1, Global.CurrentB.cy, row.Data)
 		Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy-1].Size
 		editorRowAppendStr(Global.CurrentB.Rows[Global.CurrentB.cy-1], Global.CurrentB, row.Data)
@@ -276,21 +274,17 @@ func editorInsertNewline(indent bool) {
 	}
 	row := Global.CurrentB.Rows[Global.CurrentB.cy]
 	if Global.CurrentB.cx == 0 {
-		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx,
-			Global.CurrentB.cy, Global.CurrentB.cy+1, row.Data)
+		editorAddInsertUndo(Global.CurrentB.cx, Global.CurrentB.cy, "\n")
 		editorInsertRow(Global.CurrentB.cy, "")
 		Global.CurrentB.cx = 0
 	} else {
-		editorAddUndo(true, Global.CurrentB.cx, Global.CurrentB.cx,
-			Global.CurrentB.cy, Global.CurrentB.cy+1, row.Data[Global.CurrentB.cx:])
 		pre := ""
 		if indent {
 			pre = getIndentation(row.Data[:Global.CurrentB.cx])
 		}
-		editorInsertRow(Global.CurrentB.cy+1, pre+row.Data[Global.CurrentB.cx:])
-		if indent {
-			editorAddUndo(true, 0, 0, Global.CurrentB.cy+1, Global.CurrentB.cy+1, pre)
-		}
+		data := pre + row.Data[Global.CurrentB.cx:]
+		editorAddInsertUndo(Global.CurrentB.cx, Global.CurrentB.cy, "\n"+pre)
+		editorInsertRow(Global.CurrentB.cy+1, data)
 		row = Global.CurrentB.Rows[Global.CurrentB.cy]
 		row.Size = Global.CurrentB.cx
 		row.Data = row.Data[0:Global.CurrentB.cx]

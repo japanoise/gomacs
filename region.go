@@ -16,7 +16,7 @@ func validMark(buf *EditorBuffer) bool {
 }
 
 func rowDelRange(row *EditorRow, startc, endc int, buf *EditorBuffer) {
-	editorAddUndo(false, startc, endc,
+	editorAddDeleteUndo(startc, endc,
 		row.idx, row.idx, row.Data[startc:endc])
 	Global.Clipboard = row.Data[startc:endc]
 	editorRowDelChar(row, buf, startc, endc-startc)

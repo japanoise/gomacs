@@ -1,6 +1,9 @@
 package main
 
-import "github.com/zhemao/glisp/interpreter"
+import (
+	"github.com/zhemao/glisp/interpreter"
+	"strings"
+)
 
 type EditorUndo struct {
 	ins    bool
@@ -43,8 +46,46 @@ func editorAddRegionUndo(ins bool, startc, endc, startl, endl int, str string) {
 	Global.CurrentB.Redo = nil
 }
 
-func editorAddUndo(ins bool, startc, endc, startl, endl int, str string) {
+func editorAddInsertUndo(startc, startl int, str string) {
 	old := Global.CurrentB.Undo
+	newlines := strings.Count(str, "\n")
+	lastnl := 0
+	if 0 < newlines {
+		lastnl = strings.LastIndex(str, "\n") + 1
+	}
+	if old != nil && old != Global.CurrentB.SaveUndo &&
+		old.ins && old.endc == startc && old.endl == startl {
+		old.str += str
+		old.endl += newlines
+		if newlines <= 0 {
+			old.endc += len(str)
+		} else {
+			old.endc = len(str[lastnl:])
+		}
+		old.region = old.region || newlines > 0
+	} else {
+		ret := new(EditorUndo)
+		ret.startl = startl
+		ret.startc = startc
+		ret.str = str
+		ret.ins = true
+		ret.region = newlines > 0
+		if newlines == 0 {
+			ret.endl = startl
+			ret.endc = startc + len(str)
+		} else {
+			ret.endl = startl + newlines
+			ret.endc = len(str[lastnl:])
+		}
+		ret.prev = old
+		Global.CurrentB.Undo = ret
+	}
+	Global.CurrentB.Redo = nil
+}
+
+func editorAddDeleteUndo(startc, endc, startl, endl int, str string) {
+	old := Global.CurrentB.Undo
+	ins := false
 	app := false
 	if old != nil {
 		app = old.startl == startl && old.endl == endl && old.ins == ins && old != Global.CurrentB.SaveUndo
