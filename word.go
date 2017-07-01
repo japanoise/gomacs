@@ -45,60 +45,78 @@ func indexEndOfForwardWord() int {
 }
 
 func delBackWord() {
-	icx, icy := Global.CurrentB.cx, Global.CurrentB.cy
-	if icy >= Global.CurrentB.NumRows {
-		return
-	}
-	ncx := indexEndOfBackwardWord()
-	if ncx < icx {
-		rowDelRange(Global.CurrentB.Rows[icy], ncx, icx, Global.CurrentB)
-		Global.CurrentB.cx = ncx
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		icx, icy := Global.CurrentB.cx, Global.CurrentB.cy
+		if icy >= Global.CurrentB.NumRows {
+			return
+		}
+		ncx := indexEndOfBackwardWord()
+		if ncx < icx {
+			rowDelRange(Global.CurrentB.Rows[icy], ncx, icx, Global.CurrentB)
+			Global.CurrentB.cx = ncx
+		}
 	}
 }
 
 func moveBackWord() {
-	if Global.CurrentB.cx == 0 {
-		Global.CurrentB.MoveCursorLeft()
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		if Global.CurrentB.cx == 0 {
+			Global.CurrentB.MoveCursorLeft()
+		}
+		Global.CurrentB.cx = indexEndOfBackwardWord()
+		Global.CurrentB.prefcx = Global.CurrentB.cx
 	}
-	Global.CurrentB.cx = indexEndOfBackwardWord()
-	Global.CurrentB.prefcx = Global.CurrentB.cx
 }
 
 func delForwardWord() {
-	icx, icy := Global.CurrentB.cx, Global.CurrentB.cy
-	if icy >= Global.CurrentB.NumRows {
-		return
-	}
-	ncx := indexEndOfForwardWord()
-	if ncx > icx {
-		rowDelRange(Global.CurrentB.Rows[icy], icx, ncx, Global.CurrentB)
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		icx, icy := Global.CurrentB.cx, Global.CurrentB.cy
+		if icy >= Global.CurrentB.NumRows {
+			return
+		}
+		ncx := indexEndOfForwardWord()
+		if ncx > icx {
+			rowDelRange(Global.CurrentB.Rows[icy], icx, ncx, Global.CurrentB)
+		}
 	}
 }
 
 func moveForwardWord() {
-	icy := Global.CurrentB.cy
-	if icy >= Global.CurrentB.NumRows {
-		return
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		icy := Global.CurrentB.cy
+		if icy >= Global.CurrentB.NumRows {
+			return
+		}
+		if Global.CurrentB.cx == Global.CurrentB.Rows[icy].Size {
+			Global.CurrentB.MoveCursorRight()
+		}
+		Global.CurrentB.cx = indexEndOfForwardWord()
+		Global.CurrentB.prefcx = Global.CurrentB.cx
 	}
-	if Global.CurrentB.cx == Global.CurrentB.Rows[icy].Size {
-		Global.CurrentB.MoveCursorRight()
-	}
-	Global.CurrentB.cx = indexEndOfForwardWord()
-	Global.CurrentB.prefcx = Global.CurrentB.cx
 }
 
 func upcaseWord() {
-	icx := Global.CurrentB.cx
-	endc := indexEndOfForwardWord()
-	if endc > icx {
-		transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.ToUpper)
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		icx := Global.CurrentB.cx
+		endc := indexEndOfForwardWord()
+		if endc > icx {
+			transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.ToUpper)
+		}
 	}
 }
 
 func downcaseWord() {
-	icx := Global.CurrentB.cx
-	endc := indexEndOfForwardWord()
-	if endc > icx {
-		transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.ToLower)
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		icx := Global.CurrentB.cx
+		endc := indexEndOfForwardWord()
+		if endc > icx {
+			transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.ToLower)
+		}
 	}
 }

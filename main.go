@@ -507,6 +507,14 @@ func SetUniversalArgument(env *glisp.Glisp) {
 	}
 }
 
+func getRepeatTimes() int {
+	if Global.SetUniversal && 0 < Global.Universal {
+		return Global.Universal
+	} else {
+		return 1
+	}
+}
+
 func main() {
 	cpuprofile := ""
 	InitEditor()

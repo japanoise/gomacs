@@ -196,10 +196,7 @@ func spitRegion(cx, cy int, region string) {
 }
 
 func doYankRegion() {
-	times := 1
-	if Global.SetUniversal && 1 < Global.Universal {
-		times = Global.Universal
-	}
+	times := getRepeatTimes()
 	for i := 0; i < times; i++ {
 		spitRegion(Global.CurrentB.cx, Global.CurrentB.cy, Global.Clipboard)
 	}
