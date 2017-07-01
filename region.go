@@ -15,6 +15,18 @@ func validMark(buf *EditorBuffer) bool {
 	return buf.cy < buf.NumRows && buf.MarkY < buf.NumRows && buf.MarkX <= len(buf.Rows[buf.MarkY].Data)
 }
 
+func doSwapMarkAndCursor(buf *EditorBuffer) {
+	if validMark(buf) {
+		cx, cy := buf.cx, buf.cy
+		buf.cx = buf.MarkX
+		buf.cy = buf.MarkY
+		buf.MarkX = cx
+		buf.MarkY = cy
+	} else {
+		Global.Input = "Invalid mark position"
+	}
+}
+
 func rowDelRange(row *EditorRow, startc, endc int, buf *EditorBuffer) {
 	editorAddDeleteUndo(startc, endc,
 		row.idx, row.idx, row.Data[startc:endc])

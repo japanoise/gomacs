@@ -102,6 +102,7 @@ yet - I'll try to keep this list up to date!
 ### Region operations
 
 - `C-@` - Set Mark (`C-<space>` also works)
+- `C-x C-x` - Swap mark and cursor location
 - `C-w` - Kill (cut) region between mark and cursor
 - `M-w` - Copy region between mark and cursor
 - `C-y` - Yank (paste) previously copied or killed region
