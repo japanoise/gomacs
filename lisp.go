@@ -470,6 +470,8 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"quoted-insert", func(*glisp.Glisp) { InsertRaw() }})
 	DefineCommand(&CommandFunc{"exchange-point-and-mark", func(*glisp.Glisp) { doSwapMarkAndCursor(Global.CurrentB) }})
 	DefineCommand(&CommandFunc{"universal-argument", func(env *glisp.Glisp) { SetUniversalArgument(env) }})
+	DefineCommand(&CommandFunc{"forward-paragraph", func(*glisp.Glisp) { forwardParagraph() }})
+	DefineCommand(&CommandFunc{"backward-paragraph", func(*glisp.Glisp) { backwardParagraph() }})
 	if Global.debug {
 		DefineCommand(&CommandFunc{"debug-undo", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.CurrentB.Undo)) }})
 		DefineCommand(&CommandFunc{"debug-universal", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.Universal), fmt.Sprint(Global.SetUniversal)) }})
@@ -587,6 +589,8 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-q" "quoted-insert")
 (emacsbindkey "C-x C-x" "exchange-point-and-mark")
 (emacsbindkey "C-u" "universal-argument")
+(emacsbindkey "M-{" "backward-paragraph")
+(emacsbindkey "M-}" "forward-paragraph")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

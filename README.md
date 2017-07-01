@@ -76,6 +76,8 @@ yet - I'll try to keep this list up to date!
 - `M-b` - Move cursor backward one word
 - `C-p` or `UP` - Move cursor to previous line
 - `C-n` or `DOWN` - Move cursor to next line
+- `M-{` - Go backward a paragraph
+- `M-}` - Go forward a paragraph
 - `C-v` or `next` (Page Down) - Move cursor forward a screen
 - `M-v` or `prior` (Page Up) - Move cursor backward a screen
 - `C-s` - Incremental search
