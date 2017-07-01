@@ -196,7 +196,13 @@ func spitRegion(cx, cy int, region string) {
 }
 
 func doYankRegion() {
-	spitRegion(Global.CurrentB.cx, Global.CurrentB.cy, Global.Clipboard)
+	times := 1
+	if Global.SetUniversal && 1 < Global.Universal {
+		times = Global.Universal
+	}
+	for i := 0; i < times; i++ {
+		spitRegion(Global.CurrentB.cx, Global.CurrentB.cy, Global.Clipboard)
+	}
 }
 
 func killToEol() {
@@ -205,11 +211,32 @@ func killToEol() {
 	if cy == Global.CurrentB.NumRows {
 		return
 	}
-	if cx >= Global.CurrentB.Rows[cy].Size {
-		Global.CurrentB.MoveCursorRight()
-		editorDelChar()
+	if Global.SetUniversal && Global.Universal != 1 {
+		if Global.Universal == 0 {
+			if 0 < Global.CurrentB.cx && cy < Global.CurrentB.NumRows {
+				rowDelRange(Global.CurrentB.Rows[cy], 0, cx, Global.CurrentB)
+				Global.CurrentB.cx = 0
+			}
+		} else if 1 < Global.Universal {
+			endl := cy + Global.Universal
+			if Global.CurrentB.NumRows < endl {
+				endl = Global.CurrentB.NumRows - 1
+			}
+			bufKillRegion(Global.CurrentB, cx, 0, cy, endl)
+		} else {
+			startl := cy + Global.Universal
+			if startl < 0 {
+				startl = 0
+			}
+			bufKillRegion(Global.CurrentB, 0, cx, startl, cy)
+		}
 	} else {
-		rowDelRange(Global.CurrentB.Rows[cy], cx, Global.CurrentB.Rows[cy].Size, Global.CurrentB)
+		if cx >= Global.CurrentB.Rows[cy].Size {
+			Global.CurrentB.MoveCursorRight()
+			editorDelChar()
+		} else {
+			rowDelRange(Global.CurrentB.Rows[cy], cx, Global.CurrentB.Rows[cy].Size, Global.CurrentB)
+		}
 	}
 }
 

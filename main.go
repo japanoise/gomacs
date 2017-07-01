@@ -13,6 +13,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime/pprof"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 )
@@ -63,6 +64,8 @@ type EditorState struct {
 	DefaultModes   map[string]bool
 	messages       []string
 	debug          bool
+	Universal      int
+	SetUniversal   bool
 }
 
 var Global EditorState
@@ -220,6 +223,13 @@ func editorRowDelChar(row *EditorRow, buf *EditorBuffer, at int, rw int) {
 }
 
 func editorInsertStr(s string) {
+	if Global.SetUniversal && Global.Universal >= 0 {
+		os := s
+		s = ""
+		for i := 0; i < Global.Universal; i++ {
+			s += os
+		}
+	}
 	Global.Input = "Insert " + s
 	if Global.CurrentB.cy == Global.CurrentB.NumRows {
 		editorAddInsertUndo(Global.CurrentB.cx, Global.CurrentB.cy, s)
@@ -233,26 +243,57 @@ func editorInsertStr(s string) {
 }
 
 func editorDelChar() {
-	if Global.CurrentB.cx == 0 && Global.CurrentB.cy == 0 {
-		return
+	times := 1
+	if Global.SetUniversal {
+		if Global.Universal >= 0 {
+			times = Global.Universal
+		} else {
+			Global.Universal *= -1
+			editorDelForwardChar()
+			return
+		}
 	}
-	if Global.CurrentB.cy == Global.CurrentB.NumRows {
-		return
+	for i := 0; i < times; i++ {
+		if Global.CurrentB.cx == 0 && Global.CurrentB.cy == 0 {
+			return
+		}
+		if Global.CurrentB.cy == Global.CurrentB.NumRows {
+			return
+		}
+		row := Global.CurrentB.Rows[Global.CurrentB.cy]
+		if Global.CurrentB.cx > 0 {
+			_, rs := utf8.DecodeLastRuneInString(Global.CurrentB.Rows[Global.CurrentB.cy].Data[:Global.CurrentB.cx])
+			editorAddDeleteUndo(Global.CurrentB.cx-rs, Global.CurrentB.cx, Global.CurrentB.cy,
+				Global.CurrentB.cy, row.Data[Global.CurrentB.cx-rs:Global.CurrentB.cx])
+			editorRowDelChar(row, Global.CurrentB, Global.CurrentB.cx-rs, rs)
+			Global.CurrentB.cx -= rs
+		} else {
+			editorAddDeleteUndo(Global.CurrentB.cx, Global.CurrentB.Rows[Global.CurrentB.cy-1].Size,
+				Global.CurrentB.cy-1, Global.CurrentB.cy, row.Data)
+			Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy-1].Size
+			editorRowAppendStr(Global.CurrentB.Rows[Global.CurrentB.cy-1], Global.CurrentB, row.Data)
+			editorDelRow(Global.CurrentB.cy)
+			Global.CurrentB.cy--
+		}
 	}
-	row := Global.CurrentB.Rows[Global.CurrentB.cy]
-	if Global.CurrentB.cx > 0 {
-		_, rs := utf8.DecodeLastRuneInString(Global.CurrentB.Rows[Global.CurrentB.cy].Data[:Global.CurrentB.cx])
-		editorAddDeleteUndo(Global.CurrentB.cx-rs, Global.CurrentB.cx, Global.CurrentB.cy,
-			Global.CurrentB.cy, row.Data[Global.CurrentB.cx-rs:Global.CurrentB.cx])
-		editorRowDelChar(row, Global.CurrentB, Global.CurrentB.cx-rs, rs)
-		Global.CurrentB.cx -= rs
-	} else {
-		editorAddDeleteUndo(Global.CurrentB.cx, Global.CurrentB.Rows[Global.CurrentB.cy-1].Size,
-			Global.CurrentB.cy-1, Global.CurrentB.cy, row.Data)
-		Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy-1].Size
-		editorRowAppendStr(Global.CurrentB.Rows[Global.CurrentB.cy-1], Global.CurrentB, row.Data)
-		editorDelRow(Global.CurrentB.cy)
-		Global.CurrentB.cy--
+}
+
+func editorDelForwardChar() {
+	times := 1
+	if Global.SetUniversal {
+		if Global.Universal < 0 {
+			Global.Universal *= -1
+			editorDelChar()
+			return
+		} else {
+			times = Global.Universal
+		}
+	}
+	for i := 0; i < times; i++ {
+		Global.CurrentB.MoveCursorRight()
+	}
+	for i := 0; i < times; i++ {
+		editorDelChar()
 	}
 }
 
@@ -386,7 +427,7 @@ func InitEditor() {
 	buffer := &EditorBuffer{}
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
 		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool),
-		[]string{}, false}
+		[]string{}, false, 0, false}
 	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true
@@ -432,6 +473,38 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 
 func AddErrorMessage(msg string) {
 	Global.messages = append(Global.messages, msg)
+}
+
+func SetUniversalArgument(env *glisp.Glisp) {
+	arg := ""
+	for {
+		key := editorGetKey()
+		if (arg == "" && key == "-") || ('0' <= key[0] && key[0] <= '9') {
+			arg += key
+			Global.Input += key
+			editorRefreshScreen()
+		} else {
+			if key == "C-u" {
+				Global.Input += " " + key
+				editorRefreshScreen()
+				key = editorGetKey()
+			}
+			argi := 0
+			if arg != "" {
+				var err error = nil
+				argi, err = strconv.Atoi(arg)
+				if err != nil {
+					Global.Input = err.Error()
+					return
+				}
+			}
+			Global.Universal = argi
+			Global.SetUniversal = true
+			RunCommandForKey(key, env)
+			Global.SetUniversal = false
+			return
+		}
+	}
 }
 
 func main() {

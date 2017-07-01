@@ -117,6 +117,7 @@ yet - I'll try to keep this list up to date!
 - `C-j` - Insert a newline and indent the new row
 - `C-q` - Interpret the next keystroke literally and insert it (so you can enter
   escape sequences)
+- `C-u` - Universal argument
 
 ## Customization
 
