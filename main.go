@@ -91,6 +91,15 @@ func saveSomeBuffers() bool {
 	return nodirty
 }
 
+func doSaveSomeBuffers() {
+	nodirty := saveSomeBuffers()
+	if nodirty {
+		Global.Input = "All buffers saved."
+	} else {
+		Global.Input = "Some buffers remain unsaved."
+	}
+}
+
 func saveBuffersKillEmacs() {
 	nodirty := saveSomeBuffers()
 	if !nodirty {
