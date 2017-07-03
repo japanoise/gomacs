@@ -361,6 +361,29 @@ func lispListModes(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp
 	return glisp.MakeList(modes), nil
 }
 
+func lispSetUniversalArgument(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) != 1 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var val int
+	switch t := args[0].(type) {
+	case glisp.SexpInt:
+		val = int(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg needs to be an int")
+	}
+	Global.Universal = val
+	return glisp.SexpNull, nil
+}
+
+func lispGetUniversalArgument(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	return glisp.SexpInt(Global.Universal), nil
+}
+
+func lispIsUniversalArgumentSet(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	return glisp.SexpBool(Global.SetUniversal), nil
+}
+
 func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
 	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", saveBuffersKillEmacs)
