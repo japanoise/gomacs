@@ -69,18 +69,20 @@ func getColorForGroup(group highlight.Group) termbox.Attribute {
 func (row *EditorRow) HlPrint(x, y, offset, runeoff int, ts string) {
 	color := termbox.ColorDefault
 	os := 0
+	ri := 0
 	for in, ru := range ts {
-		if group, ok := row.HlMatches[in+runeoff]; ok {
+		if group, ok := row.HlMatches[ri+offset]; ok {
 			color = getColorForGroup(group)
 		} else if in == 0 && runeoff != 0 {
-			groupi, oki := row.HlMatches[runeoff]
-			for i := 1; !oki && i <= runeoff; i++ {
-				groupi, oki = row.HlMatches[runeoff-i]
+			groupi, oki := row.HlMatches[offset]
+			for i := 1; !oki && i <= offset; i++ {
+				groupi, oki = row.HlMatches[offset-i]
 			}
 			color = getColorForGroup(groupi)
 		}
 		termutil.PrintRune(x+os, y, ru, color)
 		os += termutil.Runewidth(ru)
+		ri++
 	}
 }
 
