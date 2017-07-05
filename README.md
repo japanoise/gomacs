@@ -144,16 +144,17 @@ Some functions to get you started…
   of spaces.
 - `(disablesyntax arg)` - Enable (false) or disable (true) syntax highlighting.
   arg must be a boolean.
+- `(addhook mode func)` - Add a hook function `func` to the major mode `mode`.
+  `mode` must be a string; `func` must be a function.
 
-## Modes
+## Minor Modes
 
-Each buffer has a number of modes activated. When a new buffer is opened, the
-modes are copied from the "default" set. Modes are added to this set with the
-lisp function `(adddefaultmode <mode>)` and removed with the function
-`(remdefaultmode <mode>)`.
-They can be toggled with the command `toggle-mode`, and you can view the current
-buffer's activated modes with the `show-modes` command. Here's what each mode
-does:
+Each buffer has a number of minor modes activated. When a new buffer is opened,
+the modes are copied from the "default" set. Modes are added to this set with
+the lisp function `(adddefaultmode <mode>)` and removed with the function
+`(remdefaultmode <mode>)`. They can be toggled with the command `toggle-mode`,
+and you can view the current buffer's activated modes with the `show-modes`
+command. Here's what each mode does:
 
 - `terminal-title-mode` - use an escape sequence to set the terminal title.
 - `line-number-mode` - display line numbers on the left edge of the buffer.

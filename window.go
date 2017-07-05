@@ -1,5 +1,9 @@
 package main
 
+import (
+	"github.com/zhemao/glisp/interpreter"
+)
+
 func getCurrentWindow() int {
 	for i, win := range Global.Windows {
 		if win == Global.CurrentB {
@@ -52,15 +56,15 @@ func switchWindow() {
 	}
 }
 
-func editorFindFile() {
+func editorFindFile(env *glisp.Glisp) {
 	fn := tabCompletedEditorPrompt("Find File", tabCompleteFilename)
 	if fn == "" {
 		return
 	}
-	openFile(fn)
+	openFile(fn, env)
 }
 
-func openFile(fn string) {
+func openFile(fn string, env *glisp.Glisp) {
 	buffer := &EditorBuffer{}
 	Global.Buffers = append(Global.Buffers, buffer)
 	i := getCurrentWindow()
@@ -70,7 +74,7 @@ func openFile(fn string) {
 		Global.Windows[i] = buffer
 	}
 	Global.CurrentB = buffer
-	EditorOpen(fn)
+	EditorOpen(fn, env)
 }
 
 func (e *EditorBuffer) getFilename() string {

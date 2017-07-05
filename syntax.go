@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/japanoise/termbox-util"
 	"github.com/nsf/termbox-go"
+	"github.com/zhemao/glisp/interpreter"
 	"github.com/zyedidia/highlight"
 	"strings"
 )
@@ -100,11 +101,14 @@ func LoadSyntaxDefs() {
 	highlight.ResolveIncludes(defs)
 }
 
-func editorSelectSyntaxHighlight(buf *EditorBuffer) {
+func editorSelectSyntaxHighlight(buf *EditorBuffer, env *glisp.Glisp) {
 	var first []byte
 	if buf.NumRows > 0 {
 		first = []byte(buf.Rows[0].Data)
 	}
 	buf.Highlighter = highlight.NewHighlighter(highlight.DetectFiletype(defs, buf.Filename, first))
+	if buf.Highlighter != nil {
+		ExecHooksForMode(env, buf.Highlighter.Def.FileType)
+	}
 	buf.Highlight()
 }

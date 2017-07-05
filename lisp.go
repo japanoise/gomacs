@@ -226,6 +226,28 @@ func lispDefineCmd(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp
 	return glisp.SexpNull, nil
 }
 
+func lispAddHook(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) != 2 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var arg1 string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		arg1 = StrToCmdName(string(t))
+	default:
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
+	}
+	var arg2 glisp.SexpFunction
+	switch t := args[1].(type) {
+	case glisp.SexpFunction:
+		arg2 = t
+	default:
+		return glisp.SexpNull, errors.New("Arg 2 needs to be a function")
+	}
+	RegisterLispHookForMode(arg1, arg2)
+	return glisp.SexpNull, nil
+}
+
 func lispOnlyWindow(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	return glisp.SexpBool(len(Global.Windows) == 1), nil
 }
@@ -386,7 +408,7 @@ func lispIsUniversalArgumentSet(env *glisp.Glisp, name string, args []glisp.Sexp
 
 func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
-	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", saveBuffersKillEmacs)
+	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", func() { saveBuffersKillEmacs(env) })
 	env.AddFunction("emacsbindkey", lispBindKey)
 	env.AddFunction("emacsonlywindow", lispOnlyWindow)
 	env.AddFunction("settabstop", lispSetTabStop)
@@ -410,6 +432,7 @@ func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("setuniversal", lispSetUniversalArgument)
 	env.AddFunction("getuniversal", lispGetUniversalArgument)
 	env.AddFunction("isuniversalset", lispIsUniversalArgumentSet)
+	env.AddFunction("addhook", lispAddHook)
 	LoadDefaultCommands()
 }
 

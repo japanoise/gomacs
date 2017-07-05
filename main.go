@@ -67,6 +67,7 @@ type EditorState struct {
 	debug          bool
 	Universal      int
 	SetUniversal   bool
+	MajorHooks     HookList
 }
 
 var Global EditorState
@@ -76,13 +77,13 @@ func editorSetPrompt(prompt string) {
 	Global.Prompt = prompt
 }
 
-func saveSomeBuffers() bool {
+func saveSomeBuffers(env *glisp.Glisp) bool {
 	nodirty := true
 	for _, buf := range Global.Buffers {
 		if buf.Dirty {
 			ds, cancel := editorYesNoPrompt(fmt.Sprintf("%s has unsaved changes; save them?", buf.getRenderName()), true)
 			if ds && cancel == nil {
-				editorBufSave(buf)
+				editorBufSave(buf, env)
 			} else if cancel != nil {
 				return false
 			}
@@ -92,8 +93,8 @@ func saveSomeBuffers() bool {
 	return nodirty
 }
 
-func doSaveSomeBuffers() {
-	nodirty := saveSomeBuffers()
+func doSaveSomeBuffers(env *glisp.Glisp) {
+	nodirty := saveSomeBuffers(env)
 	if nodirty {
 		Global.Input = "All buffers saved."
 	} else {
@@ -101,8 +102,8 @@ func doSaveSomeBuffers() {
 	}
 }
 
-func saveBuffersKillEmacs() {
-	nodirty := saveSomeBuffers()
+func saveBuffersKillEmacs(env *glisp.Glisp) {
+	nodirty := saveSomeBuffers(env)
 	if !nodirty {
 		dq, cancel := editorYesNoPrompt("Unsaved buffers exist; really quit?", false)
 		if dq && cancel == nil {
@@ -360,7 +361,7 @@ func AbsPath(filename string) (string, error) {
 	return path.Join(cwd, filename), nil
 }
 
-func EditorOpen(filename string) error {
+func EditorOpen(filename string, env *glisp.Glisp) error {
 	fpath, perr := AbsPath(filename)
 	if perr != nil {
 		return perr
@@ -377,7 +378,7 @@ func EditorOpen(filename string) error {
 		editorAppendRow(scanner.Text())
 	}
 	Global.CurrentB.Dirty = false
-	editorSelectSyntaxHighlight(Global.CurrentB)
+	editorSelectSyntaxHighlight(Global.CurrentB, env)
 	return nil
 }
 
@@ -407,11 +408,11 @@ func tabCompleteFilename(fn string) []string {
 	return ret
 }
 
-func EditorSave() {
-	editorBufSave(Global.CurrentB)
+func EditorSave(env *glisp.Glisp) {
+	editorBufSave(Global.CurrentB, env)
 }
 
-func editorBufSave(buf *EditorBuffer) {
+func editorBufSave(buf *EditorBuffer, env *glisp.Glisp) {
 	fn := buf.Filename
 	if fn == "" {
 		fn = editorPrompt("Save as", nil)
@@ -428,7 +429,7 @@ func editorBufSave(buf *EditorBuffer) {
 			buf.Filename = fpath
 			fn = buf.Filename
 			buf.Rendername = filepath.Base(fpath)
-			editorSelectSyntaxHighlight(buf)
+			editorSelectSyntaxHighlight(buf, env)
 		}
 	}
 	f, err := os.Create(fn)
@@ -463,7 +464,7 @@ func InitEditor() {
 	buffer := &EditorBuffer{}
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
 		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool),
-		[]string{}, false, 0, false}
+		[]string{}, false, 0, false, loadDefaultHooks()}
 	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true
@@ -575,7 +576,7 @@ func main() {
 		Global.Input = "Welcome to Emacs!"
 	}
 	if len(args) > 0 {
-		ferr := EditorOpen(args[0])
+		ferr := EditorOpen(args[0], env)
 		if ferr != nil {
 			Global.Input = ferr.Error()
 			AddErrorMessage(ferr.Error())
@@ -585,7 +586,7 @@ func main() {
 				buffer := &EditorBuffer{}
 				Global.Buffers = append(Global.Buffers, buffer)
 				Global.CurrentB = buffer
-				ferr = EditorOpen(fn)
+				ferr = EditorOpen(fn, env)
 				if ferr != nil {
 					Global.Input = ferr.Error()
 					AddErrorMessage(ferr.Error())
