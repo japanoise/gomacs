@@ -107,7 +107,11 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 			row := buf.Rows[filerow]
 			if buf.coloff < row.RenderSize {
 				ts, off := trimString(row.Render, buf.coloff)
-				row.HlPrint(gutsize, y, buf.coloff, off, ts)
+				if Global.NoSyntax || buf.Highlighter == nil {
+					termutil.Printstring(ts, gutsize, y)
+				} else {
+					row.HlPrint(gutsize, y, buf.coloff, off, ts)
+				}
 			}
 		}
 	}
@@ -115,7 +119,7 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 
 func editorUpdateStatus(buf *EditorBuffer) string {
 	fn := buf.getRenderName()
-	syn := "no ft"
+	syn := "Unknown"
 	if buf.Highlighter != nil {
 		syn = buf.Highlighter.Def.FileType
 	}

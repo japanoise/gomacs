@@ -568,9 +568,7 @@ func main() {
 		pprof.StartCPUProfile(f)
 		defer pprof.StopCPUProfile()
 	}
-	if !Global.NoSyntax {
-		LoadSyntaxDefs()
-	}
+	LoadSyntaxDefs()
 	args := fs.Args()
 	env := NewLispInterp()
 	if Global.Input == "" {
