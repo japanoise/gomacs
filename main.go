@@ -9,6 +9,7 @@ import (
 	"github.com/nsf/termbox-go"
 	"github.com/zhemao/glisp/interpreter"
 	"github.com/zyedidia/highlight"
+	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -378,6 +379,32 @@ func EditorOpen(filename string) error {
 	Global.CurrentB.Dirty = false
 	editorSelectSyntaxHighlight(Global.CurrentB)
 	return nil
+}
+
+func tabCompleteFilename(fn string) []string {
+	if fn == "" {
+		return nil
+	}
+	fpath, perr := AbsPath(fn)
+	if perr != nil {
+		return nil
+	}
+	fdir := filepath.Dir(fpath)
+	files, err := ioutil.ReadDir(fdir)
+	if err != nil || len(files) <= 0 {
+		return nil
+	}
+	ret := make([]string, 0)
+	for _, file := range files {
+		fileFullPath := fdir + string(filepath.Separator) + file.Name()
+		if file.IsDir() {
+			fileFullPath += string(filepath.Separator)
+		}
+		if strings.HasPrefix(fileFullPath, fpath) {
+			ret = append(ret, fileFullPath)
+		}
+	}
+	return ret
 }
 
 func EditorSave() {

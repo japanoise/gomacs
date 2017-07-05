@@ -53,7 +53,7 @@ func switchWindow() {
 }
 
 func editorFindFile() {
-	fn := editorPrompt("Find File", nil)
+	fn := tabCompletedEditorPrompt("Find File", tabCompleteFilename)
 	if fn == "" {
 		return
 	}

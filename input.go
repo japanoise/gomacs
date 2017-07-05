@@ -39,6 +39,55 @@ func editorPrompt(prompt string, callback func(string, string)) string {
 	return ret
 }
 
+func tabCompletedEditorPrompt(prompt string, getCandidates func(string) []string) string {
+	ret := termutil.DynamicPromptWithCallback(prompt, func(int, int) { editorRefreshScreen() }, func(query, key string) string {
+		if key == "TAB" || key == "C-i" {
+			if getCandidates == nil {
+				return query
+			}
+			candidates := getCandidates(query)
+			if candidates == nil {
+				return query
+			} else if len(candidates) == 1 {
+				return candidates[0]
+			} else if 0 < len(candidates) {
+				choice := 0
+				undecided := true
+				Global.Prompt = "Multiple choices"
+				cachedinput := Global.Input
+				for undecided {
+					Global.Input = candidates[choice]
+					editorRefreshScreen()
+					key := editorGetKey()
+					if key == "TAB" || key == "C-i" || key == "RIGHT" || key == "C-f" {
+						choice++
+						if choice == len(candidates) {
+							choice = 0
+						}
+					} else if key == "LEFT" || key == "C-b" {
+						choice--
+						if choice == -1 {
+							choice = len(candidates) - 1
+						}
+					} else if key == "C-c" || key == "C-g" {
+						return query
+					} else {
+						undecided = false
+					}
+				}
+				Global.Prompt = ""
+				Global.Input = cachedinput
+				return candidates[choice]
+			} else {
+				return query
+			}
+		} else {
+			return query
+		}
+	})
+	return ret
+}
+
 func editorChoiceIndex(title string, choices []string, def int) int {
 	return termutil.ChoiceIndex(title, choices, def)
 }
