@@ -18,8 +18,7 @@ func editorRowCxToRx(row *EditorRow) int {
 			break
 		}
 		if rv == '\t' {
-			rx += (Global.Tabsize - 1) - (rx % Global.Tabsize)
-			rx++
+			rx += Global.Tabsize
 		} else {
 			rx += termutil.Runewidth(rv)
 		}
@@ -32,9 +31,10 @@ func editorRowRxToCx(row *EditorRow, rx int) int {
 	var cx int
 	for cx = 0; cx < row.Size; cx++ {
 		if row.Data[cx] == '\t' {
-			cur_rx += (Global.Tabsize - 1) - (cur_rx % Global.Tabsize)
+			cur_rx += Global.Tabsize
+		} else {
+			cur_rx++
 		}
-		cur_rx++
 		if cur_rx > rx {
 			return cx
 		}
