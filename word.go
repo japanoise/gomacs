@@ -120,3 +120,13 @@ func downcaseWord() {
 		}
 	}
 }
+
+func capitalizeWord() {
+	times := getRepeatTimes()
+	icx := Global.CurrentB.cx
+	endc := icx
+	for i := 0; i < times; i++ {
+		endc = indexEndOfForwardWord()
+	}
+	transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.Title)
+}

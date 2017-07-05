@@ -194,6 +194,7 @@ func LoadDefaultCommands() {
 	DefineCommand(&CommandFunc{"upcase-region", func(*glisp.Glisp) { doUCRegion() }})
 	DefineCommand(&CommandFunc{"upcase-word", func(*glisp.Glisp) { upcaseWord() }})
 	DefineCommand(&CommandFunc{"downcase-word", func(*glisp.Glisp) { downcaseWord() }})
+	DefineCommand(&CommandFunc{"capitalize-word", func(*glisp.Glisp) { capitalizeWord() }})
 	DefineCommand(&CommandFunc{"toggle-mode", func(*glisp.Glisp) {
 		mode := editorPrompt("Which mode?", nil)
 		Global.CurrentB.toggleMode(StrToCmdName(mode))
