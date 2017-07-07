@@ -7,6 +7,7 @@
   though, you can run `go-bindata syntax_files/*.yaml`
 - commands.go - code to do with registering and storing mappings between
   keypresses and lisp functions or commands.
+- dired.go - barebones implementation of dired-mode
 - input.go - input from the user. Translating a termbox key event into an emacs
   binding string.
 - lisp.go - dealing with the lisp interpreter.
@@ -16,6 +17,7 @@
   dedicated files.
 - modes.go - dealing with modes
 - nav.go - navigation code
+- paragraph.go - paragraph-based commands
 - region.go - functions and commands for acting upon the selected region.
 - render.go - rendering and drawing functions
 - suspend.go - placeholder for non-Linux platforms (which don't have suspend
@@ -48,7 +50,7 @@ Now, apart from these differences, a Kilo hacker will notice a lot of
 similarities. Buffers are a wrapper around a list of EditorRows. Each of these
 has a data field (the actual string from the file), a render string (what's
 shown on screen, determined from the data) and a highlighting data array (which
-helps the editor determine what colour to print strings in on screen). 
+helps the editor determine what colour to print strings in on screen).
 
 Syntax highlighting is broadly similar to [Micro,](https://github.com/zyedidia/micro)
 Gomacs' other main parent (we even both share some code from [Godit,](https://github.com/nsf/godit)
@@ -113,7 +115,7 @@ together, as in GNU Emacs, to avoid making the undoing of long edits tedious.
 ## Region
 
 Region commands are in region.go. They were rewritten recently to free them
-from the helpful extra functionality in the editing commands, namely the 
+from the helpful extra functionality in the editing commands, namely the
 indentation and syntax highlighting updates - the latter of which they now
 save until the end. These commands use their own logic for acting on the
 buffer.
@@ -175,12 +177,12 @@ environment. This allows us to name commands for use with `M-x` or `C-h c`.
 It's strongly recommended that you define commands and then bind them to keys,
 rather than using lisp functions, because `C-h c` can't access the lisp code.
 
-## Modes
+## Minor Modes
 
-Modes are stored as a simple map of strings to booleans, for fairly fast access.
-They can be toggled with the command `toggle-mode`, and you can view the current
-buffer's activated modes with the `show-modes` command. Here are the modes
-implemented in the Go code:
+Minor modes are stored as a simple map of strings to booleans, for fairly fast
+access. They can be toggled with the command `toggle-mode`, and you can view the
+current buffer's activated modes with the `show-modes` command. Here are the
+modes implemented in the Go code:
 
 - `terminal-title-mode` - use an escape sequence to set the terminal title.
 - `line-number-mode` - display line numbers on the left edge of the buffer.
