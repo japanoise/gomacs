@@ -216,6 +216,12 @@ func callFunOtherWindow(f func()) {
 	f()
 }
 
+func callFunOtherWindowAndGoBack(f func()) {
+	oldcb := Global.CurrentB
+	callFunOtherWindow(f)
+	Global.CurrentB = oldcb
+}
+
 func KillBufferAndWindow() {
 	bufi := getIndexOfCurrentBuffer()
 	closeThisWindow()

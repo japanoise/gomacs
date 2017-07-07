@@ -554,6 +554,8 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x 4 d" "dired-other-window")
 (emacsbindkey "C-x C-w" "write-file")
 (emacsbindkey "C-x C-v" "visit-file")
+(emacsbindkey "C-M-v" "scroll-other-window")
+(emacsbindkey "C-M-z" "scroll-other-window-back")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

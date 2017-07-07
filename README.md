@@ -87,6 +87,8 @@ yet - I'll try to keep this list up to date!
 - `M-}` - Go forward a paragraph
 - `C-v` or `next` (Page Down) - Move cursor forward a screen
 - `M-v` or `prior` (Page Up) - Move cursor backward a screen
+- `C-M-v` - Move cursor forward a screen in other window
+- `C-M-z` - Move cursor backward a screen in other window
 - `C-s` - Incremental search
 - `M-%` - Query replace
 - `M-<` - Go to start of buffer

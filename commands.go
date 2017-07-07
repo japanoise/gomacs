@@ -243,6 +243,18 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"backward-paragraph", func(*glisp.Glisp) { backwardParagraph() }})
 	DefineCommand(&CommandFunc{"zap-to-char", func(*glisp.Glisp) { zapToChar() }})
 	DefineCommand(&CommandFunc{"dired-other-window", func(env *glisp.Glisp) { callFunOtherWindow(func() { DiredMode(env) }) }})
+	DefineCommand(&CommandFunc{"scroll-other-window", func(env *glisp.Glisp) {
+		callFunOtherWindowAndGoBack(func() {
+			MoveCursorForthPage()
+			editorScroll(GetScreenSize())
+		})
+	}})
+	DefineCommand(&CommandFunc{"scroll-other-window-back", func(env *glisp.Glisp) {
+		callFunOtherWindowAndGoBack(func() {
+			MoveCursorBackPage()
+			editorScroll(GetScreenSize())
+		})
+	}})
 	DefineCommand(&CommandFunc{"write-file", func(env *glisp.Glisp) { editorWriteFile(env) }})
 	DefineCommand(&CommandFunc{"visit-file", func(env *glisp.Glisp) { editorVisitFile(env) }})
 	if Global.debug {
