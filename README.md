@@ -58,6 +58,7 @@ yet - I'll try to keep this list up to date!
 
 - `C-x C-f` - find file
 - `C-x d` - find file using dired-mode
+- `C-x C-w` - write file
 - `C-x b` - switch buffer
 - `C-x k` - kill buffer
 - `C-x 2` - open a new window

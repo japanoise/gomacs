@@ -56,6 +56,16 @@ func switchWindow() {
 	}
 }
 
+func editorWriteFile(env *glisp.Glisp) {
+	fn := tabCompletedEditorPrompt("Write File", tabCompleteFilename)
+	if fn == "" {
+		return
+	}
+	Global.CurrentB.Filename = fn
+	Global.CurrentB.UpdateRenderName()
+	EditorSave(env)
+}
+
 func editorFindFile(env *glisp.Glisp) {
 	fn := tabCompletedEditorPrompt("Find File", tabCompleteFilename)
 	if fn == "" {

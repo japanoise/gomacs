@@ -367,7 +367,7 @@ func EditorOpen(filename string, env *glisp.Glisp) error {
 		return perr
 	}
 	Global.CurrentB.Filename = fpath
-	Global.CurrentB.Rendername = filepath.Base(fpath)
+	Global.CurrentB.UpdateRenderName()
 	f, err := os.Open(fpath)
 	if err != nil {
 		return err
@@ -380,6 +380,10 @@ func EditorOpen(filename string, env *glisp.Glisp) error {
 	Global.CurrentB.Dirty = false
 	editorSelectSyntaxHighlight(Global.CurrentB, env)
 	return nil
+}
+
+func (buf *EditorBuffer) UpdateRenderName() {
+	buf.Rendername = filepath.Base(buf.Filename)
 }
 
 func tabCompleteFilename(fn string) []string {
