@@ -57,6 +57,7 @@ yet - I'll try to keep this list up to date!
 ### View operations
 
 - `C-x C-f` - find file
+- `C-x d` - find file using dired-mode
 - `C-x b` - switch buffer
 - `C-x k` - kill buffer
 - `C-x 2` - open a new window
@@ -65,6 +66,7 @@ yet - I'll try to keep this list up to date!
 - `C-x 1` - maximise selected window (deleting the others)
 - `C-x 4 0` - delete selected window and current buffer
 - `C-x 4 C-f` - find file in other window (creating one if there's only one window)
+- `C-x 4 d` - use dired-mode to find file in other window
 - `C-x 4 b` - switch buffer in other window
 - `C-l` - Centre view on current line
 
