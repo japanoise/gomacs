@@ -244,6 +244,7 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"zap-to-char", func(*glisp.Glisp) { zapToChar() }})
 	DefineCommand(&CommandFunc{"dired-other-window", func(env *glisp.Glisp) { callFunOtherWindow(func() { DiredMode(env) }) }})
 	DefineCommand(&CommandFunc{"write-file", func(env *glisp.Glisp) { editorWriteFile(env) }})
+	DefineCommand(&CommandFunc{"visit-file", func(env *glisp.Glisp) { editorVisitFile(env) }})
 	if Global.debug {
 		DefineCommand(&CommandFunc{"debug-undo", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.CurrentB.Undo)) }})
 		DefineCommand(&CommandFunc{"debug-universal", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.Universal), fmt.Sprint(Global.SetUniversal)) }})

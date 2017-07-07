@@ -66,6 +66,26 @@ func editorWriteFile(env *glisp.Glisp) {
 	EditorSave(env)
 }
 
+func editorVisitFile(env *glisp.Glisp) {
+	fn := tabCompletedEditorPrompt("Visit File", tabCompleteFilename)
+	if fn == "" {
+		return
+	}
+	oldcb := Global.CurrentB
+	openFile(fn, env)
+	for i, buf := range Global.Windows {
+		if buf == oldcb {
+			Global.Windows[i] = Global.CurrentB
+		}
+	}
+	for i, buf := range Global.Buffers {
+		if buf == oldcb {
+			killGivenBuffer(i)
+			return
+		}
+	}
+}
+
 func editorFindFile(env *glisp.Glisp) {
 	fn := tabCompletedEditorPrompt("Find File", tabCompleteFilename)
 	if fn == "" {

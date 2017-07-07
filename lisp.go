@@ -553,6 +553,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "M-z" "zap-to-char")
 (emacsbindkey "C-x 4 d" "dired-other-window")
 (emacsbindkey "C-x C-w" "write-file")
+(emacsbindkey "C-x C-v" "visit-file")
 `)
 	if err != nil {
 		fmt.Println(err.Error())
