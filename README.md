@@ -73,6 +73,7 @@ yet - I'll try to keep this list up to date!
 - `C-x 4 C-f` - find file in other window (creating one if there's only one window)
 - `C-x 4 d` - use dired-mode to find file in other window
 - `C-x 4 b` - switch buffer in other window
+- `C-x 4 C-o` - display buffer in other window (keeping current window focused)
 - `C-l` - Centre view on current line
 
 ### Cursor, navigation, search & replace

@@ -557,6 +557,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-M-v" "scroll-other-window")
 (emacsbindkey "C-M-z" "scroll-other-window-back")
 (emacsbindkey "C-x z" "repeat")
+(emacsbindkey "C-x 4 C-o" "display-buffer")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

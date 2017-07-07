@@ -269,4 +269,5 @@ Current key bindings:
 		DefineCommand(&CommandFunc{"debug-universal", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.Universal), fmt.Sprint(Global.SetUniversal)) }, false})
 	}
 	DefineCommand(&CommandFunc{"repeat", func(env *glisp.Glisp) { RepeatCommand(env) }, true})
+	DefineCommand(&CommandFunc{"display-buffer", func(env *glisp.Glisp) { callFunOtherWindowAndGoBack(editorSwitchBuffer) }, false})
 }
