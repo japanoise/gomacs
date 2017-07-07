@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/japanoise/termbox-util"
 	"github.com/nsf/termbox-go"
+	"unicode/utf8"
 )
 
 func InitTerm() {
@@ -117,35 +118,38 @@ func editorPressKey(p string, keys ...string) string {
 	return termutil.PressKey(p, func(int, int) { editorRefreshScreen() }, keys...)
 }
 
+func GetRawChar() string {
+	return termutil.GetRawChar(func(int, int) {
+		editorRefreshScreen()
+	})
+}
+
 func InsertRaw() {
 	if Global.CurrentB.hasMode("no-self-insert-mode") {
 		Global.Input = "Can't insert right now"
 		return
 	}
-	done := false
-	chara := ""
-	for !done {
-		data := make([]byte, 4)
-		termbox.PollRawEvent(data)
-		parsed := termbox.ParseEvent(data)
-		if parsed.Type == termbox.EventKey {
-			if data[3] == 0 {
-				if data[2] == 0 {
-					if data[1] == 0 {
-						chara = string(data[:1])
-					} else {
-						chara = string(data[:2])
-					}
-				} else {
-					chara = string(data[:3])
-				}
-			} else {
-				chara = string(data)
+	editorInsertStr(GetRawChar())
+}
+
+func zapToChar() {
+	if Global.CurrentB.cy == Global.CurrentB.NumRows {
+		Global.Input = "End of buffer"
+		return
+	}
+	Global.Input = "Zap to char: "
+	editorRefreshScreen()
+	chars := GetRawChar()
+	Global.Input += chars
+	zapru, size := utf8.DecodeLastRuneInString(chars)
+	for _, row := range Global.CurrentB.Rows[Global.CurrentB.cy:] {
+		thisrow := row.idx == Global.CurrentB.cy
+		for in, ru := range row.Data {
+			if ru == zapru && !(thisrow && in < Global.CurrentB.cx) {
+				bufKillRegion(Global.CurrentB, Global.CurrentB.cx, in+size, Global.CurrentB.cy, row.idx)
+				return
 			}
-			done = true
-		} else if parsed.Type == termbox.EventResize {
-			editorRefreshScreen()
 		}
 	}
-	editorInsertStr(chara)
+	Global.Input = "Search failed: " + chars
 }

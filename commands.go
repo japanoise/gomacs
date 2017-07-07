@@ -241,6 +241,7 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"universal-argument", func(env *glisp.Glisp) { SetUniversalArgument(env) }})
 	DefineCommand(&CommandFunc{"forward-paragraph", func(*glisp.Glisp) { forwardParagraph() }})
 	DefineCommand(&CommandFunc{"backward-paragraph", func(*glisp.Glisp) { backwardParagraph() }})
+	DefineCommand(&CommandFunc{"zap-to-char", func(*glisp.Glisp) { zapToChar() }})
 	if Global.debug {
 		DefineCommand(&CommandFunc{"debug-undo", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.CurrentB.Undo)) }})
 		DefineCommand(&CommandFunc{"debug-universal", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.Universal), fmt.Sprint(Global.SetUniversal)) }})

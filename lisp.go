@@ -550,6 +550,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "M-{" "backward-paragraph")
 (emacsbindkey "M-}" "forward-paragraph")
 (emacsbindkey "M-c" "capitalize-word")
+(emacsbindkey "M-z" "zap-to-char")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

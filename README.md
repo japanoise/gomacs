@@ -101,6 +101,7 @@ yet - I'll try to keep this list up to date!
   does not work due to a fault either in Termbox or my terminal. If it works in
   your terminal, feel free to bind it.)
 - `C-k` - Delete to end of line
+- `M-z` - Zap (delete everything until) given character
 
 ### Region operations
 
