@@ -45,52 +45,64 @@ func (buf *EditorBuffer) UpdateRowToPrefCX() {
 }
 
 func (buf *EditorBuffer) MoveCursorDown() {
-	if buf.cy == buf.NumRows-1 {
-		buf.cy++
-		buf.cx = 0
-	} else if buf.cy >= buf.NumRows {
-		Global.Input = "End of buffer"
-	} else {
-		buf.cy++
-		buf.UpdateRowToPrefCX()
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		if buf.cy == buf.NumRows-1 {
+			buf.cy++
+			buf.cx = 0
+		} else if buf.cy >= buf.NumRows {
+			Global.Input = "End of buffer"
+		} else {
+			buf.cy++
+			buf.UpdateRowToPrefCX()
+		}
 	}
 }
 
 func (buf *EditorBuffer) MoveCursorUp() {
-	if buf.cy == 0 {
-		Global.Input = "Beginning of buffer"
-	} else {
-		buf.cy--
-		buf.UpdateRowToPrefCX()
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		if buf.cy == 0 {
+			Global.Input = "Beginning of buffer"
+		} else {
+			buf.cy--
+			buf.UpdateRowToPrefCX()
+		}
 	}
 }
 
 func (buf *EditorBuffer) MoveCursorLeft() {
-	if buf.cy == 0 && buf.cx == 0 {
-		Global.Input = "Beginning of buffer"
-	} else if buf.cx == 0 {
-		buf.cy--
-		buf.prefcx = -1
-		buf.cx = buf.Rows[buf.cy].Size
-	} else {
-		_, rs :=
-			utf8.DecodeLastRuneInString(buf.Rows[buf.cy].Data[:buf.cx])
-		buf.cx -= rs
-		buf.prefcx = buf.cx
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		if buf.cy == 0 && buf.cx == 0 {
+			Global.Input = "Beginning of buffer"
+		} else if buf.cx == 0 {
+			buf.cy--
+			buf.prefcx = -1
+			buf.cx = buf.Rows[buf.cy].Size
+		} else {
+			_, rs :=
+				utf8.DecodeLastRuneInString(buf.Rows[buf.cy].Data[:buf.cx])
+			buf.cx -= rs
+			buf.prefcx = buf.cx
+		}
 	}
 }
 
 func (buf *EditorBuffer) MoveCursorRight() {
-	if buf.cy >= buf.NumRows {
-		Global.Input = "End of buffer"
-	} else if buf.cx == buf.Rows[buf.cy].Size {
-		buf.cy++
-		buf.prefcx = 0
-		buf.cx = 0
-	} else {
-		_, rs := utf8.DecodeRuneInString(buf.Rows[buf.cy].Data[buf.cx:])
-		buf.cx += rs
-		buf.prefcx = buf.cx
+	times := getRepeatTimes()
+	for i := 0; i < times; i++ {
+		if buf.cy >= buf.NumRows {
+			Global.Input = "End of buffer"
+		} else if buf.cx == buf.Rows[buf.cy].Size {
+			buf.cy++
+			buf.prefcx = 0
+			buf.cx = 0
+		} else {
+			_, rs := utf8.DecodeRuneInString(buf.Rows[buf.cy].Data[buf.cx:])
+			buf.cx += rs
+			buf.prefcx = buf.cx
+		}
 	}
 }
 
@@ -117,18 +129,51 @@ func MovePage(back bool, sy int) {
 }
 
 func MoveCursorBackPage() {
-	_, sy := GetScreenSize()
-	Global.CurrentB.cy = Global.CurrentB.rowoff
-	MovePage(true, sy)
+	if Global.SetUniversal {
+		sy := Global.Universal
+		if sy < 0 {
+			Global.Universal *= -1
+			MoveCursorForthPage()
+			return
+		} else if Global.CurrentB.rowoff-sy >= 0 {
+			Global.CurrentB.rowoff -= sy
+		} else {
+			Global.Input = "Beginning of buffer"
+			Global.CurrentB.rowoff = 0
+		}
+		_, ssy := GetScreenSize()
+		for Global.CurrentB.cy > Global.CurrentB.rowoff+ssy {
+			Global.CurrentB.MoveCursorUp()
+		}
+	} else {
+		_, sy := GetScreenSize()
+		Global.CurrentB.cy = Global.CurrentB.rowoff
+		MovePage(true, sy)
+	}
 }
 
 func MoveCursorForthPage() {
-	_, sy := GetScreenSize()
-	Global.CurrentB.cy = Global.CurrentB.rowoff + sy - 1
-	if Global.CurrentB.cy > Global.CurrentB.NumRows {
-		Global.CurrentB.cy = Global.CurrentB.NumRows
+	if Global.SetUniversal {
+		sy := Global.Universal
+		if sy < 0 {
+			Global.Universal *= -1
+			MoveCursorBackPage()
+		} else if Global.CurrentB.rowoff+sy < Global.CurrentB.NumRows {
+			Global.CurrentB.rowoff += sy
+			for Global.CurrentB.cy < Global.CurrentB.rowoff {
+				Global.CurrentB.MoveCursorDown()
+			}
+		} else {
+			Global.Input = "End of buffer"
+		}
+	} else {
+		_, sy := GetScreenSize()
+		Global.CurrentB.cy = Global.CurrentB.rowoff + sy - 1
+		if Global.CurrentB.cy > Global.CurrentB.NumRows {
+			Global.CurrentB.cy = Global.CurrentB.NumRows
+		}
+		MovePage(false, sy)
 	}
-	MovePage(false, sy)
 }
 
 // HACK: Go does not have static variables, so these have to go in global state.
