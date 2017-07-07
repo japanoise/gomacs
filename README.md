@@ -131,6 +131,7 @@ yet - I'll try to keep this list up to date!
 - `C-q` - Interpret the next keystroke literally and insert it (so you can enter
   escape sequences)
 - `C-u` - Universal argument
+- `C-x z` - Repeat previous command - press `z` to repeat again
 
 ## Customization
 

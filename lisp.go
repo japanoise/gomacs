@@ -158,7 +158,7 @@ func lispSingleton(f func()) glisp.GlispUserFunction {
 
 func cmdAndLispFunc(e *glisp.Glisp, cmdname, lispname string, f func()) {
 	e.AddFunction(lispname, lispSingleton(f))
-	DefineCommand(&CommandFunc{cmdname, func(env *glisp.Glisp) { f() }})
+	DefineCommand(&CommandFunc{cmdname, func(env *glisp.Glisp) { f() }, false})
 }
 
 func lispBindKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
@@ -194,7 +194,7 @@ func lispBindKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, 
 	}
 	Emacs.PutCommand(arg1, &CommandFunc{"lisp code", func(env *glisp.Glisp) {
 		env.Apply(arg2, av)
-	}})
+	}, false})
 	return glisp.SexpNull, nil
 }
 
@@ -222,7 +222,7 @@ func lispDefineCmd(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp
 	}
 	DefineCommand(&CommandFunc{arg1, func(env *glisp.Glisp) {
 		env.Apply(arg2, av)
-	}})
+	}, false})
 	return glisp.SexpNull, nil
 }
 
@@ -556,6 +556,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x C-v" "visit-file")
 (emacsbindkey "C-M-v" "scroll-other-window")
 (emacsbindkey "C-M-z" "scroll-other-window-back")
+(emacsbindkey "C-x z" "repeat")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

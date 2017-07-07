@@ -51,23 +51,26 @@ type EditorBuffer struct {
 }
 
 type EditorState struct {
-	quit           bool
-	Input          string
-	CurrentB       *EditorBuffer
-	Buffers        []*EditorBuffer
-	Tabsize        int
-	Prompt         string
-	NoSyntax       bool
-	Windows        []*EditorBuffer
-	CurrentBHeight int
-	Clipboard      string
-	SoftTab        bool
-	DefaultModes   map[string]bool
-	messages       []string
-	debug          bool
-	Universal      int
-	SetUniversal   bool
-	MajorHooks     HookList
+	quit                    bool
+	Input                   string
+	CurrentB                *EditorBuffer
+	Buffers                 []*EditorBuffer
+	Tabsize                 int
+	Prompt                  string
+	NoSyntax                bool
+	Windows                 []*EditorBuffer
+	CurrentBHeight          int
+	Clipboard               string
+	SoftTab                 bool
+	DefaultModes            map[string]bool
+	messages                []string
+	debug                   bool
+	Universal               int
+	SetUniversal            bool
+	MajorHooks              HookList
+	LastCommand             *CommandFunc
+	LastCommandSetUniversal bool
+	LastCommandUniversal    int
 }
 
 var Global EditorState
@@ -468,7 +471,7 @@ func InitEditor() {
 	buffer := &EditorBuffer{}
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
 		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool),
-		[]string{}, false, 0, false, loadDefaultHooks()}
+		[]string{}, false, 0, false, loadDefaultHooks(), nil, false, 0}
 	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true
@@ -509,6 +512,11 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 			macro = append(macro, com)
 		}
 		com.Com(env)
+		if !com.NoRepeat {
+			Global.LastCommand = com
+			Global.LastCommandSetUniversal = Global.SetUniversal
+			Global.LastCommandUniversal = Global.Universal
+		}
 	}
 }
 
@@ -546,6 +554,19 @@ func SetUniversalArgument(env *glisp.Glisp) {
 			return
 		}
 	}
+}
+
+func RepeatCommand(env *glisp.Glisp) {
+	cmd := Global.LastCommand
+	Global.Universal = Global.LastCommandUniversal
+	Global.SetUniversal = Global.LastCommandSetUniversal
+	var s string
+	if Global.SetUniversal {
+		s = strconv.Itoa(Global.Universal) + " " + cmd.Name
+	} else {
+		s = cmd.Name
+	}
+	micromode("z", "Press z to repeat "+s, env, cmd.Com)
 }
 
 func getRepeatTimes() int {
