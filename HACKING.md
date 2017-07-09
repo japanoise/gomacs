@@ -18,6 +18,7 @@
 - modes.go - dealing with modes
 - nav.go - navigation code
 - paragraph.go - paragraph-based commands
+- registers.go - commands that save, load, and run from registers
 - region.go - functions and commands for acting upon the selected region.
 - render.go - rendering and drawing functions
 - suspend.go - placeholder for non-Linux platforms (which don't have suspend

@@ -194,6 +194,14 @@ func killGivenBuffer(i int) {
 			Global.Windows[wi] = rb
 		}
 	}
+
+	// Delete any mentions of this buffer in the registers
+	for _, reg := range Global.Registers.Registers {
+		if reg.Type == RegisterPos && reg.PosBuffer == kb {
+			reg.Type = RegisterInvalid
+			reg.PosBuffer = nil
+		}
+	}
 }
 
 func killBuffer() {

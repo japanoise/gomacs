@@ -272,4 +272,9 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"display-buffer", func(env *glisp.Glisp) { callFunOtherWindowAndGoBack(editorSwitchBuffer) }, false})
 	DefineCommand(&CommandFunc{"untabify", func(env *glisp.Glisp) { doUntabifyRegion() }, false})
 	DefineCommand(&CommandFunc{"tabify", func(env *glisp.Glisp) { doTabifyRegion() }, false})
+	DefineCommand(&CommandFunc{"jump-to-register", func(env *glisp.Glisp) { DoJumpRegister(env) }, false})
+	DefineCommand(&CommandFunc{"copy-to-register", func(env *glisp.Glisp) { DoSaveTextToRegister() }, false})
+	DefineCommand(&CommandFunc{"kmacro-to-register", func(env *glisp.Glisp) { DoSaveMacroToRegister() }, false})
+	DefineCommand(&CommandFunc{"insert-register", func(env *glisp.Glisp) { DoInsertTextFromRegister() }, false})
+	DefineCommand(&CommandFunc{"point-to-register", func(env *glisp.Glisp) { DoSavePositionToRegister() }, false})
 }

@@ -84,9 +84,9 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 	buf.Dirty = true
 }
 
-func bufCopyRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
+func getRegionText(buf *EditorBuffer, startc, endc, startl, endl int) string {
 	if startl == endl {
-		Global.Clipboard = buf.Rows[startl].Data[startc:endc]
+		return buf.Rows[startl].Data[startc:endc]
 	} else {
 		var bb bytes.Buffer
 		row := buf.Rows[startl]
@@ -99,8 +99,12 @@ func bufCopyRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 		}
 		row = buf.Rows[endl]
 		bb.WriteString(row.Data[:endc])
-		Global.Clipboard = bb.String()
+		return bb.String()
 	}
+}
+
+func bufCopyRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
+	Global.Clipboard = getRegionText(buf, startc, endc, startl, endl)
 }
 
 func markAhead(buf *EditorBuffer) bool {
@@ -195,11 +199,15 @@ func spitRegion(cx, cy int, region string) {
 		cy, Global.CurrentB.cy, region)
 }
 
-func doYankRegion() {
+func doYankText(text string) {
 	times := getRepeatTimes()
 	for i := 0; i < times; i++ {
-		spitRegion(Global.CurrentB.cx, Global.CurrentB.cy, Global.Clipboard)
+		spitRegion(Global.CurrentB.cx, Global.CurrentB.cy, text)
 	}
+}
+
+func doYankRegion() {
+	doYankText(Global.Clipboard)
 }
 
 func killToEol() {

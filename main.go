@@ -71,6 +71,7 @@ type EditorState struct {
 	LastCommand             *CommandFunc
 	LastCommandSetUniversal bool
 	LastCommandUniversal    int
+	Registers               *RegisterList
 }
 
 var Global EditorState
@@ -471,7 +472,8 @@ func InitEditor() {
 	buffer := &EditorBuffer{}
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
 		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool),
-		[]string{}, false, 0, false, loadDefaultHooks(), nil, false, 0}
+		[]string{}, false, 0, false, loadDefaultHooks(), nil, false, 0,
+		NewRegisterList()}
 	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true

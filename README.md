@@ -123,6 +123,14 @@ yet - I'll try to keep this list up to date!
 - `C-x C-u` - Uppercase region
 - `C-x C-l` - Lowercase region
 
+### Registers
+
+- `C-x r s` - Save region to register
+- `C-x r i` - Insert saved region from register
+- `C-x r C-@` - Save position to register
+- `C-x C-k x` - Save macro to register
+- `C-x r j` - Jump to saved position or run saved macro from register
+
 ### Misc
 
 - `C-x (` - Start recording a macro

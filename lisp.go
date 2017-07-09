@@ -558,6 +558,11 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-M-z" "scroll-other-window-back")
 (emacsbindkey "C-x z" "repeat")
 (emacsbindkey "C-x 4 C-o" "display-buffer")
+(emacsbindkey "C-x r j" "jump-to-register")
+(emacsbindkey "C-x r s" "copy-to-register")
+(emacsbindkey "C-x r i" "insert-register")
+(emacsbindkey "C-x r C-@" "point-to-register")
+(emacsbindkey "C-x C-k x" "kmacro-to-register")
 `)
 	if err != nil {
 		fmt.Println(err.Error())
