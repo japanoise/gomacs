@@ -277,4 +277,5 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"kmacro-to-register", func(env *glisp.Glisp) { DoSaveMacroToRegister() }, false})
 	DefineCommand(&CommandFunc{"insert-register", func(env *glisp.Glisp) { DoInsertTextFromRegister() }, false})
 	DefineCommand(&CommandFunc{"point-to-register", func(env *glisp.Glisp) { DoSavePositionToRegister() }, false})
+	DefineCommand(&CommandFunc{"view-register", func(env *glisp.Glisp) { DoDescribeRegister() }, false})
 }

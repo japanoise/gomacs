@@ -130,6 +130,7 @@ yet - I'll try to keep this list up to date!
 - `C-x r C-@` - Save position to register
 - `C-x C-k x` - Save macro to register
 - `C-x r j` - Jump to saved position or run saved macro from register
+- `M-x view-register` - Describe a given register
 
 ### Misc
 

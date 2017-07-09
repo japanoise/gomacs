@@ -2,7 +2,9 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/zhemao/glisp/interpreter"
+	"strings"
 )
 
 type RegisterType uint8
@@ -163,6 +165,36 @@ func DoInsertTextFromRegister() {
 		doYankText(register.Text)
 	} else {
 		Global.Input = "Register " + regname + " is not a text register"
+	}
+}
+
+func DoDescribeRegister() {
+	register, regname := InteractiveGetRegister("Describe register: ")
+	if register == nil || register.Type == RegisterInvalid {
+		Global.Input = "Register " + regname + " is empty."
+	} else {
+		switch register.Type {
+		case RegisterText:
+			showMessages(regname+" is a text register.", "",
+				"The data stored in this register is:",
+				register.Text)
+		case RegisterMacro:
+			cmds := make([]string, len(register.Macro))
+			for i, cmd := range register.Macro {
+				if cmd != nil {
+					cmds[i] = cmd.Name
+				}
+			}
+			showMessages(regname+" is a macro register.", "",
+				"The macro stored in this register is:",
+				strings.Join(cmds, "\n"))
+		case RegisterPos:
+			showMessages(regname+" is a position register.", "",
+				"The buffer stored in this register is "+register.PosBuffer.Rendername,
+				fmt.Sprintf("The position in the buffer is line %d, character %d",
+					register.Posy+1, register.Posx),
+			)
+		}
 	}
 }
 
