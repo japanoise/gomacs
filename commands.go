@@ -270,4 +270,6 @@ Current key bindings:
 	}
 	DefineCommand(&CommandFunc{"repeat", func(env *glisp.Glisp) { RepeatCommand(env) }, true})
 	DefineCommand(&CommandFunc{"display-buffer", func(env *glisp.Glisp) { callFunOtherWindowAndGoBack(editorSwitchBuffer) }, false})
+	DefineCommand(&CommandFunc{"untabify", func(env *glisp.Glisp) { doUntabifyRegion() }, false})
+	DefineCommand(&CommandFunc{"tabify", func(env *glisp.Glisp) { doTabifyRegion() }, false})
 }

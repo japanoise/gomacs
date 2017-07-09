@@ -257,3 +257,58 @@ func doUCRegion() {
 func doLCRegion() {
 	transposeRegionCmd(strings.ToLower)
 }
+
+func doUntabifyRegion() {
+	transposeRegionCmd(func(s string) string {
+		lines := strings.Split(s, "\n")
+		newlines := make([]string, 0, len(lines))
+		repstr := ""
+		for i := 0; i < Global.Tabsize; i++ {
+			repstr += " "
+		}
+		for _, line := range lines {
+			if strings.HasPrefix(line, "\t") {
+				count := 0
+				for _, ru := range line {
+					if ru == '\t' {
+						count++
+					} else {
+						break
+					}
+				}
+				newlines = append(newlines, strings.Replace(line, "\t", repstr, count))
+			} else {
+				newlines = append(newlines, line)
+			}
+		}
+		return strings.Join(newlines, "\n")
+	})
+}
+
+func doTabifyRegion() {
+	transposeRegionCmd(func(s string) string {
+		lines := strings.Split(s, "\n")
+		newlines := make([]string, 0, len(lines))
+		repstr := ""
+		for i := 0; i < Global.Tabsize; i++ {
+			repstr += " "
+		}
+		for _, line := range lines {
+			if strings.HasPrefix(line, " ") {
+				count := 0
+				for _, ru := range line {
+					if ru == ' ' {
+						count++
+					} else {
+						break
+					}
+				}
+				count = count / Global.Tabsize
+				newlines = append(newlines, strings.Replace(line, repstr, "\t", count))
+			} else {
+				newlines = append(newlines, line)
+			}
+		}
+		return strings.Join(newlines, "\n")
+	})
+}
