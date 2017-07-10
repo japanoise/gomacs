@@ -19,6 +19,27 @@ to run:
 
     go get github.com/japanoise/gomacs
 
+If you want to install gomacs systemwide, make sure you set your gopath and that
+this directory resides within it: here's an incantation that will do that on
+Linux if you're not sure how:
+
+```shell
+# Set gopath and create directories
+export GOPATH="$HOME/go"
+mkdir -pv "$GOPATH"
+# Create directory for this repo to live
+mkdir -pv "${GOPATH}/src/github.com/japanoise"
+cd "${GOPATH}/src/github.com/japanoise"
+# Clone the repo
+git clone https://github.com/japanoise/gomacs
+cd gomacs
+```
+
+The makefile includes `install` which will install the program as `gomacs`, and
+also `install-em` which will install it as `em` - in case your fingers are used
+to uemacs. Both come with corresponding `uninstall` targets. The makefile also
+accepts `PREFIX`, `DESTDIR`, `MANDIR`, etc.
+
 ## Usage
 
     gomacs [options] file

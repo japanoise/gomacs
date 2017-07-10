@@ -1,0 +1,46 @@
+.TH GOMACS 1
+.SH NAME
+gomacs \- emacs-like text editor
+.SH SYNOPSIS
+.B gomacs
+[\fB\-sd\fR]
+[\fB\-cpuprofile\fR=\fIFILE\fR]
+.IR file ...
+.SH DESCRIPTION
+.B gomacs
+is an emacs-like text editor. It accepts most of the standard emacs bindings,
+and supports a good subset of GNU Emacs commands. The reasoning behind its
+creation is a recognition of how emacsen generally do not conform to the
+vim-philosophy of leaning on the shell with short editor sessions broken up by
+lots of shell editing. In the design and implementation of
+.B gomacs
+much care has been taken towards making an editor that performs well in the
+terminal while using emacs bindings, having usable defaults, and being as
+intuitive as possible.
+.SH OPTIONS
+.TP
+.BR \-s
+Disable syntax highlighting. Syntax files are still loaded, for major mode
+support.
+.TP
+.BR \-d
+Enable dumping of crash logs.
+.TP
+.BR \-cpuprofile=\fIFILE\fR
+Write a cpu profile out to given file.
+.SH FILES
+.TP
+.BR $HOME/.gomacs.lisp
+rc file.
+.B gomacs
+will execute all lisp code in this file on startup.
+.SH BUGS
+Please report all bugs to me at the upstream repository:
+https://github.com/japanoise/gomacs
+.SH AUTHOR
+.B gomacs
+by japanoise/chameleon, with a lot of indirect help from Zachary Yedidia et al
+(the authors of Micro and highlight) and nsf, the author of termbox and godit.
+.SH COPYRIGHT
+.B gomacs
+is Copyright © 2017 japanoise/chameleon, licensed under the MIT license.
