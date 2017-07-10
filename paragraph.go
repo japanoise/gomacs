@@ -45,3 +45,13 @@ func forwardParagraph() {
 		Global.CurrentB.cx = 0
 	}
 }
+
+func doFillParagraph() {
+	startl := indexPreviousBlankLine()
+	endl := indexNextBlankLine() - 1
+	if Global.CurrentB.NumRows == 0 {
+		return
+	} else {
+		transposeRegion(Global.CurrentB, 0, Global.CurrentB.Rows[endl].Size, startl, endl, FillString)
+	}
+}

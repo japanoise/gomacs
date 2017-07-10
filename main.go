@@ -72,6 +72,7 @@ type EditorState struct {
 	LastCommandSetUniversal bool
 	LastCommandUniversal    int
 	Registers               *RegisterList
+	Fillcolumn              int
 }
 
 var Global EditorState
@@ -473,7 +474,7 @@ func InitEditor() {
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
 		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool),
 		[]string{}, false, 0, false, loadDefaultHooks(), nil, false, 0,
-		NewRegisterList()}
+		NewRegisterList(), 80}
 	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true
@@ -576,6 +577,30 @@ func getRepeatTimes() int {
 		return Global.Universal
 	} else {
 		return 1
+	}
+}
+
+func setFillColumn() {
+	if Global.SetUniversal {
+		if Global.Universal > 0 {
+			Global.Fillcolumn = Global.Universal
+			Global.Input = fmt.Sprintf("Fill column set to %d", Global.Fillcolumn)
+		} else {
+			Global.Input = fmt.Sprintf("Invalid value for fill column: %d", Global.Universal)
+			AddErrorMessage(Global.Input)
+		}
+	} else {
+		fc, err := strconv.Atoi(editorPrompt("Set the fill column to", nil))
+		if err != nil {
+			Global.Input = "Invalid value for fill column: " + err.Error()
+			AddErrorMessage(Global.Input)
+		} else if fc <= 0 {
+			Global.Input = fmt.Sprintf("Invalid value for fill column: %d", Global.Universal)
+			AddErrorMessage(Global.Input)
+		} else {
+			Global.Fillcolumn = fc
+			Global.Input = fmt.Sprintf("Fill column set to %d", fc)
+		}
 	}
 }
 

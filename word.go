@@ -130,3 +130,22 @@ func capitalizeWord() {
 	}
 	transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.Title)
 }
+
+func indexOfLastWord(s string) int {
+	for i := len(s) - 1; i > 0; i-- {
+		ru, _ := utf8.DecodeLastRuneInString(s[:i])
+		if !termutil.WordCharacter(ru) {
+			return i
+		}
+	}
+	return 0
+}
+
+func indexOfFirstWord(s string) int {
+	for i, ru := range s {
+		if !termutil.WordCharacter(ru) {
+			return i
+		}
+	}
+	return len(s)
+}

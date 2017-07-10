@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"github.com/japanoise/termbox-util"
 	"strings"
 )
 
@@ -319,4 +320,64 @@ func doTabifyRegion() {
 		}
 		return strings.Join(newlines, "\n")
 	})
+}
+
+func FillString(s string) string {
+	lines := strings.Split(s, "\n")
+	ll := len(lines)
+	for i := 0; i < ll; i++ {
+		line := lines[i] // We can't use range here as we may be modifying lines
+		linelen := termutil.RunewidthStr(line)
+		if linelen > Global.Fillcolumn {
+			var index int
+			rl := []rune(line)
+			fill := rl[Global.Fillcolumn]
+			afterfill := rl[Global.Fillcolumn+1]
+			if (termutil.WordCharacter(fill) && !termutil.WordCharacter(afterfill)) ||
+				!termutil.WordCharacter(fill) {
+				index = Global.Fillcolumn
+			} else {
+				index = indexOfLastWord(line[:Global.Fillcolumn])
+			}
+			if index > 0 {
+				if i == ll-1 {
+					lines = append(lines, "")
+					ll++
+				} else if lines[i+1] == "" {
+					n := i + 1
+					lines = append(lines, "")
+					copy(lines[n+1:], lines[n:])
+					lines[n] = ""
+					ll++
+				}
+				lines[i+1] = line[index:] + lines[i+1]
+				lines[i] = line[:index]
+			}
+		} else if i != ll-1 && line != "" {
+			index := indexOfFirstWord(lines[i+1])
+			wi := index
+			working := true
+			for working {
+				oldwi := wi
+				wi = wi + indexOfFirstWord(lines[i+1][wi:])
+				if oldwi == wi {
+					working = false
+				}
+				if termutil.RunewidthStr(lines[i+1][:wi]) < Global.Fillcolumn-linelen {
+					index = wi
+				} else {
+					working = false
+				}
+			}
+			if index < Global.Fillcolumn-linelen && index > 0 {
+				lines[i] = line + lines[i+1][:index]
+				lines[i+1] = lines[i+1][index:]
+			}
+		}
+	}
+	return strings.Join(lines, "\n")
+}
+
+func doFillRegion() {
+	transposeRegionCmd(FillString)
 }

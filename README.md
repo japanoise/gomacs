@@ -112,6 +112,9 @@ yet - I'll try to keep this list up to date!
   your terminal, feel free to bind it.)
 - `C-k` - Delete to end of line
 - `M-z` - Zap (delete everything until) given character
+- `M-q` - Fill paragraph (justify it to the width of the fill column)
+- `M-x fill-region` - Fill region
+- `C-x f` - Set the fill column
 
 ### Region operations
 

@@ -278,4 +278,7 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"insert-register", func(env *glisp.Glisp) { DoInsertTextFromRegister() }, false})
 	DefineCommand(&CommandFunc{"point-to-register", func(env *glisp.Glisp) { DoSavePositionToRegister() }, false})
 	DefineCommand(&CommandFunc{"view-register", func(env *glisp.Glisp) { DoDescribeRegister() }, false})
+	DefineCommand(&CommandFunc{"fill-region", func(env *glisp.Glisp) { doFillRegion() }, false})
+	DefineCommand(&CommandFunc{"fill-paragraph", func(env *glisp.Glisp) { doFillParagraph() }, false})
+	DefineCommand(&CommandFunc{"set-fill-column", func(env *glisp.Glisp) { setFillColumn() }, false})
 }
