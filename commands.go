@@ -62,6 +62,7 @@ func (c *CommandList) PutCommand(key string, command *CommandFunc) {
 		c.Children[keys[0]].Parent = true
 		c.Children[keys[0]].PutCommand(strings.Join(keys[1:], " "), command)
 	} else {
+		c.Children[keys[0]].Parent = false
 		c.Children[keys[0]].Command = command
 	}
 }
