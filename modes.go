@@ -121,3 +121,15 @@ func RegisterLispHookForMode(mode string, hook glisp.SexpFunction) {
 		hooks.LispHooks = append(hooks.LispHooks, hook)
 	}
 }
+
+func RegisterGoSaveHookForMode(mode string, hook func()) {
+	RegisterGoHookForMode(mode+"-save", hook)
+}
+
+func RegisterLispSaveHookForMode(mode string, hook glisp.SexpFunction) {
+	RegisterLispHookForMode(mode+"-save", hook)
+}
+
+func ExecSaveHooksForMode(env *glisp.Glisp, mode string) {
+	ExecHooksForMode(env, mode+"-save")
+}

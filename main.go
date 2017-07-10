@@ -459,6 +459,9 @@ func editorBufSave(buf *EditorBuffer, env *glisp.Glisp) {
 	AddErrorMessage(Global.Input)
 	buf.Dirty = false
 	buf.SaveUndo = buf.Undo
+	if buf.Highlighter != nil {
+		ExecSaveHooksForMode(env, buf.Highlighter.Def.FileType)
+	}
 }
 
 func getTabString() string {
