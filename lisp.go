@@ -149,6 +149,31 @@ func lispRunCommand(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sex
 	return glisp.SexpNull, nil
 }
 
+func lispRunCommandWithUarg(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) != 2 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	switch t := args[0].(type) {
+	case glisp.SexpInt:
+		Global.Universal = int(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg needs to be an int")
+	}
+	switch t := args[1].(type) {
+	case glisp.SexpStr:
+		cn := StrToCmdName(string(t))
+		cmd := funcnames[cn]
+		if cmd != nil && cmd.Com != nil {
+			Global.SetUniversal = true
+			cmd.Com(env)
+			Global.SetUniversal = false
+		}
+	default:
+		return glisp.SexpNull, errors.New("Arg 2 needs to be a string")
+	}
+	return glisp.SexpNull, nil
+}
+
 func lispSingleton(f func()) glisp.GlispUserFunction {
 	return func(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 		f()
@@ -383,21 +408,6 @@ func lispListModes(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp
 	return glisp.MakeList(modes), nil
 }
 
-func lispSetUniversalArgument(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
-	if len(args) != 1 {
-		return glisp.SexpNull, glisp.WrongNargs
-	}
-	var val int
-	switch t := args[0].(type) {
-	case glisp.SexpInt:
-		val = int(t)
-	default:
-		return glisp.SexpNull, errors.New("Arg needs to be an int")
-	}
-	Global.Universal = val
-	return glisp.SexpNull, nil
-}
-
 func lispGetUniversalArgument(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	return glisp.SexpInt(Global.Universal), nil
 }
@@ -418,6 +428,7 @@ func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("unbindall", lispSingleton(func() { Emacs.UnbindAll() }))
 	env.AddFunction("emacsdefinecmd", lispDefineCmd)
 	env.AddFunction("runemacscmd", lispRunCommand)
+	env.AddFunction("cmduarg", lispRunCommandWithUarg)
 	env.AddFunction("setmode", lispSetMode)
 	env.AddFunction("hasmode", lispHasMode)
 	env.AddFunction("listmodes", lispListModes)
@@ -429,7 +440,6 @@ func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("stringprompt", lispPrompt)
 	env.AddFunction("stringpromptcallback", lispPromptWithCallback)
 	env.AddFunction("choiceindex", lispChoiceIndex)
-	env.AddFunction("setuniversal", lispSetUniversalArgument)
 	env.AddFunction("getuniversal", lispGetUniversalArgument)
 	env.AddFunction("isuniversalset", lispIsUniversalArgumentSet)
 	env.AddFunction("addhook", lispAddHook)
