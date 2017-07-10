@@ -568,7 +568,12 @@ func RepeatCommand(env *glisp.Glisp) {
 	} else {
 		s = cmd.Name
 	}
-	micromode("z", "Press z to repeat "+s, env, cmd.Com)
+	micromode("z", "Press z to repeat "+s, env, func(e *glisp.Glisp) {
+		cmd.Com(e)
+		if !cmd.NoRepeat && macrorec {
+			macro = append(macro, &EditorAction{Global.SetUniversal, Global.Universal, cmd})
+		}
+	})
 }
 
 func getRepeatTimes() int {
