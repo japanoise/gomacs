@@ -48,6 +48,8 @@ accepts `PREFIX`, `DESTDIR`, `MANDIR`, etc.
 
 - `-s` - Disable syntax highlighting
 - `-d` - Enable dumping of crash logs
+- `-D` - Dump the keybindings to stdout and exit immediately. Used to generate
+  the man page.
 
 ## Keybindings
 

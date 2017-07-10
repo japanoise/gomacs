@@ -29,6 +29,8 @@ Disable syntax highlighting. Syntax files are still loaded, for major mode
 support.
 .It Fl d
 Enable dumping of crash logs.
+.It Fl D
+Dump default keybindings to stdout and exit immediately.
 .It Fl cpuprofile Ns = Ns Ar file
 Write a cpu profile out to given file.
 .Sh KEYBINDINGS
