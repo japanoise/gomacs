@@ -4,16 +4,29 @@ import (
 	"github.com/zhemao/glisp/interpreter"
 )
 
-var macro []*CommandFunc
+type EditorAction struct {
+	HasUniversal bool
+	Universal    int
+	Command      *CommandFunc
+}
+
+type EditorMacro []*EditorAction
+
+var macro EditorMacro
 var macrorec bool = false
 
-func runMacroOnce(env *glisp.Glisp) {
-	if macro == nil || len(macro) <= 0 {
+func runMacroOnce(env *glisp.Glisp, m []*EditorAction) {
+	if m == nil || len(m) <= 0 {
 		Global.Input = "Zero length or unset macro"
 		return
 	}
-	for _, cmd := range macro {
-		cmd.Com(env)
+	for _, act := range m {
+		if act != nil && act.Command != nil && act.Command.Com != nil {
+			Global.Universal = act.Universal
+			Global.SetUniversal = act.HasUniversal
+			act.Command.Com(env)
+			Global.SetUniversal = false
+		}
 	}
 }
 
@@ -32,19 +45,18 @@ func micromode(repeatkey string, msg string, env *glisp.Glisp, f func(*glisp.Gli
 
 func doRunMacro(env *glisp.Glisp) {
 	stopRecMacro()
-	micromode("e", "Press e to run macro again", env, runMacroOnce)
+	micromode("e", "Press e to run macro again", env, func(e *glisp.Glisp) {
+		runMacroOnce(e, macro)
+	})
 }
 
 func recMacro() {
 	macrorec = true
-	macro = []*CommandFunc{}
+	macro = EditorMacro{}
 	Global.Input = "Recording macro..."
 }
 
 func stopRecMacro() {
-	if macrorec {
-		macro = macro[:len(macro)-1]
-	}
 	macrorec = false
 	Global.Input = "Stopped recording"
 }

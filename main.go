@@ -502,7 +502,14 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 	}
 	// Hack fixed (though we won't support any encoding save utf8)
 	if !Global.CurrentB.hasMode("no-self-insert-mode") && utf8.RuneCountInString(key) == 1 {
-		editorInsertStr(key)
+		com := &CommandFunc{
+			key,
+			func(*glisp.Glisp) {
+				editorInsertStr(key)
+			},
+			false,
+		}
+		com.Run(env)
 		return
 	}
 	Global.Input = ""
@@ -511,15 +518,7 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 		Global.Input = comerr.Error()
 		return
 	} else if com != nil {
-		if macrorec {
-			macro = append(macro, com)
-		}
-		com.Com(env)
-		if !com.NoRepeat {
-			Global.LastCommand = com
-			Global.LastCommandSetUniversal = Global.SetUniversal
-			Global.LastCommandUniversal = Global.Universal
-		}
+		com.Run(env)
 	}
 }
 

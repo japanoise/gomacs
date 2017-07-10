@@ -22,7 +22,7 @@ type Register struct {
 	Posx      int
 	Posy      int
 	PosBuffer *EditorBuffer
-	Macro     []*CommandFunc
+	Macro     EditorMacro
 }
 
 type RegisterList struct {
@@ -61,7 +61,7 @@ func (r *RegisterList) storeMacroToRegister(register string) {
 	stopRecMacro()
 	ret := r.getRegisterOrCreate(register)
 	ret.Type = RegisterMacro
-	ret.Macro = make([]*CommandFunc, len(macro))
+	ret.Macro = make([]*EditorAction, len(macro))
 	for i := range ret.Macro {
 		ret.Macro[i] = macro[i]
 	}
@@ -75,16 +75,7 @@ func (r *RegisterList) runMacroFromRegister(env *glisp.Glisp, register string) {
 	}
 	stopRecMacro()
 	micromode("e", "Press e to run macro again", env, func(e *glisp.Glisp) {
-		if ret.Macro == nil || len(ret.Macro) <= 0 {
-			Global.Input = "Zero length or unset macro in register " + register
-			return
-		} else {
-			for _, cmd := range ret.Macro {
-				if cmd != nil && cmd.Com != nil {
-					cmd.Com(e)
-				}
-			}
-		}
+		runMacroOnce(e, ret.Macro)
 	})
 }
 
@@ -180,9 +171,13 @@ func DoDescribeRegister() {
 				register.Text)
 		case RegisterMacro:
 			cmds := make([]string, len(register.Macro))
-			for i, cmd := range register.Macro {
-				if cmd != nil {
-					cmds[i] = cmd.Name
+			for i, act := range register.Macro {
+				if act != nil && act.Command != nil {
+					if act.HasUniversal {
+						cmds[i] = fmt.Sprintf("%s %d", act.Command.Name, act.Universal)
+					} else {
+						cmds[i] = act.Command.Name
+					}
 				}
 			}
 			showMessages(regname+" is a macro register.", "",

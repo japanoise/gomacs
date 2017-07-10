@@ -126,15 +126,26 @@ func RunNamedCommand(env *glisp.Glisp, cmdname string) error {
 		}
 	}
 	if cmd != nil && cmd.Com != nil {
+		return cmd.Run(env)
+	} else {
+		return errors.New("no such command")
+	}
+}
+
+func (cmd *CommandFunc) Run(env *glisp.Glisp) error {
+	if cmd.Com != nil {
 		cmd.Com(env)
 		if !cmd.NoRepeat {
 			Global.LastCommand = cmd
 			Global.LastCommandSetUniversal = Global.SetUniversal
 			Global.LastCommandUniversal = Global.Universal
+			if macrorec {
+				macro = append(macro, &EditorAction{Global.SetUniversal, Global.Universal, cmd})
+			}
 		}
 		return nil
 	} else {
-		return errors.New("no such command")
+		return errors.New("Malformed command")
 	}
 }
 
@@ -234,9 +245,9 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"dired-mode", func(env *glisp.Glisp) { DiredMode(env) }, false})
 	DefineCommand(&CommandFunc{"goto-line", func(*glisp.Glisp) { gotoLine() }, false})
 	DefineCommand(&CommandFunc{"goto-char", func(*glisp.Glisp) { gotoChar() }, false})
-	DefineCommand(&CommandFunc{"start-macro", func(*glisp.Glisp) { recMacro() }, false})
-	DefineCommand(&CommandFunc{"end-macro", func(*glisp.Glisp) { stopRecMacro() }, false})
-	DefineCommand(&CommandFunc{"end-macro-and-run", func(e *glisp.Glisp) { doRunMacro(e) }, false})
+	DefineCommand(&CommandFunc{"start-macro", func(*glisp.Glisp) { recMacro() }, true})
+	DefineCommand(&CommandFunc{"end-macro", func(*glisp.Glisp) { stopRecMacro() }, true})
+	DefineCommand(&CommandFunc{"end-macro-and-run", func(e *glisp.Glisp) { doRunMacro(e) }, true})
 	DefineCommand(&CommandFunc{"kill-buffer-and-window", func(*glisp.Glisp) { KillBufferAndWindow() }, false})
 	DefineCommand(&CommandFunc{"view-messages", func(*glisp.Glisp) { showMessages(Global.messages...) }, false})
 	DefineCommand(&CommandFunc{"query-replace", func(*glisp.Glisp) { doQueryReplace() }, false})
