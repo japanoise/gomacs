@@ -87,11 +87,34 @@ func (c *CommandList) UnbindAll() {
 	c.Children = make(map[string]*CommandList)
 }
 
+func doDescribeBindings() {
+	if Global.MajorBindings[Global.CurrentB.MajorMode] != nil {
+		showMessages("Global bindings:", WalkCommandTree(Emacs, ""), "",
+			"Bindings for major mode "+Global.CurrentB.MajorMode+":",
+			WalkCommandTree(Global.MajorBindings[Global.CurrentB.MajorMode], ""))
+	} else {
+		showMessages(WalkCommandTree(Emacs, ""))
+	}
+}
+
 func DescribeKeyBriefly() {
 	editorSetPrompt("Describe key sequence")
+	defer editorSetPrompt("")
 	Global.Input = ""
 	editorRefreshScreen()
-	com, comerr := Emacs.GetCommand(editorGetKey())
+	key := editorGetKey()
+	if Global.MajorBindings[Global.CurrentB.MajorMode] != nil {
+		com, comerr := Global.MajorBindings[Global.CurrentB.MajorMode].GetCommand(key)
+		if com != nil && comerr == nil {
+			if com.Name == "lisp code" {
+				Global.Input += "runs anonymous lisp code"
+			} else {
+				Global.Input += "runs the command " + com.Name
+			}
+			return
+		}
+	}
+	com, comerr := Emacs.GetCommand(key)
 	if comerr != nil {
 		Global.Input += "is not bound to a command"
 	} else if com != nil {
@@ -103,7 +126,6 @@ func DescribeKeyBriefly() {
 	} else {
 		Global.Input += "is a null command"
 	}
-	editorSetPrompt("")
 }
 
 func RunCommand(env *glisp.Glisp) {
@@ -223,7 +245,7 @@ func LoadDefaultCommands() {
 	DefineCommand(&CommandFunc{"backward-char", func(*glisp.Glisp) { Global.CurrentB.MoveCursorLeft() }, false})
 	DefineCommand(&CommandFunc{"next-line", func(*glisp.Glisp) { Global.CurrentB.MoveCursorDown() }, false})
 	DefineCommand(&CommandFunc{"previous-line", func(*glisp.Glisp) { Global.CurrentB.MoveCursorUp() }, false})
-	DefineCommand(&CommandFunc{"describe-bindings", func(*glisp.Glisp) { showMessages(WalkCommandTree(Emacs, "")) }, false})
+	DefineCommand(&CommandFunc{"describe-bindings", func(*glisp.Glisp) { doDescribeBindings() }, false})
 	DefineCommand(&CommandFunc{"quick-help", func(*glisp.Glisp) {
 		showMessages(`Welcome to Gomacs - Go-powered emacs!
 

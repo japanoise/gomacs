@@ -119,15 +119,11 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 
 func editorUpdateStatus(buf *EditorBuffer) string {
 	fn := buf.getRenderName()
-	syn := "Unknown"
-	if buf.Highlighter != nil {
-		syn = buf.Highlighter.Def.FileType
-	}
 	dc := '-'
 	if buf.Dirty {
 		dc = '*'
 	}
-	return fmt.Sprintf("-%c %s - (%s) %d:%d", dc, fn, syn,
+	return fmt.Sprintf("-%c %s - (%s) %d:%d", dc, fn, buf.MajorMode,
 		buf.cy+1, buf.cx)
 }
 

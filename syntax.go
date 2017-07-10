@@ -108,7 +108,10 @@ func editorSelectSyntaxHighlight(buf *EditorBuffer, env *glisp.Glisp) {
 	}
 	buf.Highlighter = highlight.NewHighlighter(highlight.DetectFiletype(defs, buf.Filename, first))
 	if buf.Highlighter != nil {
-		ExecHooksForMode(env, buf.Highlighter.Def.FileType)
+		buf.MajorMode = buf.Highlighter.Def.FileType
+		ExecHooksForMode(env, buf.MajorMode)
+	} else {
+		buf.MajorMode = "Unknown"
 	}
 	buf.Highlight()
 }

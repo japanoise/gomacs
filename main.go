@@ -47,6 +47,7 @@ type EditorBuffer struct {
 	MarkY       int
 	Modes       ModeList
 	Highlighter *highlight.Highlighter
+	MajorMode   string
 	prefcx      int
 }
 
@@ -73,6 +74,7 @@ type EditorState struct {
 	LastCommandUniversal    int
 	Registers               *RegisterList
 	Fillcolumn              int
+	MajorBindings           map[string]*CommandList
 }
 
 var Global EditorState
@@ -419,6 +421,7 @@ func tabCompleteFilename(fn string) []string {
 
 func EditorSave(env *glisp.Glisp) {
 	editorBufSave(Global.CurrentB, env)
+	ExecSaveHooksForMode(env, Global.CurrentB.MajorMode)
 }
 
 func editorBufSave(buf *EditorBuffer, env *glisp.Glisp) {
@@ -459,9 +462,6 @@ func editorBufSave(buf *EditorBuffer, env *glisp.Glisp) {
 	AddErrorMessage(Global.Input)
 	buf.Dirty = false
 	buf.SaveUndo = buf.Undo
-	if buf.Highlighter != nil {
-		ExecSaveHooksForMode(env, buf.Highlighter.Def.FileType)
-	}
 }
 
 func getTabString() string {
@@ -474,10 +474,11 @@ func getTabString() string {
 
 func InitEditor() {
 	buffer := &EditorBuffer{}
+	buffer.MajorMode = "Unknown"
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
 		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool),
 		[]string{}, false, 0, false, loadDefaultHooks(), nil, false, 0,
-		NewRegisterList(), 80}
+		NewRegisterList(), 80, make(map[string]*CommandList)}
 	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true
@@ -514,6 +515,14 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 		}
 		com.Run(env)
 		return
+	}
+	if Global.MajorBindings[Global.CurrentB.MajorMode] != nil {
+		Global.Input = ""
+		com, comerr := Global.MajorBindings[Global.CurrentB.MajorMode].GetCommand(key)
+		if com != nil && comerr == nil {
+			com.Run(env)
+			return
+		}
 	}
 	Global.Input = ""
 	com, comerr := Emacs.GetCommand(key)
@@ -643,6 +652,7 @@ func main() {
 		if len(args) > 1 {
 			for _, fn := range args[1:] {
 				buffer := &EditorBuffer{}
+				buffer.MajorMode = "Unknown"
 				Global.Buffers = append(Global.Buffers, buffer)
 				Global.CurrentB = buffer
 				ferr = EditorOpen(fn, env)

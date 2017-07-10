@@ -223,6 +223,50 @@ func lispBindKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, 
 	return glisp.SexpNull, nil
 }
 
+func lispBindMajorModeKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) < 3 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var mode string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		mode = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
+	}
+	var arg1 string
+	switch t := args[1].(type) {
+	case glisp.SexpStr:
+		arg1 = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg 2 needs to be a string")
+	}
+	var arg2 glisp.SexpFunction
+	switch t := args[2].(type) {
+	case glisp.SexpFunction:
+		arg2 = t
+	case glisp.SexpStr:
+		cmdname := StrToCmdName(string(t))
+		cmd := funcnames[cmdname]
+		if cmd == nil {
+			return glisp.SexpNull, errors.New("Unknown command: " + cmdname)
+		} else {
+			BindKeyMajorMode(mode, arg1, cmd)
+			return glisp.SexpNull, nil
+		}
+	default:
+		return glisp.SexpNull, errors.New("Arg 3 needs to be a string or function")
+	}
+	av := []glisp.Sexp{}
+	if len(args) > 3 {
+		av = args[3:]
+	}
+	BindKeyMajorMode(mode, arg1, &CommandFunc{"lisp code", func(env *glisp.Glisp) {
+		env.Apply(arg2, av)
+	}, false})
+	return glisp.SexpNull, nil
+}
+
 func lispDefineCmd(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) < 2 {
 		return glisp.SexpNull, glisp.WrongNargs
@@ -466,6 +510,7 @@ func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("isuniversalset", lispIsUniversalArgumentSet)
 	env.AddFunction("addhook", lispAddHook)
 	env.AddFunction("addsavehook", lispAddSaveHook)
+	env.AddFunction("bindkeymode", lispBindMajorModeKey)
 	LoadDefaultCommands()
 }
 

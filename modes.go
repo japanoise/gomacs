@@ -133,3 +133,12 @@ func RegisterLispSaveHookForMode(mode string, hook glisp.SexpFunction) {
 func ExecSaveHooksForMode(env *glisp.Glisp, mode string) {
 	ExecHooksForMode(env, mode+"-save")
 }
+
+func BindKeyMajorMode(mode, key string, cmd *CommandFunc) {
+	AddErrorMessage(mode + key + cmd.Name)
+	if Global.MajorBindings[mode] == nil {
+		Global.MajorBindings[mode] = new(CommandList)
+		Global.MajorBindings[mode].Parent = true
+	}
+	Global.MajorBindings[mode].PutCommand(key, cmd)
+}
