@@ -40,6 +40,7 @@ func micromode(repeatkey string, msg string, env *glisp.Glisp, f func(*glisp.Gli
 		editorRefreshScreen()
 		key = editorGetKey()
 	}
+	Global.SetUniversal = false
 	RunCommandForKey(key, env)
 }
 
