@@ -168,6 +168,7 @@ yet - I'll try to keep this list up to date!
 - `C-x z` - Repeat previous command - press `z` to repeat again
 - `M-x tabify` - Convert spaces to tabs using the tabsize set in the options
 - `M-x untabify` - Convert tabs to spaces using the tabsize set in the options
+- `M-~` - Clear the 'modified' flag, as if the buffer was just saved.
 
 ## Customization
 

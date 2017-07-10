@@ -575,6 +575,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x C-k x" "kmacro-to-register")
 (emacsbindkey "M-q" "fill-paragraph")
 (emacsbindkey "C-x f" "set-fill-column")
+(emacsbindkey "M-~" "not-modified")
 `)
 	if err != nil {
 		fmt.Println(err.Error())
