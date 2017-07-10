@@ -621,11 +621,13 @@ func setFillColumn() {
 }
 
 func main() {
+	var dumptreequit bool
 	cpuprofile := ""
 	InitEditor()
 	fs := flag.NewFlagSet("", flag.ExitOnError)
 	fs.BoolVar(&Global.NoSyntax, "s", false, "disable syntax highlighting")
 	fs.BoolVar(&Global.debug, "d", false, "enable dumps of crash logs")
+	fs.BoolVar(&dumptreequit, "D", false, "dump the keybindings to stdout and quit")
 	fs.StringVar(&cpuprofile, "cpuprofile", "", "write cpu profile to file")
 	fs.Parse(os.Args[1:])
 	if cpuprofile != "" {
@@ -639,7 +641,11 @@ func main() {
 	}
 	LoadSyntaxDefs()
 	args := fs.Args()
-	env := NewLispInterp()
+	env := NewLispInterp(!dumptreequit)
+	if dumptreequit {
+		fmt.Println(WalkCommandTree(Emacs, ""))
+		return
+	}
 	if Global.Input == "" {
 		Global.Input = "Welcome to Emacs!"
 	}

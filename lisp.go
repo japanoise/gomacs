@@ -514,11 +514,13 @@ func loadLispFunctions(env *glisp.Glisp) {
 	LoadDefaultCommands()
 }
 
-func NewLispInterp() *glisp.Glisp {
+func NewLispInterp(loaduser bool) *glisp.Glisp {
 	ret := glisp.NewGlisp()
 	loadLispFunctions(ret)
 	LoadDefaultConfig(ret)
-	LoadUserConfig(ret)
+	if loaduser {
+		LoadUserConfig(ret)
+	}
 	return ret
 }
 

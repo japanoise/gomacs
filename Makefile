@@ -18,6 +18,11 @@ gomacs:
 gomacs.1.bz2: gomacs.1
 	${BZ2} -f -k gomacs.1
 
+gomacs.1: gomacs
+	sed -n -e '1,/^<<BINDINGS>>$$/p' gomacs.1.in | sed -e '$$ d' > gomacs.1
+	./gomacs -D | sed -e "s/^ \(.*\) - \(.*\)/.It \1\n\2/" -e's/\\/\\e/g' -e 's/)/\\\&)/g' >> gomacs.1
+	sed -e '1,/^<<BINDINGS>>$$/d' gomacs.1.in >> gomacs.1
+
 install: gomacs gomacs.1.bz2
 	${INSTALL_PROGRAM} gomacs ${DESTDIR}/${BINDIR}/gomacs
 	${INSTALL_FILE} gomacs.1.bz2 ${MANDIR}/gomacs.1.bz2

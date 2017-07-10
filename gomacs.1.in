@@ -1,46 +1,59 @@
-.TH GOMACS 1
-.SH NAME
-gomacs \- emacs-like text editor
-.SH SYNOPSIS
-.B gomacs
-[\fB\-sd\fR]
-[\fB\-cpuprofile\fR=\fIFILE\fR]
-.IR file ...
-.SH DESCRIPTION
-.B gomacs
+.\" https://linux.die.net/man/7/groff_mdoc
+.Dd $Mdocdate: July 10 2017 $
+.Dt GOMACS 1
+.Os
+.Sh NAME
+.Nm gomacs
+.Nd emacs-like text editor
+.Sh SYNOPSIS
+.Nm
+.Op Fl dDs
+.Op Fl cpuprofile Ns = Ns Ar file
+.Op Ar
+.Sh DESCRIPTION
+.Nm
 is an emacs-like text editor. It accepts most of the standard emacs bindings,
 and supports a good subset of GNU Emacs commands. The reasoning behind its
 creation is a recognition of how emacsen generally do not conform to the
 vim-philosophy of leaning on the shell with short editor sessions broken up by
 lots of shell editing. In the design and implementation of
-.B gomacs
+.Nm
 much care has been taken towards making an editor that performs well in the
 terminal while using emacs bindings, having usable defaults, and being as
 intuitive as possible.
-.SH OPTIONS
-.TP
-.BR \-s
+.Sh OPTIONS
+.Pp
+.Bl -tag -width xx
+.It Fl s
 Disable syntax highlighting. Syntax files are still loaded, for major mode
 support.
-.TP
-.BR \-d
+.It Fl d
 Enable dumping of crash logs.
-.TP
-.BR \-cpuprofile=\fIFILE\fR
+.It Fl cpuprofile Ns = Ns Ar file
 Write a cpu profile out to given file.
-.SH FILES
-.TP
-.BR $HOME/.gomacs.lisp
+.Sh KEYBINDINGS
+These are the default keybindings; they can be overridden (see the
+.Sx FILES
+section below)
+.Pp
+.Bl -tag -width xxxxxxxxxxxx -offset indent -compact
+<<BINDINGS>>
+.El
+.Pp
+.Sh FILES
+.Bl -tag -width ~/.gomacs.lisp -compact
+.It Pa ~/.gomacs.lisp
 rc file.
-.B gomacs
+.Nm
 will execute all lisp code in this file on startup.
-.SH BUGS
+.El
+.Sh BUGS
 Please report all bugs to me at the upstream repository:
 https://github.com/japanoise/gomacs
-.SH AUTHOR
-.B gomacs
+.Sh AUTHOR
+.Nm
 by japanoise/chameleon, with a lot of indirect help from Zachary Yedidia et al
 (the authors of Micro and highlight) and nsf, the author of termbox and godit.
-.SH COPYRIGHT
-.B gomacs
+.Sh COPYRIGHT
+.Nm
 is Copyright © 2017 japanoise/chameleon, licensed under the MIT license.
