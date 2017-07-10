@@ -280,11 +280,17 @@ func doQueryReplace() {
 	replace := editorPrompt("Replace "+orig+" with", nil)
 	all := false
 	ql := len(orig)
+	qw := utf8.RuneCountInString(orig)
+	rlen := len(replace)
 	for cy, row := range Global.CurrentB.Rows {
-		match := strings.Index(row.Render, orig)
-		if match != -1 {
+		match := strings.Index(row.Data, orig)
+		prestring := ""
+		matchstring := row.Data
+		for match != -1 {
+			psl := len(prestring)
 			Global.CurrentB.cy = cy
-			Global.CurrentB.cx = editorRowRxToCx(row, match)
+			Global.CurrentB.cx = match + psl
+			matchrx := utf8.RuneCountInString(row.Render[:editorRowCxToRx(row)])
 			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			saved_hl_line = cy
@@ -294,10 +300,10 @@ func doQueryReplace() {
 			}
 			var c highlight.Group
 			if row.HlMatches != nil {
-				row.HlMatches[match] = 255
+				row.HlMatches[matchrx] = 255
 
-				for i := 0; i <= match+ql; i++ {
-					if i >= match {
+				for i := 0; i <= matchrx+qw; i++ {
+					if i >= matchrx {
 						row.HlMatches[i] = 255
 					}
 					if saved_hl[i] != 0 {
@@ -305,11 +311,12 @@ func doQueryReplace() {
 					}
 				}
 				if ql == 0 {
-					row.HlMatches[match] = saved_hl[match]
+					row.HlMatches[matchrx] = saved_hl[matchrx]
 				} else {
-					row.HlMatches[match+ql] = c
+					row.HlMatches[matchrx+qw] = c
 				}
 			}
+
 			var pressed string
 			if !all {
 				pressed = editorPressKey("Replace with "+replace+"?", "y", "n", "C-g", "q", ".", "!")
@@ -317,14 +324,17 @@ func doQueryReplace() {
 					all = true
 				}
 			}
+
 			if pressed == "C-g" || pressed == "q" {
 				row.HlMatches = saved_hl
 				return
 			} else if pressed == "y" || pressed == "." || all {
 				Global.CurrentB.Dirty = true
 				editorAddDeleteUndo(0, row.Size, cy, cy, row.Data)
-				row.Data = strings.Replace(row.Data, orig, replace, -1)
+				row.Data = prestring + strings.Replace(matchstring, orig, replace, 1)
 				row.Size = len(row.Data)
+				prestring = row.Data[:psl+match+rlen]
+				matchstring = row.Data[psl+match+rlen:]
 				editorAddInsertUndo(0, cy, row.Data)
 				editorUpdateRow(row, Global.CurrentB)
 				if pressed == "." {
@@ -332,7 +342,10 @@ func doQueryReplace() {
 				}
 			} else {
 				row.HlMatches = saved_hl
+				prestring = row.Data[:psl+match+ql]
+				matchstring = row.Data[psl+match+ql:]
 			}
+			match = strings.Index(matchstring, orig)
 		}
 	}
 }
