@@ -316,4 +316,6 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"fill-paragraph", func(env *glisp.Glisp) { doFillParagraph() }, false})
 	DefineCommand(&CommandFunc{"set-fill-column", func(env *glisp.Glisp) { setFillColumn() }, false})
 	DefineCommand(&CommandFunc{"not-modified", func(env *glisp.Glisp) { Global.CurrentB.Dirty = false; Global.Input = "Modification flag cleared." }, false})
+	DefineCommand(&CommandFunc{"query-replace-regexp", func(env *glisp.Glisp) { doQueryReplaceRegexp() }, false})
+	DefineCommand(&CommandFunc{"replace-regexp", func(env *glisp.Glisp) { doReplaceRegexp() }, false})
 }

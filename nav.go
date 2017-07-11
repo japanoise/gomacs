@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/zyedidia/highlight"
+	"regexp"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -374,6 +375,129 @@ func doReplaceString() {
 			Global.CurrentB.Dirty = true
 			editorAddDeleteUndo(0, row.Size, cy, cy, row.Data)
 			row.Data = strings.Replace(row.Data, orig, replace, -1)
+			row.Size = len(row.Data)
+			editorAddInsertUndo(0, cy, row.Data)
+			editorUpdateRow(row, Global.CurrentB)
+		}
+	}
+	if matches > 0 {
+		Global.Input = fmt.Sprintf("Replaced %d occurences on %d lines",
+			matches, lines)
+	} else {
+		Global.Input = "No matches found"
+	}
+}
+
+func doQueryReplaceRegexp() {
+	orig := editorPrompt("Find regexp", nil)
+	if orig == "" {
+		Global.Input = "Can't query-replace-regexp with an empty query"
+		return
+	}
+	pattern, err := regexp.Compile(orig)
+	if err != nil {
+		Global.Input = "Couldn't compile regexp " + orig + ": " + err.Error()
+		return
+	}
+	replace := editorPrompt("Replace "+orig+" with", nil)
+	all := false
+	ql := len(orig)
+	for cy, row := range Global.CurrentB.Rows {
+		match := pattern.FindStringIndex(row.Data)
+		prestring := ""
+		matchstring := row.Data
+		for len(match) != 0 {
+			psl := len(prestring)
+			Global.CurrentB.cy = cy
+			Global.CurrentB.cx = match[0] + psl
+			matchrx := utf8.RuneCountInString(row.Render[:editorRowCxToRx(row)])
+			Global.CurrentB.prefcx = Global.CurrentB.cx
+			Global.CurrentB.rowoff = Global.CurrentB.NumRows
+			saved_hl_line = cy
+			saved_hl = make(highlight.LineMatch)
+			for k, v := range row.HlMatches {
+				saved_hl[k] = v
+			}
+			qw := utf8.RuneCountInString(matchstring[match[0]:match[1]])
+			var c highlight.Group
+			if row.HlMatches != nil {
+				row.HlMatches[matchrx] = 255
+
+				for i := 0; i <= matchrx+qw; i++ {
+					if i >= matchrx {
+						row.HlMatches[i] = 255
+					}
+					if saved_hl[i] != 0 {
+						c = saved_hl[i]
+					}
+				}
+				if ql == 0 {
+					row.HlMatches[matchrx] = saved_hl[matchrx]
+				} else {
+					row.HlMatches[matchrx+qw] = c
+				}
+			}
+
+			var pressed string
+			if !all {
+				pressed = editorPressKey("Replace with "+replace+"?", "y", "n", "C-g", "q", ".", "!")
+				if pressed == "!" {
+					all = true
+				}
+			}
+
+			if pressed == "C-g" || pressed == "q" {
+				row.HlMatches = saved_hl
+				return
+			} else if pressed == "y" || pressed == "." || all {
+				Global.CurrentB.Dirty = true
+				editorAddDeleteUndo(0, row.Size, cy, cy, row.Data)
+				prestring = prestring + pattern.ReplaceAllString(matchstring[:match[1]], replace)
+				matchstring = matchstring[match[1]:]
+				row.Data = prestring + matchstring
+				row.Size = len(row.Data)
+				editorAddInsertUndo(0, cy, row.Data)
+				editorUpdateRow(row, Global.CurrentB)
+				if pressed == "." {
+					return
+				}
+			} else {
+				row.HlMatches = saved_hl
+				prestring = prestring + matchstring[:match[1]]
+				matchstring = matchstring[match[1]:]
+			}
+			match = pattern.FindStringIndex(matchstring)
+		}
+	}
+}
+
+func doReplaceRegexp() {
+	orig := editorPrompt("Find regexp", nil)
+	if orig == "" {
+		Global.Input = "Can't replace-regexp with an empty query"
+		return
+	}
+	pattern, err := regexp.Compile(orig)
+	if err != nil {
+		Global.Input = "Couldn't compile regexp " + orig + ": " + err.Error()
+		return
+	}
+	replace := editorPrompt("Replace "+orig+" with", nil)
+	matches := 0
+	lines := 0
+	for cy, row := range Global.CurrentB.Rows {
+		match := pattern.MatchString(row.Data)
+		if match {
+			count := len(pattern.FindAllString(row.Data, -1))
+			matches += count
+			lines++
+			Global.CurrentB.cy = cy
+			Global.CurrentB.cx = editorRowRxToCx(row, row.Size)
+			Global.CurrentB.prefcx = Global.CurrentB.cx
+			Global.CurrentB.rowoff = Global.CurrentB.NumRows
+			Global.CurrentB.Dirty = true
+			editorAddDeleteUndo(0, row.Size, cy, cy, row.Data)
+			row.Data = pattern.ReplaceAllString(row.Data, replace)
 			row.Size = len(row.Data)
 			editorAddInsertUndo(0, cy, row.Data)
 			editorUpdateRow(row, Global.CurrentB)

@@ -115,6 +115,9 @@ yet - I'll try to keep this list up to date!
 - `C-M-z` - Move cursor backward a screen in other window
 - `C-s` - Incremental search
 - `M-%` - Query replace
+- `M-x replace-string` - Replace all instances of a string
+- `M-x query-replace-regexp` - Query replace matches of a regular expression
+- `M-x replace-regexp` - Replace all matches of a regular expression
 - `M-<` - Go to start of buffer
 - `M->` - Go to end of buffer
 - `M-g g` or `M-g M-g` - Go to line (prompt)
