@@ -54,7 +54,8 @@ func tabCompletedEditorPrompt(prompt string, getCandidates func(string) []string
 			} else if 0 < len(candidates) {
 				choice := 0
 				undecided := true
-				Global.Prompt = "Multiple choices"
+				editorSetPrompt("Multiple choices")
+				defer editorSetPrompt("")
 				cachedinput := Global.Input
 				for undecided {
 					Global.Input = candidates[choice]
@@ -76,7 +77,6 @@ func tabCompletedEditorPrompt(prompt string, getCandidates func(string) []string
 						undecided = false
 					}
 				}
-				Global.Prompt = ""
 				Global.Input = cachedinput
 				return candidates[choice]
 			} else {
