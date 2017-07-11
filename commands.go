@@ -129,7 +129,20 @@ func DescribeKeyBriefly() {
 }
 
 func RunCommand(env *glisp.Glisp) {
-	cmdname := StrToCmdName(editorPrompt("Run command", nil))
+	cmdname := StrToCmdName(tabCompletedEditorPrompt("Run command", func(prefix string) []string {
+		halfcmd := StrToCmdName(prefix)
+		ret := []string{}
+		for cmd := range funcnames {
+			if strings.HasPrefix(cmd, halfcmd) {
+				ret = append(ret, cmd)
+			}
+		}
+		return ret
+	}))
+	if cmdname == "" {
+		Global.Input = "Cancelled."
+		return
+	}
 	err := RunNamedCommand(env, cmdname)
 	if err != nil {
 		Global.Input = cmdname + ": " + err.Error()
