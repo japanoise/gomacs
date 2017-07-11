@@ -646,6 +646,8 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "M-q" "fill-paragraph")
 (emacsbindkey "C-x f" "set-fill-column")
 (emacsbindkey "M-~" "not-modified")
+(emacsbindkey "M-!" "shell-command")
+(emacsbindkey "M-|" "shell-command-on-region")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

@@ -331,4 +331,6 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"not-modified", func(env *glisp.Glisp) { Global.CurrentB.Dirty = false; Global.Input = "Modification flag cleared." }, false})
 	DefineCommand(&CommandFunc{"query-replace-regexp", func(env *glisp.Glisp) { doQueryReplaceRegexp() }, false})
 	DefineCommand(&CommandFunc{"replace-regexp", func(env *glisp.Glisp) { doReplaceRegexp() }, false})
+	DefineCommand(&CommandFunc{"shell-command", func(env *glisp.Glisp) { doShellCmd() }, false})
+	DefineCommand(&CommandFunc{"shell-command-on-region", func(env *glisp.Glisp) { doShellCmdRegion() }, false})
 }

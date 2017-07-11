@@ -174,6 +174,9 @@ yet - I'll try to keep this list up to date!
 - `M-x tabify` - Convert spaces to tabs using the tabsize set in the options
 - `M-x untabify` - Convert tabs to spaces using the tabsize set in the options
 - `M-~` - Clear the 'modified' flag, as if the buffer was just saved.
+- `M-!` - Run shell command (add a universal argument to output to buffer)
+- `M-|` - Run shell command on region (add a universal argument to replace
+  region with output)
 
 ## Customization
 
