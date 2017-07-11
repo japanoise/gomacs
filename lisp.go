@@ -332,8 +332,20 @@ func lispAddSaveHook(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Se
 	switch t := args[1].(type) {
 	case glisp.SexpFunction:
 		arg2 = t
+	case glisp.SexpStr:
+		cmd := funcnames[StrToCmdName(string(t))]
+		if cmd == nil {
+			return glisp.SexpNull, errors.New("Unknown command: " + string(t))
+		}
+		RegisterGoSaveHookForMode(arg1, func() {
+			e := cmd.Run(env)
+			if e != nil {
+				Global.Input = e.Error()
+			}
+		})
+		return glisp.SexpNull, nil
 	default:
-		return glisp.SexpNull, errors.New("Arg 2 needs to be a function")
+		return glisp.SexpNull, errors.New("Arg 2 needs to be a function or a string")
 	}
 	RegisterLispSaveHookForMode(arg1, arg2)
 	return glisp.SexpNull, nil
@@ -482,6 +494,84 @@ func lispIsUniversalArgumentSet(env *glisp.Glisp, name string, args []glisp.Sexp
 	return glisp.SexpBool(Global.SetUniversal), nil
 }
 
+func lispRunExtCmd(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) < 1 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var com string
+	var cmdargs []string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		com = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
+	}
+	if len(args) > 1 {
+		for _, arg := range args[1:] {
+			switch t := arg.(type) {
+			case glisp.SexpStr:
+				cmdargs = append(cmdargs, string(t))
+			default:
+				return glisp.SexpNull, errors.New("All command args need to be strings")
+			}
+		}
+	}
+	shellCmdAction(com, cmdargs)
+	return glisp.SexpNull, nil
+}
+
+func lispFilterRegion(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) < 1 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var com string
+	var cmdargs []string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		com = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
+	}
+	if len(args) > 1 {
+		for _, arg := range args[1:] {
+			switch t := arg.(type) {
+			case glisp.SexpStr:
+				cmdargs = append(cmdargs, string(t))
+			default:
+				return glisp.SexpNull, errors.New("All command args need to be strings")
+			}
+		}
+	}
+	shellCmdRegion(com, cmdargs)
+	return glisp.SexpNull, nil
+}
+
+func lispFilterBuffer(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) < 1 {
+		return glisp.SexpNull, glisp.WrongNargs
+	}
+	var com string
+	var cmdargs []string
+	switch t := args[0].(type) {
+	case glisp.SexpStr:
+		com = string(t)
+	default:
+		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
+	}
+	if len(args) > 1 {
+		for _, arg := range args[1:] {
+			switch t := arg.(type) {
+			case glisp.SexpStr:
+				cmdargs = append(cmdargs, string(t))
+			default:
+				return glisp.SexpNull, errors.New("All command args need to be strings")
+			}
+		}
+	}
+	replaceBufferWithShellCommand(Global.CurrentB, com, cmdargs, env)
+	return glisp.SexpNull, nil
+}
+
 func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("emacsprint", lispPrint)
 	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", func() { saveBuffersKillEmacs(env) })
@@ -511,6 +601,9 @@ func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("addhook", lispAddHook)
 	env.AddFunction("addsavehook", lispAddSaveHook)
 	env.AddFunction("bindkeymode", lispBindMajorModeKey)
+	env.AddFunction("filterbuffer", lispFilterBuffer)
+	env.AddFunction("filterregion", lispFilterRegion)
+	env.AddFunction("shellcmd", lispRunExtCmd)
 	LoadDefaultCommands()
 }
 
