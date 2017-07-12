@@ -21,6 +21,7 @@
 - registers.go - commands that save, load, and run from registers
 - region.go - functions and commands for acting upon the selected region.
 - render.go - rendering and drawing functions
+- shell.go - commands that use external programs
 - suspend.go - placeholder for non-Linux platforms (which don't have suspend
   functionality)
 - suspend_linux.go - suspend functionality for Linux
@@ -92,10 +93,10 @@ file crash.log in the current directory. If you get stuck (sometimes Glisp will
 crash and not get restarted) hit the `<f12>` key, which will quit Gomacs
 immediately.
 
-Most of the lisp functionality is YAGNI at the moment, pending the implementation
-of modes and the exposure of more of the editor's internals to lisp. You can
-find all of the functions that are currently implemented in lisp.go.
-lispSingleton maps a simple func() to a function in lisp that takes no arguments.
+See the examples directory for some examples of lisp in use for extending
+Gomacs. You can also find all of the functions that are currently implemented in
+lisp.go. lispSingleton maps a simple func() to a function in lisp that takes no
+arguments.
 
 ## Undo and Redo
 
