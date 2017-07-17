@@ -75,7 +75,7 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 
 		// Update the buffer and return
 		updateLineIndexes()
-		editorReHighlightRow(buf.Rows[startl], buf)
+		buf.Highlight()
 		editorAddRegionUndo(false, startc, endc,
 			startl, endl, Global.Clipboard)
 	}
