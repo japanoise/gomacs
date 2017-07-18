@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/japanoise/termbox-util"
-	"github.com/mattn/go-runewidth"
-	"github.com/nsf/termbox-go"
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/japanoise/termbox-util"
+	"github.com/mattn/go-runewidth"
+	"github.com/nsf/termbox-go"
 )
 
 func editorRowCxToRx(row *EditorRow) int {

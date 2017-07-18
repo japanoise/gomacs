@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/zhemao/glisp/interpreter"
 	"io"
 	"os/exec"
 	"strings"
+
+	"github.com/zhemao/glisp/interpreter"
 )
 
 func shellCmd(com string, args []string) (string, error) {

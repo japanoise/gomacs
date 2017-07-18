@@ -3,8 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/zhemao/glisp/interpreter"
 	"strings"
+
+	"github.com/zhemao/glisp/interpreter"
 )
 
 type RegisterType uint8

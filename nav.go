@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/zyedidia/highlight"
 	"regexp"
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/zyedidia/highlight"
 )
 
 func editorScroll(sx, sy int) {

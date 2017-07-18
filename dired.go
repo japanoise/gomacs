@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/zhemao/glisp/interpreter"
 	"io/ioutil"
 	"path/filepath"
+
+	"github.com/zhemao/glisp/interpreter"
 )
 
 func DiredMode(env *glisp.Glisp) {

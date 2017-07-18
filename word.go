@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/japanoise/termbox-util"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/japanoise/termbox-util"
 )
 
 func indexEndOfBackwardWord() int {

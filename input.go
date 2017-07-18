@@ -1,9 +1,10 @@
 package main
 
 import (
+	"unicode/utf8"
+
 	"github.com/japanoise/termbox-util"
 	"github.com/nsf/termbox-go"
-	"unicode/utf8"
 )
 
 func InitTerm() {

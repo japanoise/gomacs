@@ -5,10 +5,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/mitchellh/go-homedir"
-	"github.com/nsf/termbox-go"
-	"github.com/zhemao/glisp/interpreter"
-	"github.com/zyedidia/highlight"
 	"io/ioutil"
 	"os"
 	"path"
@@ -17,6 +13,11 @@ import (
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/mitchellh/go-homedir"
+	"github.com/nsf/termbox-go"
+	"github.com/zhemao/glisp/interpreter"
+	"github.com/zyedidia/highlight"
 )
 
 type EditorRow struct {

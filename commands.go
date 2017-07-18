@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/zhemao/glisp/interpreter"
 	"sort"
 	"strings"
+
+	"github.com/zhemao/glisp/interpreter"
 )
 
 type CommandList struct {

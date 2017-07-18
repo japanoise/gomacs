@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/nsf/termbox-go"
 	"syscall"
+
+	"github.com/nsf/termbox-go"
 )
 
 func suspend() {

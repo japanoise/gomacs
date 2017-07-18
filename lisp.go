@@ -3,9 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+
 	"github.com/mitchellh/go-homedir"
 	"github.com/zhemao/glisp/interpreter"
-	"io/ioutil"
 )
 
 func lispGetKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {

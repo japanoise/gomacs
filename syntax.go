@@ -1,11 +1,12 @@
 package main
 
 import (
+	"strings"
+
 	"github.com/japanoise/termbox-util"
 	"github.com/nsf/termbox-go"
 	"github.com/zhemao/glisp/interpreter"
 	"github.com/zyedidia/highlight"
-	"strings"
 )
 
 var defs []*highlight.Def

@@ -2,8 +2,9 @@ package main
 
 import (
 	"bytes"
-	"github.com/japanoise/termbox-util"
 	"strings"
+
+	"github.com/japanoise/termbox-util"
 )
 
 func setMark(buf *EditorBuffer) {

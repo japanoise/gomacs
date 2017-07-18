@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/zhemao/glisp/interpreter"
 	"strings"
+
+	"github.com/zhemao/glisp/interpreter"
 )
 
 type EditorUndo struct {
