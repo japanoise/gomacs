@@ -1,3 +1,4 @@
+*.prof
 gomacs
 crash.log
 gomacs.1
