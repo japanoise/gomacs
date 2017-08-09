@@ -249,7 +249,7 @@ func editorInsertStr(s string) {
 			s += os
 		}
 	}
-	Global.Input = "Insert " + s
+	Global.Input = ""
 	if Global.CurrentB.cy == Global.CurrentB.NumRows {
 		editorAddInsertUndo(Global.CurrentB.cx, Global.CurrentB.cy, s)
 		editorInsertRow(Global.CurrentB.cy, s)
