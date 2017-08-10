@@ -12,6 +12,7 @@ import (
 	"runtime/pprof"
 	"strconv"
 	"strings"
+	"time"
 	"unicode/utf8"
 
 	"github.com/mitchellh/go-homedir"
@@ -674,14 +675,22 @@ func main() {
 
 	InitTerm()
 	defer termbox.Close()
-
+	editorRefreshScreen()
+	lastkey := "<none>"
+	lt := time.Now()
 	for {
-		editorRefreshScreen()
 		if Global.quit {
 			return
 		} else {
 			key := editorGetKey()
+			t := time.Now()
 			RunCommandForKey(key, env)
+			// A bit hacky, but this fixes some of our speed issues when pasting.
+			// Don't do the optimisation if this key and the last were the same!
+			if t.UnixNano()-lt.UnixNano() > 10000000 || lastkey == key {
+				editorRefreshScreen()
+			}
+			lt = time.Now()
 		}
 	}
 }
