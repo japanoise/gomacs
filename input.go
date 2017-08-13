@@ -29,6 +29,7 @@ func editorGetKey() string {
 			select {
 			case _ = <-timeout:
 				editorRefreshScreen()
+				Global.CurrentB.updateHighlighting()
 			case _ = <-done:
 				// Don't refresh the screen.
 			}
