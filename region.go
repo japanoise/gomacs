@@ -325,58 +325,66 @@ func doTabifyRegion() {
 
 func FillString(s string) string {
 	lines := strings.Split(s, "\n")
-	ll := len(lines)
-	for i := 0; i < ll; i++ {
-		line := lines[i] // We can't use range here as we may be modifying lines
-		linelen := termutil.RunewidthStr(line)
-		if linelen > Global.Fillcolumn {
-			var index int
-			rl := []rune(line)
-			fill := rl[Global.Fillcolumn]
-			afterfill := rl[Global.Fillcolumn+1]
-			if (termutil.WordCharacter(fill) && !termutil.WordCharacter(afterfill)) ||
-				!termutil.WordCharacter(fill) {
-				index = Global.Fillcolumn
+	ret := bytes.Buffer{}
+	lw := 0
+	for _, line := range lines {
+		if line == "" {
+			if lw != 0 {
+				ret.WriteString("\n")
+			}
+			ret.WriteString("\n")
+			lw = 0
+			continue
+		}
+		chomp := line
+		for chomp != "" {
+			var word string
+			chomp, word = chompWord(chomp)
+			if word == "" {
+				break
+			}
+			ww := termutil.RunewidthStr(word)
+			if lw+ww > Global.Fillcolumn {
+				ret.WriteString("\n" + word)
+				lw = ww
 			} else {
-				index = indexOfLastWord(line[:Global.Fillcolumn])
-			}
-			if index > 0 {
-				if i == ll-1 {
-					lines = append(lines, "")
-					ll++
-				} else if lines[i+1] == "" {
-					n := i + 1
-					lines = append(lines, "")
-					copy(lines[n+1:], lines[n:])
-					lines[n] = ""
-					ll++
-				}
-				lines[i+1] = line[index:] + lines[i+1]
-				lines[i] = line[:index]
-			}
-		} else if i != ll-1 && line != "" {
-			index := indexOfFirstWord(lines[i+1])
-			wi := index
-			working := true
-			for working {
-				oldwi := wi
-				wi = wi + indexOfFirstWord(lines[i+1][wi:])
-				if oldwi == wi {
-					working = false
-				}
-				if termutil.RunewidthStr(lines[i+1][:wi]) < Global.Fillcolumn-linelen {
-					index = wi
+				if lw == 0 {
+					ret.WriteString(word)
 				} else {
-					working = false
+					ret.WriteString(" " + word)
+					lw++
 				}
-			}
-			if index < Global.Fillcolumn-linelen && index > 0 {
-				lines[i] = line + lines[i+1][:index]
-				lines[i+1] = lines[i+1][index:]
+				lw += ww
 			}
 		}
 	}
-	return strings.Join(lines, "\n")
+	return ret.String()
+}
+
+func chompWord(s string) (string, string) {
+	if s == "" {
+		return "", ""
+	} else {
+		i := chompIndex(s)
+		if i == -1 {
+			return "", ""
+		}
+		return s[i:], strings.Trim(s[:i], " ")
+	}
+}
+
+func chompIndex(s string) int {
+	leader := true
+	for i, ru := range s {
+		if ru == ' ' {
+			if !leader {
+				return i
+			}
+		} else {
+			leader = false
+		}
+	}
+	return len(s)
 }
 
 func doFillRegion() {
