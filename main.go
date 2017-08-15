@@ -463,9 +463,9 @@ func editorBufSave(buf *EditorBuffer, env *glisp.Glisp) {
 			buf.Filename = fpath
 			fn = buf.Filename
 			buf.Rendername = filepath.Base(fpath)
-			editorSelectSyntaxHighlight(buf, env)
 		}
 	}
+	editorSelectSyntaxHighlight(buf, env)
 	f, err := os.Create(fn)
 	if err != nil {
 		Global.Input = err.Error()
