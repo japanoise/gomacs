@@ -551,14 +551,14 @@ func gotoChar() {
 func getOffsetInBuffer(buf *EditorBuffer) (int, int) {
 	offset, total := 0, 0
 	for i, row := range buf.Rows {
-		total += row.Size
+		total += row.Size + 1
 		if i == buf.cy {
 			offset += buf.cx
 		} else if i < buf.cy {
-			offset += row.Size
+			offset = total
 		}
 	}
-	return offset, total
+	return offset, total - 1
 }
 
 func describeRune(ru rune) string {
@@ -581,6 +581,6 @@ func whatCursorPosition() {
 	}
 	offset, total := getOffsetInBuffer(Global.CurrentB)
 	pc := (offset * 100) / (total)
-	Global.Input = fmt.Sprintf("Char: %s Byte: %d of %d (%d%%)", describeRune(ru),
+	Global.Input = fmt.Sprintf("Char: %s Offset: %d/%d (%d%%)", describeRune(ru),
 		offset, total, pc)
 }
