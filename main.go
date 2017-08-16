@@ -351,7 +351,14 @@ func getIndentation(s string) string {
 
 func editorInsertNewline(indent bool) {
 	if Global.CurrentB.cy == Global.CurrentB.NumRows {
-		return
+		defer func() { Global.CurrentB.cy++; Global.CurrentB.cx = 0 }()
+		if Global.CurrentB.NumRows == 0 {
+			editorAppendRow("")
+			return
+		} else {
+			Global.CurrentB.cy--
+			Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy].Size
+		}
 	}
 	row := Global.CurrentB.Rows[Global.CurrentB.cy]
 	if Global.CurrentB.cx == 0 {
