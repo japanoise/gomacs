@@ -226,10 +226,7 @@ func editorInsertRow(at int, line string) {
 }
 
 func editorRowAppendStr(row *EditorRow, buf *EditorBuffer, s string) {
-	row.Data += s
-	row.Size += len(s)
-	editorUpdateRow(row, buf)
-	Global.CurrentB.Dirty = true
+	editorMutateRow(row, buf, row.Data+s)
 }
 
 func editorRowInsertStr(row *EditorRow, buf *EditorBuffer, at int, s string) {
@@ -243,7 +240,11 @@ func editorRowInsertStr(row *EditorRow, buf *EditorBuffer, at int, s string) {
 	if row.Size > 0 && at < row.Size {
 		buffer.WriteString(row.Data[at:])
 	}
-	row.Data = buffer.String()
+	editorMutateRow(row, buf, buffer.String())
+}
+
+func editorMutateRow(row *EditorRow, buf *EditorBuffer, s string) {
+	row.Data = s
 	row.Size = len(row.Data)
 	editorUpdateRow(row, buf)
 	Global.CurrentB.Dirty = true
