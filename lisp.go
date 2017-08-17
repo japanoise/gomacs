@@ -743,6 +743,10 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "M-!" "shell-command")
 (emacsbindkey "M-|" "shell-command-on-region")
 (emacsbindkey "C-x r t" "string-rectangle")
+(emacsbindkey "C-x r M-w" "copy-rectangle-as-kill")
+(emacsbindkey "C-x r r" "copy-rectangle-to-register")
+(emacsbindkey "C-x r C-w" "kill-rectangle")
+(emacsbindkey "C-x r k" "kill-rectangle")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

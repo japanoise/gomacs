@@ -77,3 +77,59 @@ func (buf *EditorBuffer) getRectangle() rectangle {
 	}
 	return ret
 }
+
+func doCopyRectangle() {
+	if validMark(Global.CurrentB) {
+		Global.Clipboard = Global.CurrentB.copyRect()
+		Global.Input = "Copied rectangle to clipboard"
+	} else {
+		Global.Input = "Invalid mark position"
+	}
+}
+
+func (buf *EditorBuffer) copyRect() string {
+	var buffer bytes.Buffer
+	rect := buf.getRectangle()
+	for i := rect.TopLeftY; i <= rect.BotRightY && i < buf.NumRows; i++ {
+		if i != rect.TopLeftY {
+			buffer.WriteRune('\n')
+		}
+		row := buf.Rows[i]
+		width := rect.BotRightX - rect.TopLeftX
+		if rect.TopLeftX > row.Size {
+			for i := 0; i < width; i++ {
+				buffer.WriteRune(' ')
+			}
+		} else if rect.BotRightX > row.Size {
+			buffer.WriteString(row.Data[rect.TopLeftX:])
+			for i := row.Size; i < rect.BotRightX; i++ {
+				buffer.WriteRune(' ')
+			}
+		} else {
+			buffer.WriteString(row.Data[rect.TopLeftX:rect.BotRightX])
+		}
+	}
+	return buffer.String()
+}
+
+func rectToRegister() {
+	if validMark(Global.CurrentB) {
+		_, regname := InteractiveGetRegister("Copy rectangle to register: ")
+		reg := Global.Registers.getRegisterOrCreate(regname)
+		reg.Text = Global.CurrentB.copyRect()
+		reg.Type = RegisterText
+		Global.Input = "Copied rectangle to register " + regname
+	} else {
+		Global.Input = "Invalid mark position"
+	}
+}
+
+func doKillRectangle() {
+	if validMark(Global.CurrentB) {
+		Global.Clipboard = Global.CurrentB.copyRect()
+		Global.CurrentB.stringRectangle("", Global.CurrentB.getRectangle())
+		Global.Input = "Killed rectangle"
+	} else {
+		Global.Input = "Invalid mark position"
+	}
+}
