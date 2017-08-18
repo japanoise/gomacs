@@ -23,10 +23,8 @@ depending on your version of Windows. For now you can open it in Notepad.
 Terminal Title
 ==============
 
-Windows doesn't support setting the terminal title, so disable it in your rc
-file:
-
-(remdefaultmode "terminal-title-mode")
+Windows doesn't support setting the terminal title, so terminal-title-mode does
+nothing.
 
 Control-H
 =========
