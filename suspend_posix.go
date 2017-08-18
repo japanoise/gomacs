@@ -1,3 +1,5 @@
+// +build linux darwin dragonfly solaris openbsd netbsd freebsd
+
 package main
 
 import (
@@ -12,8 +14,7 @@ func suspend() {
 
 	// suspend the process
 	pid := syscall.Getpid()
-	tid := syscall.Gettid()
-	err := syscall.Tgkill(pid, tid, syscall.SIGSTOP)
+	err := syscall.Kill(pid, syscall.SIGSTOP)
 	if err != nil {
 		panic(err)
 	}
