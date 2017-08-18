@@ -191,6 +191,10 @@ func StrToCmdName(s string) string {
 
 func AproposCommand() {
 	search := editorPrompt("Search for a command", nil)
+	if search == "" {
+		Global.Input = "Cancelled."
+		return
+	}
 	results := []string{}
 	for cmd := range funcnames {
 		if strings.Contains(cmd, search) {

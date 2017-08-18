@@ -73,6 +73,7 @@ yet - I'll try to keep this list up to date!
 ### Getting help
 
 - `<f1>` - Quickhelp
+- `C-h a` - Apropos - search for a named command
 - `C-h b` - Show key bindings
 - `C-h c` - Describe keybinding briefly
 - `C-h m` - Show modes active in buffer
