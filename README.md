@@ -17,7 +17,7 @@ in terms of the inner workings of the editor. Inspiration also comes from
 If your $GOPATH (or %GOPATH% under Windows) is set correctly, you should be able
 to run:
 
-    go get github.com/japanoise/gomacs
+	go get github.com/japanoise/gomacs
 
 If you want to install gomacs systemwide, make sure you set your gopath and that
 this directory resides within it: here's an incantation that will do that on
@@ -42,7 +42,7 @@ accepts `PREFIX`, `DESTDIR`, `MANDIR`, etc.
 
 ## Usage
 
-    gomacs [options] file
+	gomacs [options] file
 
 ### Options
 
@@ -124,6 +124,7 @@ yet - I'll try to keep this list up to date!
 - `M-g c` - Go to char (prompt)
 - `C-x =` - Print location of cursor & information about the character at the
   cursor.
+- `C-x r t` - Replace rectangle with string
 
 ### Deletion and Transposition
 
@@ -151,15 +152,19 @@ yet - I'll try to keep this list up to date!
 - `C-y` - Yank (paste) previously copied or killed region
 - `C-x C-u` - Uppercase region
 - `C-x C-l` - Lowercase region
+- `C-x r M-w` - Copy rectangle to clipboard
+- `C-x r k` or `C-x r C-w` - Kill rectangle
+- `C-x r y` - Yank rectangle
 
 ### Registers
 
 - `C-x r s` - Save region to register
-- `C-x r i` - Insert saved region from register
+- `C-x r i` - Insert saved region or rectangle from register
 - `C-x r C-@` - Save position to register
 - `C-x C-k x` - Save macro to register
 - `C-x r j` - Jump to saved position or run saved macro from register
 - `M-x view-register` - Describe a given register
+- `C-x r r` - Save rectangle to register
 
 ### Misc
 
