@@ -54,7 +54,7 @@ func delBackWord() {
 		}
 		ncx := indexEndOfBackwardWord()
 		if ncx < icx {
-			rowDelRange(Global.CurrentB.Rows[icy], ncx, icx, Global.CurrentB)
+			Global.Clipboard = rowDelRange(Global.CurrentB.Rows[icy], ncx, icx, Global.CurrentB)
 			Global.CurrentB.cx = ncx
 		}
 	}
@@ -80,7 +80,7 @@ func delForwardWord() {
 		}
 		ncx := indexEndOfForwardWord()
 		if ncx > icx {
-			rowDelRange(Global.CurrentB.Rows[icy], icx, ncx, Global.CurrentB)
+			Global.Clipboard = rowDelRange(Global.CurrentB.Rows[icy], icx, ncx, Global.CurrentB)
 		}
 	}
 }

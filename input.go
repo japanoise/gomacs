@@ -165,7 +165,7 @@ func zapToChar() {
 		thisrow := row.idx == Global.CurrentB.cy
 		for in, ru := range row.Data {
 			if ru == zapru && !(thisrow && in < Global.CurrentB.cx) {
-				bufKillRegion(Global.CurrentB, Global.CurrentB.cx, in+size, Global.CurrentB.cy, row.idx)
+				Global.Clipboard = bufKillRegion(Global.CurrentB, Global.CurrentB.cx, in+size, Global.CurrentB.cy, row.idx)
 				return
 			}
 		}

@@ -84,9 +84,12 @@ func (r *RegisterList) runMacroFromRegister(env *glisp.Glisp, register string) {
 func (r *RegisterList) saveTextToRegister(register string) {
 	reg := r.getRegisterOrCreate(register)
 	reg.Type = RegisterText
-	regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) {
-		reg.Text = getRegionText(buf, startc, endc, startl, endl)
+	res, err := regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) string {
+		return getRegionText(buf, startc, endc, startl, endl)
 	})
+	if err == nil {
+		reg.Text = res
+	}
 }
 
 func (r *RegisterList) jumpToPositionRegister(regname string) {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 
 	"github.com/japanoise/termbox-util"
@@ -29,16 +30,18 @@ func doSwapMarkAndCursor(buf *EditorBuffer) {
 	}
 }
 
-func rowDelRange(row *EditorRow, startc, endc int, buf *EditorBuffer) {
+func rowDelRange(row *EditorRow, startc, endc int, buf *EditorBuffer) string {
 	editorAddDeleteUndo(startc, endc,
 		row.idx, row.idx, row.Data[startc:endc])
-	Global.Clipboard = row.Data[startc:endc]
+	ret := row.Data[startc:endc]
 	editorRowDelChar(row, buf, startc, endc-startc)
+	return ret
 }
 
-func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
+func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) string {
+	var ret string
 	if startl == endl {
-		rowDelRange(buf.Rows[startl], startc, endc, buf)
+		ret = rowDelRange(buf.Rows[startl], startc, endc, buf)
 	} else {
 		var bb bytes.Buffer
 		row := buf.Rows[startl]
@@ -63,7 +66,7 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 		buf.Rows[startl].Data += row.Data
 		buf.Rows[startl].Size = len(buf.Rows[startl].Data)
 		rowUpdateRender(buf.Rows[startl])
-		Global.Clipboard = bb.String()
+		ret = bb.String()
 
 		// Cut region out of rows
 		i, j := startl+1, endl+1
@@ -84,6 +87,7 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
 	buf.prefcx = startc
 	buf.cy = startl
 	buf.Dirty = true
+	return ret
 }
 
 func getRegionText(buf *EditorBuffer, startc, endc, startl, endl int) string {
@@ -105,8 +109,8 @@ func getRegionText(buf *EditorBuffer, startc, endc, startl, endl int) string {
 	}
 }
 
-func bufCopyRegion(buf *EditorBuffer, startc, endc, startl, endl int) {
-	Global.Clipboard = getRegionText(buf, startc, endc, startl, endl)
+func bufCopyRegion(buf *EditorBuffer, startc, endc, startl, endl int) string {
+	return getRegionText(buf, startc, endc, startl, endl)
 }
 
 func markAhead(buf *EditorBuffer) bool {
@@ -117,25 +121,31 @@ func markAhead(buf *EditorBuffer) bool {
 	}
 }
 
-func regionCmd(c func(*EditorBuffer, int, int, int, int)) {
+func regionCmd(c func(*EditorBuffer, int, int, int, int) string) (string, error) {
 	buf := Global.CurrentB
 	if !validMark(buf) {
 		Global.Input = "Invalid mark position"
-		return
+		return "", errors.New("invalid mark")
 	}
 	if markAhead(buf) {
-		c(buf, buf.cx, buf.MarkX, buf.cy, buf.MarkY)
+		return c(buf, buf.cx, buf.MarkX, buf.cy, buf.MarkY), nil
 	} else {
-		c(buf, buf.MarkX, buf.cx, buf.MarkY, buf.cy)
+		return c(buf, buf.MarkX, buf.cx, buf.MarkY, buf.cy), nil
 	}
 }
 
 func doKillRegion() {
-	regionCmd(bufKillRegion)
+	res, err := regionCmd(bufKillRegion)
+	if err == nil {
+		Global.Clipboard = res
+	}
 }
 
 func doCopyRegion() {
-	regionCmd(bufCopyRegion)
+	res, err := regionCmd(bufCopyRegion)
+	if err == nil {
+		Global.Clipboard = res
+	}
 }
 
 func spitRegion(cx, cy int, region string) {
@@ -221,7 +231,7 @@ func killToEol() {
 	if Global.SetUniversal && Global.Universal != 1 {
 		if Global.Universal == 0 {
 			if 0 < Global.CurrentB.cx && cy < Global.CurrentB.NumRows {
-				rowDelRange(Global.CurrentB.Rows[cy], 0, cx, Global.CurrentB)
+				Global.Clipboard = rowDelRange(Global.CurrentB.Rows[cy], 0, cx, Global.CurrentB)
 				Global.CurrentB.cx = 0
 			}
 		} else if 1 < Global.Universal {
@@ -229,34 +239,32 @@ func killToEol() {
 			if Global.CurrentB.NumRows < endl {
 				endl = Global.CurrentB.NumRows - 1
 			}
-			bufKillRegion(Global.CurrentB, cx, 0, cy, endl)
+			Global.Clipboard = bufKillRegion(Global.CurrentB, cx, 0, cy, endl)
 		} else {
 			startl := cy + Global.Universal
 			if startl < 0 {
 				startl = 0
 			}
-			bufKillRegion(Global.CurrentB, 0, cx, startl, cy)
+			Global.Clipboard = bufKillRegion(Global.CurrentB, 0, cx, startl, cy)
 		}
 	} else {
 		if cx >= Global.CurrentB.Rows[cy].Size {
 			Global.CurrentB.MoveCursorRight()
 			editorDelChar()
 		} else {
-			rowDelRange(Global.CurrentB.Rows[cy], cx, Global.CurrentB.Rows[cy].Size, Global.CurrentB)
+			Global.Clipboard = rowDelRange(Global.CurrentB.Rows[cy], cx, Global.CurrentB.Rows[cy].Size, Global.CurrentB)
 		}
 	}
 }
 
 func transposeRegion(buf *EditorBuffer, startc, endc, startl, endl int, trans func(string) string) {
-	clip := Global.Clipboard
-	bufKillRegion(buf, startc, endc, startl, endl)
-	spitRegion(startc, startl, trans(Global.Clipboard))
-	Global.Clipboard = clip
+	spitRegion(startc, startl, trans(bufKillRegion(buf, startc, endc, startl, endl)))
 }
 
 func transposeRegionCmd(trans func(string) string) {
-	regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) {
+	regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) string {
 		transposeRegion(buf, startc, endc, startl, endl, trans)
+		return ""
 	})
 }
 

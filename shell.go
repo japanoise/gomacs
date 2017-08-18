@@ -77,13 +77,14 @@ func shellCmdRegion(com string, args []string) {
 			}
 		})
 	} else {
-		regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) {
+		regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) string {
 			result, err := shellCmdWithInput(getRegionText(buf, startc, endc, startl, endl), com, args)
 			if err == nil {
 				showMessages(result)
 			} else {
 				showMessages(err.Error() + "\n" + result)
 			}
+			return ""
 		})
 	}
 }
