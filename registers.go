@@ -15,6 +15,7 @@ const (
 	RegisterText
 	RegisterPos
 	RegisterMacro
+	RegisterRect
 )
 
 type Register struct {
@@ -155,6 +156,8 @@ func DoInsertTextFromRegister() {
 		Global.Input = "No such register " + regname
 	} else if register.Type == RegisterText {
 		doYankText(register.Text)
+	} else if register.Type == RegisterRect {
+		yankRectangle(Global.CurrentB, register.Text)
 	} else {
 		Global.Input = "Register " + regname + " is not a text register"
 	}
@@ -168,6 +171,10 @@ func DoDescribeRegister() {
 		switch register.Type {
 		case RegisterText:
 			showMessages(regname+" is a text register.", "",
+				"The data stored in this register is:",
+				register.Text)
+		case RegisterRect:
+			showMessages(regname+" is a rectangle register.", "",
 				"The data stored in this register is:",
 				register.Text)
 		case RegisterMacro:

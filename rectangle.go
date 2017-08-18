@@ -1,6 +1,9 @@
 package main
 
-import "bytes"
+import (
+	"bytes"
+	"strings"
+)
 
 type rectangle struct {
 	TopLeftX, TopLeftY   int
@@ -117,7 +120,7 @@ func rectToRegister() {
 		_, regname := InteractiveGetRegister("Copy rectangle to register: ")
 		reg := Global.Registers.getRegisterOrCreate(regname)
 		reg.Text = Global.CurrentB.copyRect()
-		reg.Type = RegisterText
+		reg.Type = RegisterRect
 		Global.Input = "Copied rectangle to register " + regname
 	} else {
 		Global.Input = "Invalid mark position"
@@ -131,5 +134,47 @@ func doKillRectangle() {
 		Global.Input = "Killed rectangle"
 	} else {
 		Global.Input = "Invalid mark position"
+	}
+}
+
+func doYankRectangle() {
+	yankRectangle(Global.CurrentB, Global.Clipboard)
+	Global.Input = "Yanked rectangle from clipboard."
+}
+
+func yankRectangle(buf *EditorBuffer, rect string) {
+	if buf.cy >= buf.NumRows {
+		doYankText(rect)
+	} else {
+		lines := strings.Split(rect, "\n")
+		ll := len(lines) - 1
+
+		startc, startl := buf.cx, buf.cy
+		var endc, endl int
+		if startl+ll >= buf.NumRows {
+			endl = buf.NumRows - 1
+			endc = buf.Rows[endl].Size
+		} else {
+			endl = startl + ll
+			endc = buf.Rows[endl].Size
+		}
+		editorAddRegionUndo(false, startc, endc, startl, endl,
+			getRegionText(buf, startc, endc, startl, endl))
+
+		for i, line := range lines {
+			index := buf.cy + i
+			if index >= buf.NumRows {
+				editorAppendRow("")
+			}
+			rectReplace(buf.cx, buf.cx, buf.Rows[index], buf, line)
+		}
+
+		endl = startl + ll
+		if endl >= buf.NumRows {
+			endl = buf.NumRows - 1
+		}
+		endc = buf.Rows[endl].Size
+		editorAddRegionUndo(true, startc, endc, startl, endl,
+			getRegionText(buf, startc, endc, startl, endl))
 	}
 }

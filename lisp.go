@@ -747,6 +747,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x r r" "copy-rectangle-to-register")
 (emacsbindkey "C-x r C-w" "kill-rectangle")
 (emacsbindkey "C-x r k" "kill-rectangle")
+(emacsbindkey "C-x r y" "yank-rectangle")
 `)
 	if err != nil {
 		fmt.Println(err.Error())
