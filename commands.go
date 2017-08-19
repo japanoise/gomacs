@@ -317,7 +317,7 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"write-file", func(env *glisp.Glisp) { editorWriteFile(env) }, false})
 	DefineCommand(&CommandFunc{"visit-file", func(env *glisp.Glisp) { editorVisitFile(env) }, false})
 	if Global.debug {
-		DefineCommand(&CommandFunc{"debug-undo", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.CurrentB.Undo)) }, false})
+		DefineCommand(&CommandFunc{"debug-undo", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.CurrentB.Undo, "\n", Global.CurrentB.Undo.prev)) }, false})
 		DefineCommand(&CommandFunc{"debug-universal", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.Universal), fmt.Sprint(Global.SetUniversal)) }, false})
 	}
 	DefineCommand(&CommandFunc{"repeat", func(env *glisp.Glisp) { RepeatCommand(env) }, true})

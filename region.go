@@ -40,11 +40,12 @@ func rowDelRange(row *EditorRow, startc, endc int, buf *EditorBuffer) string {
 
 func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) string {
 	var ret string
+	row := buf.Rows[startl]
 	if startl == endl {
-		ret = rowDelRange(buf.Rows[startl], startc, endc, buf)
+		ret = row.Data[startc:endc]
+		editorRowDelChar(row, buf, startc, endc-startc)
 	} else {
 		var bb bytes.Buffer
-		row := buf.Rows[startl]
 
 		// Delete from first line
 		bb.WriteString(row.Data[startc:])
@@ -80,8 +81,6 @@ func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) string {
 		// Update the buffer and return
 		updateLineIndexes()
 		buf.Highlight()
-		editorAddRegionUndo(false, startc, endc,
-			startl, endl, Global.Clipboard)
 	}
 	buf.cx = startc
 	buf.prefcx = startc
@@ -135,7 +134,12 @@ func regionCmd(c func(*EditorBuffer, int, int, int, int) string) (string, error)
 }
 
 func doKillRegion() {
-	res, err := regionCmd(bufKillRegion)
+	res, err := regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) string {
+		ret := bufKillRegion(buf, startc, endc, startl, endl)
+		editorAddRegionUndo(false, startc, endc,
+			startl, endl, Global.Clipboard)
+		return ret
+	})
 	if err == nil {
 		Global.Clipboard = res
 	}
@@ -148,7 +152,7 @@ func doCopyRegion() {
 	}
 }
 
-func spitRegion(cx, cy int, region string) {
+func spitRegion(cx, cy int, region string) (int, int) {
 	Global.CurrentB.Dirty = true
 	Global.CurrentB.cx = cx
 	Global.CurrentB.prefcx = cx
@@ -207,14 +211,15 @@ func spitRegion(cx, cy int, region string) {
 		row.Size = len(row.Data)
 		editorUpdateRow(row, Global.CurrentB)
 	}
-	editorAddRegionUndo(true, cx, Global.CurrentB.cx,
-		cy, Global.CurrentB.cy, region)
+	return cx, cy
 }
 
 func doYankText(text string) {
 	times := getRepeatTimes()
 	for i := 0; i < times; i++ {
-		spitRegion(Global.CurrentB.cx, Global.CurrentB.cy, text)
+		cx, cy := spitRegion(Global.CurrentB.cx, Global.CurrentB.cy, text)
+		editorAddRegionUndo(true, cx, Global.CurrentB.cx,
+			cy, Global.CurrentB.cy, text)
 	}
 }
 
@@ -240,12 +245,14 @@ func killToEol() {
 				endl = Global.CurrentB.NumRows - 1
 			}
 			Global.Clipboard = bufKillRegion(Global.CurrentB, cx, 0, cy, endl)
+			editorAddRegionUndo(false, cx, 0, cy, endl, Global.Clipboard)
 		} else {
 			startl := cy + Global.Universal
 			if startl < 0 {
 				startl = 0
 			}
 			Global.Clipboard = bufKillRegion(Global.CurrentB, 0, cx, startl, cy)
+			editorAddRegionUndo(false, 0, cx, startl, cy, Global.Clipboard)
 		}
 	} else {
 		if cx >= Global.CurrentB.Rows[cy].Size {
@@ -258,7 +265,12 @@ func killToEol() {
 }
 
 func transposeRegion(buf *EditorBuffer, startc, endc, startl, endl int, trans func(string) string) {
-	spitRegion(startc, startl, trans(bufKillRegion(buf, startc, endc, startl, endl)))
+	killed := bufKillRegion(buf, startc, endc, startl, endl)
+	editorAddRegionUndo(false, startc, endc, startl, endl, killed)
+	text := trans(killed)
+	cx, cy := spitRegion(startc, startl, text)
+	editorAddRegionUndo(true, cx, buf.cx, cy, buf.cy, text)
+	buf.Undo.paired = true
 }
 
 func transposeRegionCmd(trans func(string) string) {

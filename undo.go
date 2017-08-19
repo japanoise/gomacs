@@ -15,6 +15,7 @@ type EditorUndo struct {
 	endc   int
 	str    string
 	prev   *EditorUndo
+	paired bool
 }
 
 // Discards the last undo. Useful for the region functions, as they're made of
@@ -135,10 +136,8 @@ func editorDoUndo(tree *EditorUndo) bool {
 	if tree.region {
 		if tree.ins {
 			bufKillRegion(Global.CurrentB, tree.startc, tree.endc, tree.startl, tree.endl)
-			editorPopUndo()
 		} else {
 			spitRegion(tree.startc, tree.startl, tree.str)
-			editorPopUndo()
 		}
 		return true
 	}
@@ -192,17 +191,14 @@ func editorDoRedo(tree *EditorUndo) {
 	if tree.region {
 		if tree.ins {
 			spitRegion(tree.startc, tree.startl, tree.str)
-			editorPopUndo()
 		} else {
 			bufKillRegion(Global.CurrentB, tree.startc, tree.endc, tree.startl, tree.endl)
-			editorPopUndo()
 		}
 		return
 	}
 	if tree.ins {
 		if tree.startl == tree.endl {
 			spitRegion(tree.startc, tree.startl, tree.str)
-			editorPopUndo()
 		} else if tree.startl == -1 {
 			editorAppendRow(tree.str)
 			Global.CurrentB.cx = tree.endc
@@ -216,7 +212,6 @@ func editorDoRedo(tree *EditorUndo) {
 	} else {
 		if tree.startl == tree.endl {
 			bufKillRegion(Global.CurrentB, tree.startc, tree.endc, tree.startl, tree.endl)
-			editorPopUndo()
 		} else {
 			Global.CurrentB.cy = tree.endl
 			Global.CurrentB.cx = 0
@@ -229,10 +224,14 @@ func editorDoRedo(tree *EditorUndo) {
 func editorUndoAction() {
 	r := Global.CurrentB.Redo
 	succ := editorDoUndo(Global.CurrentB.Undo)
+	paired := Global.CurrentB.Undo != nil && Global.CurrentB.Undo.paired
 	if succ {
 		Global.CurrentB.Redo = Global.CurrentB.Undo
 		Global.CurrentB.Undo = Global.CurrentB.Undo.prev
 		Global.CurrentB.Redo.prev = r
+		if paired {
+			editorUndoAction()
+		}
 	} else {
 		Global.Input = "No further undo information."
 	}
@@ -241,7 +240,7 @@ func editorUndoAction() {
 	}
 }
 
-func doOneRedo(_ *glisp.Glisp) {
+func doOneRedo(env *glisp.Glisp) {
 	if Global.CurrentB.Redo == nil {
 		Global.Input = "No further redo information."
 	} else {
@@ -252,6 +251,9 @@ func doOneRedo(_ *glisp.Glisp) {
 		Global.CurrentB.Undo = r
 		if r == Global.CurrentB.SaveUndo {
 			Global.CurrentB.Dirty = false
+		}
+		if Global.CurrentB.Redo != nil && Global.CurrentB.Redo.paired {
+			doOneRedo(env)
 		}
 	}
 }

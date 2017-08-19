@@ -29,6 +29,7 @@ func (buf *EditorBuffer) stringRectangle(rep string, rect rectangle) {
 	}
 	buf.cx, buf.cy = rect.BotRightX, rect.BotRightY
 	addRectUndo(true, buf, rect)
+	buf.Undo.paired = true
 }
 
 func addRectUndo(ins bool, buf *EditorBuffer, rect rectangle) {
@@ -176,5 +177,6 @@ func yankRectangle(buf *EditorBuffer, rect string) {
 		endc = buf.Rows[endl].Size
 		editorAddRegionUndo(true, startc, endc, startl, endl,
 			getRegionText(buf, startc, endc, startl, endl))
+		buf.Undo.paired = true
 	}
 }
