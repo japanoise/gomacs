@@ -11,9 +11,8 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
-func editorRowCxToRx(row *EditorRow) int {
+func (row *EditorRow) cxToRx(cx int) int {
 	rx := 0
-	cx := Global.CurrentB.cx
 	for i, rv := range row.Data {
 		if i >= cx {
 			break
@@ -25,6 +24,10 @@ func editorRowCxToRx(row *EditorRow) int {
 		}
 	}
 	return rx
+}
+
+func editorRowCxToRx(row *EditorRow) int {
+	return row.cxToRx(Global.CurrentB.cx)
 }
 
 func editorRowRxToCx(row *EditorRow, rx int) int {
@@ -65,6 +68,9 @@ func editorRefreshScreen() {
 		if win == Global.CurrentB {
 			Global.CurrentBHeight = winheight
 			termbox.SetCursor(Global.CurrentB.rx-Global.CurrentB.coloff+gutter, starth+Global.CurrentB.cy-Global.CurrentB.rowoff)
+		}
+		if win.regionActive {
+			win.recalcRegion()
 		}
 		editorDrawRows(starth, winheight*(i+1)+1, win, gutter)
 	}
@@ -108,11 +114,7 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 			row := buf.Rows[filerow]
 			if buf.coloff < row.RenderSize {
 				ts, off := trimString(row.Render, buf.coloff)
-				if Global.NoSyntax || buf.Highlighter == nil {
-					termutil.Printstring(ts, gutsize, y)
-				} else {
-					row.HlPrint(gutsize, y, buf.coloff, off, ts)
-				}
+				row.Print(gutsize, y, buf.coloff, off, ts, buf)
 			}
 		}
 	}

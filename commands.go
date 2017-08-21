@@ -343,4 +343,5 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"copy-rectangle-to-register", func(*glisp.Glisp) { rectToRegister() }, false})
 	DefineCommand(&CommandFunc{"kill-rectangle", func(*glisp.Glisp) { doKillRectangle() }, false})
 	DefineCommand(&CommandFunc{"yank-rectangle", func(*glisp.Glisp) { doYankRectangle() }, false})
+	DefineCommand(&CommandFunc{"keyboard-quit", func(*glisp.Glisp) { keyboardQuit() }, false})
 }

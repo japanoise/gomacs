@@ -14,6 +14,7 @@ func doStringRectangle() {
 	if validMark(Global.CurrentB) {
 		rect := Global.CurrentB.getRectangle()
 		Global.CurrentB.stringRectangle(editorPrompt("String rectangle", nil), rect)
+		Global.CurrentB.regionActive = false
 	} else {
 		Global.Input = "Invalid mark position."
 	}
@@ -86,6 +87,7 @@ func doCopyRectangle() {
 	if validMark(Global.CurrentB) {
 		Global.Clipboard = Global.CurrentB.copyRect()
 		Global.Input = "Copied rectangle to clipboard"
+		Global.CurrentB.regionActive = false
 	} else {
 		Global.Input = "Invalid mark position"
 	}
@@ -123,6 +125,7 @@ func rectToRegister() {
 		reg.Text = Global.CurrentB.copyRect()
 		reg.Type = RegisterRect
 		Global.Input = "Copied rectangle to register " + regname
+		Global.CurrentB.regionActive = false
 	} else {
 		Global.Input = "Invalid mark position"
 	}
@@ -133,6 +136,7 @@ func doKillRectangle() {
 		Global.Clipboard = Global.CurrentB.copyRect()
 		Global.CurrentB.stringRectangle("", Global.CurrentB.getRectangle())
 		Global.Input = "Killed rectangle"
+		Global.CurrentB.regionActive = false
 	} else {
 		Global.Input = "Invalid mark position"
 	}
@@ -141,6 +145,7 @@ func doKillRectangle() {
 func doYankRectangle() {
 	yankRectangle(Global.CurrentB, Global.Clipboard)
 	Global.Input = "Yanked rectangle from clipboard."
+	Global.CurrentB.regionActive = false
 }
 
 func yankRectangle(buf *EditorBuffer, rect string) {

@@ -68,12 +68,24 @@ func getColorForGroup(group highlight.Group) termbox.Attribute {
 	return color
 }
 
-func (row *EditorRow) HlPrint(x, y, offset, runeoff int, ts string) {
+func (row *EditorRow) Print(x, y, offset, runeoff int, ts string, buf *EditorBuffer) {
+	if buf.regionActive && buf.region.startl <= row.idx && row.idx < buf.region.endl {
+		sx, _ := termbox.Size()
+		for i := x; i <= sx; i++ {
+			termbox.SetCell(i, y, ' ', termbox.AttrReverse, termbox.ColorDefault)
+		}
+		if buf.region.startl < row.idx {
+			termutil.PrintstringColored(termbox.AttrReverse, ts, x, y)
+			return
+		}
+	}
 	color := termbox.ColorDefault
 	os := 0
 	ri := 0
 	for in, ru := range ts {
-		if group, ok := row.HlMatches[ri+offset]; ok {
+		if Global.NoSyntax || buf.Highlighter == nil {
+			color = termbox.ColorDefault
+		} else if group, ok := row.HlMatches[ri+offset]; ok {
 			color = getColorForGroup(group)
 		} else if in == 0 && runeoff != 0 {
 			groupi, oki := row.HlMatches[offset]
@@ -82,7 +94,18 @@ func (row *EditorRow) HlPrint(x, y, offset, runeoff int, ts string) {
 			}
 			color = getColorForGroup(groupi)
 		}
-		termutil.PrintRune(x+os, y, ru, color)
+		// Extremely insane boolean, but it basically is asking if we're in the region.
+		// Could kick this out to a function, but it would be just as unreadable.
+		// 1st line is "If the region is active"
+		// 2nd line is "If the start & end are the same, and we're in between the first and last character"
+		// 3rd line is "If the start & end are not the same and we're within the region"
+		if buf.regionActive &&
+			((row.idx == buf.region.startl && buf.region.startl == buf.region.endl && offset+os < buf.region.endc && offset+os >= buf.region.startc) ||
+				(buf.region.startl != buf.region.endl && ((row.idx == buf.region.startl && offset+os >= buf.region.startc) || (row.idx == buf.region.endl && offset+os < buf.region.endc)))) {
+			termutil.PrintRune(x+os, y, ru, termbox.AttrReverse)
+		} else {
+			termutil.PrintRune(x+os, y, ru, color)
+		}
 		os += termutil.Runewidth(ru)
 		ri++
 	}

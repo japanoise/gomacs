@@ -8,10 +8,61 @@ import (
 	"github.com/japanoise/termbox-util"
 )
 
+type Region struct {
+	startc, endc int
+	startl, endl int
+}
+
+func NewRegion(startc, endc, startl, endl int) *Region {
+	return &Region{
+		startc, endc,
+		startl, endl,
+	}
+}
+
+func (buf *EditorBuffer) setRegion(startc, startl, endc, endl int) {
+	if buf.region == nil {
+		buf.region = &Region{}
+	}
+	region := buf.region
+	region.startl = startl
+	if region.startl < buf.NumRows {
+		region.startc = buf.Rows[region.startl].cxToRx(startc)
+	} else {
+		region.startc = 0
+	}
+	region.endl = endl
+	if region.startl < buf.NumRows {
+		region.endc = buf.Rows[region.endl].cxToRx(endc)
+	} else {
+		region.endc = 0
+	}
+}
+
 func setMark(buf *EditorBuffer) {
-	buf.MarkX = buf.cx
-	buf.MarkY = buf.cy
-	Global.Input = "Mark set."
+	if buf.cx == buf.MarkX && buf.cy == buf.MarkY {
+		if buf.regionActive == false {
+			Global.Input = "Mark activated."
+		} else {
+			Global.Input = "Mark deactivated."
+			buf.regionActive = false
+			return
+		}
+	} else {
+		buf.MarkX = buf.cx
+		buf.MarkY = buf.cy
+		Global.Input = "Mark set."
+	}
+	buf.regionActive = true
+	buf.recalcRegion()
+}
+
+func (buf *EditorBuffer) recalcRegion() {
+	if markAhead(buf) {
+		buf.setRegion(buf.cx, buf.cy, buf.MarkX, buf.MarkY)
+	} else {
+		buf.setRegion(buf.MarkX, buf.MarkY, buf.cx, buf.cy)
+	}
 }
 
 func validMark(buf *EditorBuffer) bool {
@@ -142,6 +193,7 @@ func doKillRegion() {
 	})
 	if err == nil {
 		Global.Clipboard = res
+		Global.CurrentB.regionActive = false
 	}
 }
 
@@ -149,6 +201,7 @@ func doCopyRegion() {
 	res, err := regionCmd(bufCopyRegion)
 	if err == nil {
 		Global.Clipboard = res
+		Global.CurrentB.regionActive = false
 	}
 }
 
@@ -225,6 +278,7 @@ func doYankText(text string) {
 
 func doYankRegion() {
 	doYankText(Global.Clipboard)
+	Global.CurrentB.regionActive = false
 }
 
 func killToEol() {

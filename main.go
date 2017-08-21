@@ -34,27 +34,29 @@ type EditorRow struct {
 }
 
 type EditorBuffer struct {
-	Filename    string
-	Rendername  string
-	Dirty       bool
-	cx          int
-	cy          int
-	rx          int
-	rowoff      int
-	coloff      int
-	NumRows     int
-	Rows        []*EditorRow
-	Undo        *EditorUndo
-	Redo        *EditorUndo
-	SaveUndo    *EditorUndo // The undo at which we can undirty the buffer
-	MarkX       int
-	MarkY       int
-	Modes       ModeList
-	Highlighter *highlight.Highlighter
-	MajorMode   string
-	prefcx      int
-	rehlfrom    int
-	needshl     bool
+	Filename     string
+	Rendername   string
+	Dirty        bool
+	cx           int
+	cy           int
+	rx           int
+	rowoff       int
+	coloff       int
+	NumRows      int
+	Rows         []*EditorRow
+	Undo         *EditorUndo
+	Redo         *EditorUndo
+	SaveUndo     *EditorUndo // The undo at which we can undirty the buffer
+	MarkX        int
+	MarkY        int
+	Modes        ModeList
+	Highlighter  *highlight.Highlighter
+	MajorMode    string
+	prefcx       int
+	rehlfrom     int
+	needshl      bool
+	regionActive bool
+	region       *Region
 }
 
 type EditorState struct {
@@ -648,6 +650,11 @@ func setFillColumn() {
 			Global.Input = fmt.Sprintf("Fill column set to %d", fc)
 		}
 	}
+}
+
+func keyboardQuit() {
+	Global.Input = "Quit"
+	Global.CurrentB.regionActive = false
 }
 
 func main() {

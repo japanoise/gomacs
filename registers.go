@@ -89,6 +89,7 @@ func (r *RegisterList) saveTextToRegister(register string) {
 	})
 	if err == nil {
 		reg.Text = res
+		Global.CurrentB.regionActive = false
 	}
 }
 
@@ -159,8 +160,10 @@ func DoInsertTextFromRegister() {
 		Global.Input = "No such register " + regname
 	} else if register.Type == RegisterText {
 		doYankText(register.Text)
+		Global.CurrentB.regionActive = false
 	} else if register.Type == RegisterRect {
 		yankRectangle(Global.CurrentB, register.Text)
+		Global.CurrentB.regionActive = false
 	} else {
 		Global.Input = "Register " + regname + " is not a text register"
 	}
