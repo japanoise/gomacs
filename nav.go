@@ -6,8 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"unicode/utf8"
-
-	"github.com/zyedidia/highlight"
 )
 
 func editorScroll(sx, sy int) {
@@ -181,15 +179,9 @@ func MoveCursorForthPage() {
 // HACK: Go does not have static variables, so these have to go in global state.
 var last_match int = -1
 var direction int = 1
-var saved_hl_line int
-var saved_hl highlight.LineMatch = nil
 
 func editorFindCallback(query string, key string) {
 	Global.Input = query
-	if saved_hl != nil {
-		Global.CurrentB.Rows[saved_hl_line].HlMatches = saved_hl
-		saved_hl = nil
-	}
 	if key == "C-s" {
 		direction = 1
 	} else if key == "C-r" {
@@ -202,6 +194,7 @@ func editorFindCallback(query string, key string) {
 		//...outta here!
 		last_match = -1
 		direction = 1
+		Global.CurrentB.regionActive = false
 		return
 	} else {
 		last_match = -1
@@ -212,6 +205,7 @@ func editorFindCallback(query string, key string) {
 		direction = 1
 	}
 	current := last_match
+	ql := len(query)
 	for range Global.CurrentB.Rows {
 		current += direction
 		if current == -1 {
@@ -227,29 +221,10 @@ func editorFindCallback(query string, key string) {
 			Global.CurrentB.cx = editorRowRxToCx(row, match)
 			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
-			saved_hl_line = current
-			saved_hl = make(highlight.LineMatch)
-			for k, v := range row.HlMatches {
-				saved_hl[k] = v
-			}
-			var c highlight.Group
-			if row.HlMatches != nil {
-				row.HlMatches[match] = 255
-				ql := len(query)
-				for i := 0; i <= match+ql; i++ {
-					if i >= match {
-						row.HlMatches[i] = 255
-					}
-					if saved_hl[i] != 0 {
-						c = saved_hl[i]
-					}
-				}
-				if ql == 0 {
-					row.HlMatches[match] = saved_hl[match]
-				} else {
-					row.HlMatches[match+ql] = c
-				}
-			}
+			Global.CurrentB.MarkX = Global.CurrentB.cx + ql
+			Global.CurrentB.MarkY = Global.CurrentB.cy
+			Global.CurrentB.regionActive = true
+			Global.CurrentB.recalcRegion()
 			break
 		}
 	}
@@ -265,6 +240,7 @@ func editorFind() {
 
 	if query == "" {
 		//Search cancelled, go back to where we were
+		Global.CurrentB.regionActive = false
 		Global.CurrentB.cx = saved_cx
 		Global.CurrentB.prefcx = Global.CurrentB.cx
 		Global.CurrentB.cy = saved_cy
@@ -279,10 +255,10 @@ func doQueryReplace() {
 		Global.Input = "Can't query-replace with an empty query"
 		return
 	}
+	defer func() { Global.CurrentB.regionActive = false }()
 	replace := editorPrompt("Replace "+orig+" with", nil)
 	all := false
 	ql := len(orig)
-	qw := utf8.RuneCountInString(orig)
 	rlen := len(replace)
 	for cy, row := range Global.CurrentB.Rows {
 		match := strings.Index(row.Data, orig)
@@ -292,32 +268,12 @@ func doQueryReplace() {
 			psl := len(prestring)
 			Global.CurrentB.cy = cy
 			Global.CurrentB.cx = match + psl
-			matchrx := utf8.RuneCountInString(row.Render[:editorRowCxToRx(row)])
 			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
-			saved_hl_line = cy
-			saved_hl = make(highlight.LineMatch)
-			for k, v := range row.HlMatches {
-				saved_hl[k] = v
-			}
-			var c highlight.Group
-			if row.HlMatches != nil {
-				row.HlMatches[matchrx] = 255
-
-				for i := 0; i <= matchrx+qw; i++ {
-					if i >= matchrx {
-						row.HlMatches[i] = 255
-					}
-					if saved_hl[i] != 0 {
-						c = saved_hl[i]
-					}
-				}
-				if ql == 0 {
-					row.HlMatches[matchrx] = saved_hl[matchrx]
-				} else {
-					row.HlMatches[matchrx+qw] = c
-				}
-			}
+			Global.CurrentB.MarkX = Global.CurrentB.cx + ql
+			Global.CurrentB.MarkY = Global.CurrentB.cy
+			Global.CurrentB.regionActive = true
+			Global.CurrentB.recalcRegion()
 
 			var pressed string
 			if !all {
@@ -328,7 +284,6 @@ func doQueryReplace() {
 			}
 
 			if pressed == "C-g" || pressed == "q" {
-				row.HlMatches = saved_hl
 				return
 			} else if pressed == "y" || pressed == "." || all {
 				Global.CurrentB.Dirty = true
@@ -343,7 +298,6 @@ func doQueryReplace() {
 					return
 				}
 			} else {
-				row.HlMatches = saved_hl
 				prestring = row.Data[:psl+match+ql]
 				matchstring = row.Data[psl+match+ql:]
 			}
@@ -395,6 +349,7 @@ func doQueryReplaceRegexp() {
 		Global.Input = "Can't query-replace-regexp with an empty query"
 		return
 	}
+	defer func() { Global.CurrentB.regionActive = false }()
 	pattern, err := regexp.Compile(orig)
 	if err != nil {
 		Global.Input = "Couldn't compile regexp " + orig + ": " + err.Error()
@@ -411,33 +366,13 @@ func doQueryReplaceRegexp() {
 			psl := len(prestring)
 			Global.CurrentB.cy = cy
 			Global.CurrentB.cx = match[0] + psl
-			matchrx := utf8.RuneCountInString(row.Render[:editorRowCxToRx(row)])
 			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
-			saved_hl_line = cy
-			saved_hl = make(highlight.LineMatch)
-			for k, v := range row.HlMatches {
-				saved_hl[k] = v
-			}
-			qw := utf8.RuneCountInString(matchstring[match[0]:match[1]])
-			var c highlight.Group
-			if row.HlMatches != nil {
-				row.HlMatches[matchrx] = 255
-
-				for i := 0; i <= matchrx+qw; i++ {
-					if i >= matchrx {
-						row.HlMatches[i] = 255
-					}
-					if saved_hl[i] != 0 {
-						c = saved_hl[i]
-					}
-				}
-				if ql == 0 {
-					row.HlMatches[matchrx] = saved_hl[matchrx]
-				} else {
-					row.HlMatches[matchrx+qw] = c
-				}
-			}
+			//qw := utf8.RuneCountInString(matchstring[match[0]:match[1]])
+			Global.CurrentB.MarkX = Global.CurrentB.cx + ql
+			Global.CurrentB.MarkY = Global.CurrentB.cy
+			Global.CurrentB.regionActive = true
+			Global.CurrentB.recalcRegion()
 
 			var pressed string
 			if !all {
@@ -448,7 +383,6 @@ func doQueryReplaceRegexp() {
 			}
 
 			if pressed == "C-g" || pressed == "q" {
-				row.HlMatches = saved_hl
 				return
 			} else if pressed == "y" || pressed == "." || all {
 				Global.CurrentB.Dirty = true
@@ -463,7 +397,6 @@ func doQueryReplaceRegexp() {
 					return
 				}
 			} else {
-				row.HlMatches = saved_hl
 				prestring = prestring + matchstring[:match[1]]
 				matchstring = matchstring[match[1]:]
 			}
