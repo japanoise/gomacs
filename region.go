@@ -325,6 +325,7 @@ func transposeRegion(buf *EditorBuffer, startc, endc, startl, endl int, trans fu
 	cx, cy := spitRegion(startc, startl, text)
 	editorAddRegionUndo(true, cx, buf.cx, cy, buf.cy, text)
 	buf.Undo.paired = true
+	buf.regionActive = false
 }
 
 func transposeRegionCmd(trans func(string) string) {
