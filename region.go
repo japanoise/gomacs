@@ -32,7 +32,7 @@ func (buf *EditorBuffer) setRegion(startc, startl, endc, endl int) {
 		region.startc = 0
 	}
 	region.endl = endl
-	if region.startl < buf.NumRows {
+	if region.endl < buf.NumRows {
 		region.endc = buf.Rows[region.endl].cxToRx(endc)
 	} else {
 		region.endc = 0
