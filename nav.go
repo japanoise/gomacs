@@ -357,7 +357,6 @@ func doQueryReplaceRegexp() {
 	}
 	replace := editorPrompt("Replace "+orig+" with", nil)
 	all := false
-	ql := len(orig)
 	for cy, row := range Global.CurrentB.Rows {
 		match := pattern.FindStringIndex(row.Data)
 		prestring := ""
@@ -368,8 +367,8 @@ func doQueryReplaceRegexp() {
 			Global.CurrentB.cx = match[0] + psl
 			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
-			//qw := utf8.RuneCountInString(matchstring[match[0]:match[1]])
-			Global.CurrentB.MarkX = Global.CurrentB.cx + ql
+			matchlen := len(matchstring[match[0]:match[1]])
+			Global.CurrentB.MarkX = Global.CurrentB.cx + matchlen
 			Global.CurrentB.MarkY = Global.CurrentB.cy
 			Global.CurrentB.regionActive = true
 			Global.CurrentB.recalcRegion()
