@@ -6,8 +6,10 @@ BZ2=bzip2 -p
 GO=go
 INSTALL_PROGRAM=install -m 0755
 INSTALL_FILE=install -m 0644
+VERSION=git
+ARCH=$(shell arch)
 
-.PHONY: all install install-em uninstall uninstall-em clean
+.PHONY: all dist install install-em uninstall uninstall-em clean
 
 all: gomacs gomacs.1.bz2
 
@@ -42,3 +44,14 @@ uninstall-em:
 clean:
 	rm -rf gomacs
 	rm -rf gomacs.1.bz2
+	rm -rf dist
+
+.ONESHELL:
+dist: gomacs gomacs.1.bz2
+	mkdir -pv dist/gomacs_${ARCH}-${VERSION}
+	cd dist/gomacs_${ARCH}-${VERSION}
+	cp ../../gomacs ../../gomacs.1.bz2 ../../gomacs.png ../../LICENSE \
+	../../README.md ../../CHANGELOG ./
+	cp --recursive ../../examples ./
+	cd ../
+	tar cvzf gomacs_${ARCH}-${VERSION}.tgz gomacs_${ARCH}-${VERSION}
