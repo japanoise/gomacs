@@ -1,3 +1,29 @@
-2017-07-12: Release 1.0.0 "Yuugi's Sweaty Abs"
+2017-08-26 Release 1.1.0
+
+	The release that should've been 1.0.0 - it's Gomacs 1.1.0!
+	Featuring some important new features, bugfixes, and a ton of tweaks.
+
+	Features:
+	* Rectangles
+	* Zmacs regions
+	* `suspend-emacs` ported to all POSIX platforms
+
+	Bugfixes:
+	* Concurrent magic tricks to fix the "slow pasting" problem
+	* Disable `terminal-title-mode` on non-Linux platforms
+	* All actions can now be undone/redone in one go
+	* Major mode and highlighting can change when file is saved/renamed
+	* Re-write fill commands
+	* Correct behaviour of `what-cursor`
+	* Prevent region undos overwriting the clipboard
+
+	Tweaks:
+	* Re-highlight buffer after killing a region
+	* Don't echo when inserting text
+	* End-of-buffer tweaks
+	* `apropos-command` tweaks
+	* Lots of internal tweaks
+
+2017-07-12 Release 1.0.0 "Yuugi's Sweaty Abs"
 
 	Initial release
