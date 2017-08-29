@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 	"unicode/utf8"
 
@@ -13,7 +14,7 @@ func InitTerm() {
 	if err != nil {
 		panic(err)
 	}
-	termbox.SetInputMode(termbox.InputAlt)
+	termbox.SetInputMode(termbox.InputAlt | termbox.InputMouse)
 }
 
 func editorGetKey() string {
@@ -40,6 +41,8 @@ func editorGetKey() string {
 			editorRefreshScreen()
 		} else if ev.Type == termbox.EventKey {
 			return ParseTermboxEvent(ev)
+		} else if ev.Type == termbox.EventMouse {
+			return ParseMouseEvent(ev)
 		}
 	}
 }
@@ -119,6 +122,25 @@ func showMessages(mesgs ...string) {
 
 func ParseTermboxEvent(ev termbox.Event) string {
 	return termutil.ParseTermboxEvent(ev)
+}
+
+func ParseMouseEvent(ev termbox.Event) string {
+	var mousestr string
+	switch ev.Key {
+	case termbox.MouseLeft:
+		mousestr = "mouse1"
+	case termbox.MouseMiddle:
+		mousestr = "mouse2"
+	case termbox.MouseRight:
+		mousestr = "mouse3"
+	case termbox.MouseRelease:
+		mousestr = "up-mouse"
+	case termbox.MouseWheelUp:
+		mousestr = "mouse4"
+	case termbox.MouseWheelDown:
+		mousestr = "mouse5"
+	}
+	return fmt.Sprintf("<%s %d %d>", mousestr, ev.MouseX, ev.MouseY)
 }
 
 func editorYesNoPrompt(p string, noallowcancel bool) (bool, error) {

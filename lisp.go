@@ -749,6 +749,10 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x r k" "kill-rectangle")
 (emacsbindkey "C-x r y" "yank-rectangle")
 (emacsbindkey "C-g" "keyboard-quit")
+(emacsbindkey "mouse1" "mouse-set-point")
+(emacsbindkey "mouse4" "mwheel-scroll-up")
+(emacsbindkey "mouse5" "mwheel-scroll-down")
+(emacsbindkey "up-mouse" "clear-input")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

@@ -68,8 +68,22 @@ func (c *CommandList) PutCommand(key string, command *CommandFunc) {
 	}
 }
 
+func getMousek(key string) string {
+	var mousek string
+	var x, y int
+	_, err := fmt.Sscanf(key, "<%s %d %d>", &mousek, &x, &y)
+	if err == nil {
+		Global.MouseX = x
+		Global.MouseY = y
+		return mousek
+	} else {
+		return key
+	}
+}
+
 func (c *CommandList) GetCommand(key string) (*CommandFunc, error) {
 	Global.Input += key + " "
+	key = getMousek(key)
 	editorRefreshScreen()
 	child := c.Children[key]
 	if child == nil {
@@ -344,4 +358,8 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"kill-rectangle", func(*glisp.Glisp) { doKillRectangle() }, false})
 	DefineCommand(&CommandFunc{"yank-rectangle", func(*glisp.Glisp) { doYankRectangle() }, false})
 	DefineCommand(&CommandFunc{"keyboard-quit", func(*glisp.Glisp) { keyboardQuit() }, false})
+	DefineCommand(&CommandFunc{"mouse-set-point", func(*glisp.Glisp) { JumpToMousePoint() }, false})
+	DefineCommand(&CommandFunc{"mwheel-scroll-up", func(*glisp.Glisp) { MouseScrollUp() }, false})
+	DefineCommand(&CommandFunc{"mwheel-scroll-down", func(*glisp.Glisp) { MouseScrollDown() }, false})
+	DefineCommand(&CommandFunc{"clear-input", func(*glisp.Glisp) { ClearInput() }, false})
 }
