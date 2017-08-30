@@ -1,6 +1,10 @@
 package main
 
-import "github.com/nsf/termbox-go"
+import (
+	"os/exec"
+
+	"github.com/nsf/termbox-go"
+)
 
 const (
 	GomacsMouseNone byte = iota
@@ -80,4 +84,38 @@ func MouseScrollDown() {
 func MouseRelease() {
 	Global.Input = ""
 	mousestate = GomacsMouseNone
+}
+
+func MouseYankXsel() {
+	prog, args, err := getXsel()
+	if err != nil {
+		Global.Input = "Can't find xsel or xclip in your PATH"
+		AddErrorMessage(Global.Input)
+		return
+	}
+	var out string
+	out, err = shellCmd(prog, args)
+	if err != nil {
+		Global.Input = err.Error()
+		AddErrorMessage(Global.Input)
+		return
+	}
+	Global.Clipboard = out
+	if Global.CurrentB.hasMode("xsel-jump-to-cursor-mode") {
+		JumpToMousePoint()
+	}
+	doYankRegion()
+	Global.Input = "Yanked X selection."
+}
+
+func getXsel() (string, []string, error) {
+	args := []string{}
+	ret, err := exec.LookPath("xsel")
+	if err != nil {
+		ret, err = exec.LookPath("xclip")
+		if err == nil {
+			args = []string{"-o", "-selection", "primary"}
+		}
+	}
+	return ret, args, err
 }

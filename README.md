@@ -223,6 +223,8 @@ command. Here's what each mode does:
 - `auto-indent-mode` - copy indentation from previous line when inserting a
   newline.
 - `tilde-mode` - draw `vi`-style blue tildes on lines outside the file
+- `xsel-jump-to-cursor-mode` - jump to the mouse cursor position before pasting
+  from the X selection
 
 ## Why?
 

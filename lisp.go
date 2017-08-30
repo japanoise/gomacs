@@ -750,6 +750,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x r y" "yank-rectangle")
 (emacsbindkey "C-g" "keyboard-quit")
 (emacsbindkey "mouse1" "mouse-drag-region")
+(emacsbindkey "mouse2" "mouse-yank-primary")
 (emacsbindkey "mouse4" "mwheel-scroll-up")
 (emacsbindkey "mouse5" "mwheel-scroll-down")
 (emacsbindkey "up-mouse" "mouse-release")

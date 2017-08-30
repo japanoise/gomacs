@@ -363,4 +363,5 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"mwheel-scroll-up", func(*glisp.Glisp) { MouseScrollUp() }, false})
 	DefineCommand(&CommandFunc{"mwheel-scroll-down", func(*glisp.Glisp) { MouseScrollDown() }, false})
 	DefineCommand(&CommandFunc{"mouse-release", func(*glisp.Glisp) { MouseRelease() }, false})
+	DefineCommand(&CommandFunc{"mouse-yank-primary", func(*glisp.Glisp) { MouseYankXsel() }, false})
 }
