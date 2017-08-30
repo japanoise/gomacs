@@ -359,7 +359,8 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"yank-rectangle", func(*glisp.Glisp) { doYankRectangle() }, false})
 	DefineCommand(&CommandFunc{"keyboard-quit", func(*glisp.Glisp) { keyboardQuit() }, false})
 	DefineCommand(&CommandFunc{"mouse-set-point", func(*glisp.Glisp) { JumpToMousePoint() }, false})
+	DefineCommand(&CommandFunc{"mouse-drag-region", func(*glisp.Glisp) { MouseDragRegion() }, false})
 	DefineCommand(&CommandFunc{"mwheel-scroll-up", func(*glisp.Glisp) { MouseScrollUp() }, false})
 	DefineCommand(&CommandFunc{"mwheel-scroll-down", func(*glisp.Glisp) { MouseScrollDown() }, false})
-	DefineCommand(&CommandFunc{"clear-input", func(*glisp.Glisp) { ClearInput() }, false})
+	DefineCommand(&CommandFunc{"mouse-release", func(*glisp.Glisp) { MouseRelease() }, false})
 }

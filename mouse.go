@@ -2,6 +2,11 @@ package main
 
 import "github.com/nsf/termbox-go"
 
+const (
+	GomacsMouseNone byte = iota
+	GomacsMouseDragging
+)
+
 func (row *EditorRow) screenXtoCx(sx int) int {
 	gut := 0
 	if Global.CurrentB.hasMode("line-number-mode") {
@@ -31,6 +36,23 @@ func JumpToMousePoint() {
 	}
 }
 
+var mousestate byte = GomacsMouseNone
+
+func MouseDragRegion() {
+	buf := Global.CurrentB
+	cachedcx, cachedcy := buf.cx, buf.cy
+	JumpToMousePoint()
+	if mousestate == GomacsMouseDragging && buf == Global.CurrentB && (cachedcx != buf.cx || cachedcy != buf.cy) {
+		if !buf.regionActive {
+			buf.MarkX = cachedcx
+			buf.MarkY = cachedcy
+			buf.regionActive = true
+		}
+		buf.recalcRegion()
+	}
+	mousestate = GomacsMouseDragging
+}
+
 func MouseScrollUp() {
 	Global.CurrentB, _ = screenYtoBufAndCy(Global.MouseY)
 	if Global.CurrentB.rowoff > 0 {
@@ -55,6 +77,7 @@ func MouseScrollDown() {
 	}
 }
 
-func ClearInput() {
+func MouseRelease() {
 	Global.Input = ""
+	mousestate = GomacsMouseNone
 }
