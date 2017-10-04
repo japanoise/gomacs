@@ -5,11 +5,18 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/japanoise/termbox-util"
 	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
 )
+
+var redrawLock *sync.Mutex
+
+func init() {
+	redrawLock = &sync.Mutex{}
+}
 
 func (row *EditorRow) cxToRx(cx int) int {
 	rx := 0
@@ -47,6 +54,7 @@ func editorRowRxToCx(row *EditorRow, rx int) int {
 }
 
 func editorRefreshScreen() {
+	redrawLock.Lock()
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 	x, y := termbox.Size()
 	yrows := y - 2
@@ -77,6 +85,7 @@ func editorRefreshScreen() {
 	editorDrawStatusLine(x, y-2, Global.Windows[numwin-1])
 	editorDrawPrompt(y)
 	termbox.Flush()
+	redrawLock.Unlock()
 }
 
 func trimString(s string, coloff int) (string, int) {
