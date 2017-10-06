@@ -168,7 +168,7 @@ func editorReHighlightRow(row *EditorRow, buf *EditorBuffer) {
 }
 
 func (buf *EditorBuffer) updateHighlighting() {
-	if buf.Highlighter != nil && buf.rehlfrom >= 0 {
+	if buf.Highlighter != nil && buf.rehlfrom >= 0 && buf.NumRows != 0 {
 		row := buf.Rows[buf.rehlfrom]
 		curstate := buf.State(row.idx)
 		buf.Highlighter.ReHighlightStates(buf, row.idx)
