@@ -17,9 +17,10 @@ func InitTerm() {
 	termbox.SetInputMode(termbox.InputAlt | termbox.InputMouse)
 }
 
-func editorGetKey() string {
+func editorGetKey() (string, bool) {
 	for {
 		// More hacking; if we've been waiting for some time, refresh the screen.
+		doReHl := false
 		timeout := make(chan bool, 1)
 		done := make(chan bool, 1)
 		go func() {
@@ -29,8 +30,7 @@ func editorGetKey() string {
 		go func() {
 			select {
 			case _ = <-timeout:
-				editorRefreshScreen()
-				Global.CurrentB.updateHighlighting()
+				doReHl = true
 			case _ = <-done:
 				// Don't refresh the screen.
 			}
@@ -40,9 +40,9 @@ func editorGetKey() string {
 		if ev.Type == termbox.EventResize {
 			editorRefreshScreen()
 		} else if ev.Type == termbox.EventKey {
-			return ParseTermboxEvent(ev)
+			return ParseTermboxEvent(ev), doReHl
 		} else if ev.Type == termbox.EventMouse {
-			return ParseMouseEvent(ev)
+			return ParseMouseEvent(ev), doReHl
 		}
 	}
 }
@@ -82,7 +82,7 @@ func tabCompletedEditorPrompt(prompt string, getCandidates func(string) []string
 				for undecided {
 					Global.Input = candidates[choice]
 					editorRefreshScreen()
-					key := editorGetKey()
+					key, _ := editorGetKey()
 					if key == "TAB" || key == "C-i" || key == "RIGHT" || key == "C-f" {
 						choice++
 						if choice == len(candidates) {

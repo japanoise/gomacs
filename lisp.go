@@ -10,7 +10,12 @@ import (
 )
 
 func lispGetKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
-	return glisp.SexpStr(editorGetKey()), nil
+	key, drhl := editorGetKey()
+	if drhl {
+		editorRefreshScreen()
+		Global.CurrentB.updateHighlighting()
+	}
+	return glisp.SexpStr(key), nil
 }
 
 func lispChoiceIndex(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {

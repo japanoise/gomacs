@@ -90,7 +90,7 @@ func (c *CommandList) GetCommand(key string) (*CommandFunc, error) {
 		return nil, errors.New("Bad command: " + Global.Input)
 	}
 	if child.Parent {
-		nextkey := editorGetKey()
+		nextkey, _ := editorGetKey()
 		s, e := child.GetCommand(nextkey)
 		return s, e
 	} else {
@@ -117,7 +117,7 @@ func DescribeKeyBriefly() {
 	defer editorSetPrompt("")
 	Global.Input = ""
 	editorRefreshScreen()
-	key := editorGetKey()
+	key, _ := editorGetKey()
 	if Global.MajorBindings[Global.CurrentB.MajorMode] != nil {
 		com, comerr := Global.MajorBindings[Global.CurrentB.MajorMode].GetCommand(key)
 		if com != nil && comerr == nil {

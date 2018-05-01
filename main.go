@@ -575,7 +575,7 @@ func AddErrorMessage(msg string) {
 func SetUniversalArgument(env *glisp.Glisp) {
 	arg := ""
 	for {
-		key := editorGetKey()
+		key, drhl := editorGetKey()
 		if (arg == "" && key == "-") || ('0' <= key[0] && key[0] <= '9') {
 			arg += key
 			Global.Input += key
@@ -584,7 +584,7 @@ func SetUniversalArgument(env *glisp.Glisp) {
 			if key == "C-u" {
 				Global.Input += " " + key
 				editorRefreshScreen()
-				key = editorGetKey()
+				key, drhl = editorGetKey()
 			}
 			argi := 0
 			if arg != "" {
@@ -598,6 +598,10 @@ func SetUniversalArgument(env *glisp.Glisp) {
 			Global.Universal = argi
 			Global.SetUniversal = true
 			RunCommandForKey(key, env)
+			if drhl {
+				editorRefreshScreen()
+				Global.CurrentB.updateHighlighting()
+			}
 			Global.SetUniversal = false
 			return
 		}
@@ -719,12 +723,16 @@ func main() {
 		if Global.quit {
 			return
 		} else {
-			key := editorGetKey()
+			key, drhl := editorGetKey()
 			t := time.Now()
 			RunCommandForKey(key, env)
 			// A bit hacky, but this fixes some of our speed issues when pasting.
 			// Don't do the optimisation if this key and the last were the same!
 			if t.UnixNano()-lt.UnixNano() > TIMEOUT || lastkey == key {
+				editorRefreshScreen()
+			}
+			if drhl {
+				Global.CurrentB.updateHighlighting()
 				editorRefreshScreen()
 			}
 			lt = time.Now()
