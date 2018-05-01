@@ -512,7 +512,10 @@ func whatCursorPosition() {
 		ru, _ = utf8.DecodeRuneInString(row.Data[cx:])
 	}
 	offset, total := getOffsetInBuffer(Global.CurrentB)
-	pc := (offset * 100) / (total)
+	pc := 0
+	if total > 0 {
+		pc = (offset * 100) / (total)
+	}
 	Global.Input = fmt.Sprintf("Char: %s Offset: %d/%d (%d%%)", describeRune(ru),
 		offset, total, pc)
 }
