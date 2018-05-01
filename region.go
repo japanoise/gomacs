@@ -89,6 +89,7 @@ func rowDelRange(row *EditorRow, startc, endc int, buf *EditorBuffer) string {
 	return ret
 }
 
+// Kills a region, returns the killed text.
 func bufKillRegion(buf *EditorBuffer, startc, endc, startl, endl int) string {
 	var ret string
 	row := buf.Rows[startl]
@@ -188,7 +189,7 @@ func doKillRegion() {
 	res, err := regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) string {
 		ret := bufKillRegion(buf, startc, endc, startl, endl)
 		editorAddRegionUndo(false, startc, endc,
-			startl, endl, Global.Clipboard)
+			startl, endl, ret)
 		return ret
 	})
 	if err == nil {
