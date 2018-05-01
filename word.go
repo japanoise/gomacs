@@ -129,7 +129,7 @@ func capitalizeWord() {
 	for i := 0; i < times; i++ {
 		endc = indexEndOfForwardWord()
 	}
-	transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.Title)
+	transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, func(s string) string { return strings.Title(strings.ToLower(s)) })
 }
 
 func indexOfLastWord(s string) int {
