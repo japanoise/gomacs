@@ -44,13 +44,16 @@ func (buf *EditorBuffer) UpdateRowToPrefCX() {
 	}
 }
 
+func (buf *EditorBuffer) MoveCursorToEndOfBuffer() {
+	buf.cy = len(buf.Rows) - 1
+	buf.cx = buf.Rows[buf.cy].Size
+	buf.prefcx = -1
+}
+
 func (buf *EditorBuffer) MoveCursorDown() {
 	times := getRepeatTimes()
 	for i := 0; i < times; i++ {
-		if buf.cy == buf.NumRows-1 {
-			buf.cy++
-			buf.cx = 0
-		} else if buf.cy >= buf.NumRows {
+		if buf.cy >= buf.NumRows-1 {
 			Global.Input = "End of buffer"
 		} else {
 			buf.cy++
@@ -95,9 +98,13 @@ func (buf *EditorBuffer) MoveCursorRight() {
 		if buf.cy >= buf.NumRows {
 			Global.Input = "End of buffer"
 		} else if buf.cx == buf.Rows[buf.cy].Size {
-			buf.cy++
-			buf.prefcx = 0
-			buf.cx = 0
+			if buf.cy == buf.NumRows-1 {
+				Global.Input = "End of buffer"
+			} else {
+				buf.cy++
+				buf.prefcx = 0
+				buf.cx = 0
+			}
 		} else {
 			_, rs := utf8.DecodeRuneInString(buf.Rows[buf.cy].Data[buf.cx:])
 			buf.cx += rs

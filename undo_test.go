@@ -81,19 +81,6 @@ func TestMultilineDeleteUndo(t *testing.T) {
 	Global.CurrentB.FailIfBufferNe([]string{"test1", "test2", "test3"}, t)
 }
 
-func TestLastLineUndo(t *testing.T) {
-	InitEditor()
-	editorInsertStr("test")
-	Global.CurrentB.cx = 0
-	Global.CurrentB.cy = 0
-	editorInsertStr("a ")
-	Global.CurrentB.cy = Global.CurrentB.NumRows
-	Global.CurrentB.cx = 0
-	editorInsertStr("foo")
-	editorUndoAction()
-	Global.CurrentB.FailIfBufferNe([]string{"a test", ""}, t)
-}
-
 func TestDoUndoWithNothing(t *testing.T) {
 	InitEditor()
 	editorUndoAction() // If this doesn't crash, then test for a message

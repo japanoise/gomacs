@@ -242,7 +242,7 @@ func LoadDefaultCommands() {
 	DefineCommand(&CommandFunc{"insert-newline", func(env *glisp.Glisp) { editorInsertNewline(false) }, false})
 	DefineCommand(&CommandFunc{"isearch", func(env *glisp.Glisp) { editorFind() }, false})
 	DefineCommand(&CommandFunc{"buffers-list", func(env *glisp.Glisp) { editorSwitchBuffer() }, false})
-	DefineCommand(&CommandFunc{"end-of-buffer", func(env *glisp.Glisp) { Global.CurrentB.cy = Global.CurrentB.NumRows; Global.CurrentB.cx = 0 }, false})
+	DefineCommand(&CommandFunc{"end-of-buffer", func(env *glisp.Glisp) { Global.CurrentB.MoveCursorToEndOfBuffer() }, false})
 	DefineCommand(&CommandFunc{"beginning-of-buffer", func(env *glisp.Glisp) { Global.CurrentB.cy = 0; Global.CurrentB.cx = 0 }, false})
 	DefineCommand(&CommandFunc{"undo", func(env *glisp.Glisp) { editorUndoAction() }, false})
 	DefineCommand(&CommandFunc{"indent", func(env *glisp.Glisp) { editorInsertStr(getTabString()) }, false})

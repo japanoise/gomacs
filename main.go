@@ -300,6 +300,7 @@ func editorDelChar() {
 	}
 	for i := 0; i < times; i++ {
 		if Global.CurrentB.cx == 0 && Global.CurrentB.cy == 0 {
+			Global.Input = "Beginning of buffer"
 			return
 		}
 		if Global.CurrentB.cy == Global.CurrentB.NumRows {
@@ -324,6 +325,11 @@ func editorDelChar() {
 }
 
 func editorDelForwardChar() {
+	cx, cy := Global.CurrentB.cx, Global.CurrentB.cy
+	if cy == Global.CurrentB.NumRows-1 && cx == Global.CurrentB.Rows[cy].Size {
+		Global.Input = "End of buffer"
+		return
+	}
 	times := 1
 	if Global.SetUniversal {
 		if Global.Universal < 0 {
