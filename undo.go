@@ -150,12 +150,6 @@ func editorDoUndo(tree *EditorUndo) bool {
 			Global.CurrentB.cx = tree.startc
 			Global.CurrentB.cy = tree.startl
 			return true
-		} else if tree.startl == -1 {
-			// inserting a string on the last line
-			editorDelRow(Global.CurrentB.NumRows - 1)
-			Global.CurrentB.cx = tree.startc
-			Global.CurrentB.cy = tree.endl
-			return true
 		} else {
 			// inserting a line
 			Global.CurrentB.cx = tree.startc
