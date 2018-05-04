@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/japanoise/kusanagi.svg?branch=master)](https://travis-ci.org/japanoise/gomacs)
+[![codecov](https://codecov.io/gh/japanoise/kusanagi/branch/master/graph/badge.svg)](https://codecov.io/gh/japanoise/gomacs)
+![Go Report Card](https://goreportcard.com/badge/github.com/japanoise/gomacs)
+
 # Gomacs - Go Powered Emacs!
 
 ![A screenshot showing Gomacs editing this README and its own source code](gomacs.png)
