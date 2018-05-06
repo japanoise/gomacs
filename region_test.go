@@ -78,3 +78,37 @@ func TestFillRegion(t *testing.T) {
 		"Shells We've Tippy Toed Over",
 	}, t)
 }
+
+func TestTabifyRegion(t *testing.T) {
+	InitEditor()
+	Global.Tabsize = 2
+	setMark(Global.CurrentB)
+	editorInsertStr("Python code")
+	editorInsertNewline(false)
+	editorInsertStr("  Indented by two spaces")
+	editorInsertNewline(false)
+	editorInsertStr("    bottom text")
+	doTabifyRegion()
+	Global.CurrentB.FailIfBufferNe([]string{
+		"Python code",
+		"\tIndented by two spaces",
+		"\t\tbottom text",
+	}, t)
+}
+
+func TestUntabifyRegion(t *testing.T) {
+	InitEditor()
+	Global.Tabsize = 2
+	setMark(Global.CurrentB)
+	editorInsertStr("Python code")
+	editorInsertNewline(false)
+	editorInsertStr("\tIndented by two spaces")
+	editorInsertNewline(false)
+	editorInsertStr("\t\tbottom text")
+	doUntabifyRegion()
+	Global.CurrentB.FailIfBufferNe([]string{
+		"Python code",
+		"  Indented by two spaces",
+		"    bottom text",
+	}, t)
+}
