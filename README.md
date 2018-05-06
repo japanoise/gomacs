@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/japanoise/gomacs.svg?branch=master)](https://travis-ci.org/japanoise/gomacs)
 [![codecov](https://codecov.io/gh/japanoise/gomacs/branch/master/graph/badge.svg)](https://codecov.io/gh/japanoise/gomacs)
-![Go Report Card](https://goreportcard.com/badge/github.com/japanoise/gomacs)
+[![Go Report Card](https://goreportcard.com/badge/github.com/japanoise/gomacs)](https://goreportcard.com/report/github.com/japanoise/gomacs)
 
 # Gomacs - Go Powered Emacs!
 
