@@ -1,0 +1,9 @@
+ignore:
+  - "bindata.go"
+  - "dired.go"
+  - "input.go"
+  - "mouse.go"
+  - "render.go"
+  - "suspend*.go"
+  - "terminal*.go"
+  - "window.go"
