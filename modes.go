@@ -1,9 +1,5 @@
 package main
 
-import (
-	"github.com/zhemao/glisp/interpreter"
-)
-
 // Minor Modes
 type ModeList map[string]bool
 
@@ -76,8 +72,7 @@ func remDefaultMode(mode string) {
 
 //Major Modes
 type Hooks struct {
-	GoHooks   []func()
-	LispHooks []glisp.SexpFunction
+	GoHooks []func()
 }
 
 type HookList map[string]*Hooks
@@ -87,14 +82,11 @@ func loadDefaultHooks() HookList {
 	return ret
 }
 
-func ExecHooksForMode(env *glisp.Glisp, mode string) {
+func ExecHooksForMode(mode string) {
 	hooks := Global.MajorHooks[mode]
 	if hooks != nil {
 		for _, hook := range hooks.GoHooks {
 			hook()
-		}
-		for _, hook := range hooks.LispHooks {
-			env.Apply(hook, []glisp.Sexp{})
 		}
 	}
 }
@@ -104,21 +96,9 @@ func RegisterGoHookForMode(mode string, hook func()) {
 	if hooks == nil {
 		gohooks := make([]func(), 1)
 		gohooks[0] = hook
-		Global.MajorHooks[mode] = &Hooks{gohooks, []glisp.SexpFunction{}}
+		Global.MajorHooks[mode] = &Hooks{gohooks}
 	} else {
 		hooks.GoHooks = append(hooks.GoHooks, hook)
-	}
-}
-
-func RegisterLispHookForMode(mode string, hook glisp.SexpFunction) {
-	hooks := Global.MajorHooks[mode]
-	if hooks == nil {
-		gohooks := make([]func(), 0)
-		lisphooks := make([]glisp.SexpFunction, 1)
-		lisphooks[0] = hook
-		Global.MajorHooks[mode] = &Hooks{gohooks, lisphooks}
-	} else {
-		hooks.LispHooks = append(hooks.LispHooks, hook)
 	}
 }
 
@@ -126,12 +106,8 @@ func RegisterGoSaveHookForMode(mode string, hook func()) {
 	RegisterGoHookForMode(mode+"-save", hook)
 }
 
-func RegisterLispSaveHookForMode(mode string, hook glisp.SexpFunction) {
-	RegisterLispHookForMode(mode+"-save", hook)
-}
-
-func ExecSaveHooksForMode(env *glisp.Glisp, mode string) {
-	ExecHooksForMode(env, mode+"-save")
+func ExecSaveHooksForMode(mode string) {
+	ExecHooksForMode(mode + "-save")
 }
 
 func BindKeyMajorMode(mode, key string, cmd *CommandFunc) {

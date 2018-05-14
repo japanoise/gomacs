@@ -1,9 +1,5 @@
 package main
 
-import (
-	"github.com/zhemao/glisp/interpreter"
-)
-
 func getCurrentWindow() int {
 	for i, win := range Global.Windows {
 		if win == Global.CurrentB {
@@ -56,23 +52,23 @@ func switchWindow() {
 	}
 }
 
-func editorWriteFile(env *glisp.Glisp) {
+func editorWriteFile() {
 	fn := tabCompletedEditorPrompt("Write File", tabCompleteFilename)
 	if fn == "" {
 		return
 	}
 	Global.CurrentB.Filename = fn
 	Global.CurrentB.UpdateRenderName()
-	EditorSave(env)
+	EditorSave()
 }
 
-func editorVisitFile(env *glisp.Glisp) {
+func editorVisitFile() {
 	fn := tabCompletedEditorPrompt("Visit File", tabCompleteFilename)
 	if fn == "" {
 		return
 	}
 	oldcb := Global.CurrentB
-	openFile(fn, env)
+	openFile(fn)
 	for i, buf := range Global.Windows {
 		if buf == oldcb {
 			Global.Windows[i] = Global.CurrentB
@@ -86,15 +82,15 @@ func editorVisitFile(env *glisp.Glisp) {
 	}
 }
 
-func editorFindFile(env *glisp.Glisp) {
+func editorFindFile() {
 	fn := tabCompletedEditorPrompt("Find File", tabCompleteFilename)
 	if fn == "" {
 		return
 	}
-	openFile(fn, env)
+	openFile(fn)
 }
 
-func openFile(fn string, env *glisp.Glisp) {
+func openFile(fn string) {
 	buffer := &EditorBuffer{}
 	Global.Buffers = append(Global.Buffers, buffer)
 	i := getCurrentWindow()
@@ -104,7 +100,7 @@ func openFile(fn string, env *glisp.Glisp) {
 		Global.Windows[i] = buffer
 	}
 	Global.CurrentB = buffer
-	EditorOpen(fn, env)
+	EditorOpen(fn)
 }
 
 func (e *EditorBuffer) getFilename() string {
