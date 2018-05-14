@@ -187,39 +187,12 @@ yet - I'll try to keep this list up to date!
 - `M-|` - Run shell command on region (add a universal argument to replace
   region with output)
 
-## Customization
-
-Emacs loads from ~/.gomacs.lisp on startup and executes the content of this file.
-Check out the Glisp documentation for information on how the language works!
-Some functions to get you started…
-
-- `(emacsbindkey arg1 arg2..)` - Bind arg1 (in standard Emacs C-\*/M-\* notation,
-  subsequent keypresses space seperated) to the Lisp function or named command
-  arg2. arg1 must be a string; arg2 can be a function or a string. If arg2 is a
-  function, any additional args will be used as its arguments when run.
-- `(emacsdefinecmd arg1 arg2..)` - Define a command with name arg1 that runs the
-  function arg2 with any aditional arguments as its arguments. arg1 must be a
-  string; arg2 must be a function.
-- `(setsofttab arg)` - Enable (true) or disable (false) the use of soft tabs
-  (spaces for indentation). arg must be a boolean.
-- `(settabstop arg)` - Set the width of \t characters in cells. If using soft
-  tabs, this also sets the number of spaces that will be inserted when you press
-  the Tab key. arg must be an integer.
-- `(gettabstr)` - returns what the Tab key inserts, either "\t" or some number
-  of spaces.
-- `(disablesyntax arg)` - Enable (false) or disable (true) syntax highlighting.
-  arg must be a boolean.
-- `(addhook mode func)` - Add a hook function `func` to the major mode `mode`.
-  `mode` must be a string; `func` must be a function.
-
 ## Minor Modes
 
 Each buffer has a number of minor modes activated. When a new buffer is opened,
-the modes are copied from the "default" set. Modes are added to this set with
-the lisp function `(adddefaultmode <mode>)` and removed with the function
-`(remdefaultmode <mode>)`. They can be toggled with the command `toggle-mode`,
-and you can view the current buffer's activated modes with the `show-modes`
-command. Here's what each mode does:
+the modes are copied from the "default" set. They can be toggled with the command
+`toggle-mode`, and you can view the current buffer's activated modes with the
+`show-modes` command. Here's what each mode does:
 
 - `terminal-title-mode` - use an escape sequence to set the terminal title.
 - `line-number-mode` - display line numbers on the left edge of the buffer.
