@@ -5,8 +5,6 @@ import (
 	"io"
 	"os/exec"
 	"strings"
-
-	"github.com/zhemao/glisp/interpreter"
 )
 
 func shellCmd(com string, args []string) (string, error) {
@@ -100,7 +98,7 @@ func doShellCmdRegion() {
 	shellCmdRegion(com, args)
 }
 
-func replaceBufferWithShellCommand(buf *EditorBuffer, com string, args []string, env *glisp.Glisp) {
+func replaceBufferWithShellCommand(buf *EditorBuffer, com string, args []string) {
 	if buf.NumRows == 0 {
 		return
 	}
@@ -133,5 +131,5 @@ func replaceBufferWithShellCommand(buf *EditorBuffer, com string, args []string,
 		buf.cx = buf.Rows[buf.cy].Size
 	}
 	editorRowCxToRx(buf.Rows[buf.cy])
-	editorBufSave(buf, env)
+	editorBufSave(buf)
 }

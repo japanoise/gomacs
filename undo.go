@@ -2,8 +2,6 @@ package main
 
 import (
 	"strings"
-
-	"github.com/zhemao/glisp/interpreter"
 )
 
 type EditorUndo struct {
@@ -234,7 +232,7 @@ func editorUndoAction() {
 	}
 }
 
-func doOneRedo(env *glisp.Glisp) {
+func doOneRedo() {
 	if Global.CurrentB.Redo == nil {
 		Global.Input = "No further redo information."
 	} else {
@@ -247,11 +245,11 @@ func doOneRedo(env *glisp.Glisp) {
 			Global.CurrentB.Dirty = false
 		}
 		if Global.CurrentB.Redo != nil && Global.CurrentB.Redo.paired {
-			doOneRedo(env)
+			doOneRedo()
 		}
 	}
 }
 
-func editorRedoAction(env *glisp.Glisp) {
-	micromode("C-_", "Press C-_ or C-/ to redo again", env, doOneRedo)
+func editorRedoAction() {
+	micromode("C-_", "Press C-_ or C-/ to redo again", doOneRedo)
 }
