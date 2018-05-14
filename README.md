@@ -6,10 +6,9 @@
 
 ![A screenshot showing Gomacs editing this README and its own source code](gomacs.png)
 
-Gomacs is an Emacs clone for the terminal. Unlike many other mini-Emacsen, it
-has an embedded Lisp, [powered by Glisp.](https://github.com/zhemao/glisp)
-This puts it in the realm of true Emacs! It also supports syntax highlighting
-for a wide array of languages; see the `syntax-files/` directory.
+Gomacs is an Emacs clone for the terminal. In this branch, there is no lisp code,
+in case you'd prefer an editor without it :) It supports syntax highlighting for
+a wide array of languages; see the `syntax-files/` directory.
 
 Closely follows
 [the modified version of Kilo found in this tutorial](http://viewsourcecode.org/snaptoken/kilo)
