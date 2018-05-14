@@ -17,7 +17,6 @@ import (
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/nsf/termbox-go"
-	"github.com/zhemao/glisp/interpreter"
 	"github.com/zyedidia/highlight"
 )
 
@@ -94,13 +93,13 @@ func editorSetPrompt(prompt string) {
 	Global.Prompt = prompt
 }
 
-func saveSomeBuffers(env *glisp.Glisp) bool {
+func saveSomeBuffers() bool {
 	nodirty := true
 	for _, buf := range Global.Buffers {
 		if buf.Dirty {
 			ds, cancel := editorYesNoPrompt(fmt.Sprintf("%s has unsaved changes; save them?", buf.getRenderName()), true)
 			if ds && cancel == nil {
-				editorBufSave(buf, env)
+				editorBufSave(buf)
 			} else if cancel != nil {
 				return false
 			}
@@ -110,8 +109,8 @@ func saveSomeBuffers(env *glisp.Glisp) bool {
 	return nodirty
 }
 
-func doSaveSomeBuffers(env *glisp.Glisp) {
-	nodirty := saveSomeBuffers(env)
+func doSaveSomeBuffers() {
+	nodirty := saveSomeBuffers()
 	if nodirty {
 		Global.Input = "All buffers saved."
 	} else {
@@ -119,8 +118,8 @@ func doSaveSomeBuffers(env *glisp.Glisp) {
 	}
 }
 
-func saveBuffersKillEmacs(env *glisp.Glisp) {
-	nodirty := saveSomeBuffers(env)
+func saveBuffersKillEmacs() {
+	nodirty := saveSomeBuffers()
 	if !nodirty {
 		dq, cancel := editorYesNoPrompt("Unsaved buffers exist; really quit?", false)
 		if dq && cancel == nil {
@@ -408,7 +407,7 @@ func AbsPath(filename string) (string, error) {
 	return path.Join(cwd, filename), nil
 }
 
-func EditorOpen(filename string, env *glisp.Glisp) error {
+func EditorOpen(filename string) error {
 	fpath, perr := AbsPath(filename)
 	if perr != nil {
 		return perr
@@ -425,7 +424,7 @@ func EditorOpen(filename string, env *glisp.Glisp) error {
 		editorAppendRow(scanner.Text())
 	}
 	Global.CurrentB.Dirty = false
-	editorSelectSyntaxHighlight(Global.CurrentB, env)
+	editorSelectSyntaxHighlight(Global.CurrentB)
 	return nil
 }
 
@@ -459,12 +458,12 @@ func tabCompleteFilename(fn string) []string {
 	return ret
 }
 
-func EditorSave(env *glisp.Glisp) {
-	editorBufSave(Global.CurrentB, env)
-	ExecSaveHooksForMode(env, Global.CurrentB.MajorMode)
+func EditorSave() {
+	editorBufSave(Global.CurrentB)
+	ExecSaveHooksForMode(Global.CurrentB.MajorMode)
 }
 
-func editorBufSave(buf *EditorBuffer, env *glisp.Glisp) {
+func editorBufSave(buf *EditorBuffer) {
 	fn := buf.Filename
 	if fn == "" {
 		fn = editorPrompt("Save as", nil)
@@ -483,7 +482,7 @@ func editorBufSave(buf *EditorBuffer, env *glisp.Glisp) {
 			buf.Rendername = filepath.Base(fpath)
 		}
 	}
-	editorSelectSyntaxHighlight(buf, env)
+	editorSelectSyntaxHighlight(buf)
 	f, err := os.Create(fn)
 	if err != nil {
 		Global.Input = err.Error()
@@ -541,7 +540,7 @@ func dumpCrashLog(e string) {
 	}
 }
 
-func RunCommandForKey(key string, env *glisp.Glisp) {
+func RunCommandForKey(key string) {
 	//use f12 as panic button
 	if key == "f12" {
 		Global.quit = true
@@ -551,19 +550,19 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 	if !Global.CurrentB.hasMode("no-self-insert-mode") && utf8.RuneCountInString(key) == 1 {
 		com := &CommandFunc{
 			key,
-			func(*glisp.Glisp) {
+			func() {
 				editorInsertStr(key)
 			},
 			false,
 		}
-		com.Run(env)
+		com.Run()
 		return
 	}
 	if Global.MajorBindings[Global.CurrentB.MajorMode] != nil {
 		Global.Input = ""
 		com, comerr := Global.MajorBindings[Global.CurrentB.MajorMode].GetCommand(key)
 		if com != nil && comerr == nil {
-			com.Run(env)
+			com.Run()
 			return
 		}
 	}
@@ -573,7 +572,7 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 		Global.Input = comerr.Error()
 		return
 	} else if com != nil {
-		com.Run(env)
+		com.Run()
 	}
 }
 
@@ -581,7 +580,7 @@ func AddErrorMessage(msg string) {
 	Global.messages = append(Global.messages, msg)
 }
 
-func SetUniversalArgument(env *glisp.Glisp) {
+func SetUniversalArgument() {
 	arg := ""
 	for {
 		key, drhl := editorGetKey()
@@ -606,7 +605,7 @@ func SetUniversalArgument(env *glisp.Glisp) {
 			}
 			Global.Universal = argi
 			Global.SetUniversal = true
-			RunCommandForKey(key, env)
+			RunCommandForKey(key)
 			if drhl {
 				editorRefreshScreen()
 				Global.CurrentB.updateHighlighting()
@@ -617,7 +616,7 @@ func SetUniversalArgument(env *glisp.Glisp) {
 	}
 }
 
-func RepeatCommand(env *glisp.Glisp) {
+func RepeatCommand() {
 	cmd := Global.LastCommand
 	Global.Universal = Global.LastCommandUniversal
 	Global.SetUniversal = Global.LastCommandSetUniversal
@@ -627,8 +626,8 @@ func RepeatCommand(env *glisp.Glisp) {
 	} else {
 		s = cmd.Name
 	}
-	micromode("z", "Press z to repeat "+s, env, func(e *glisp.Glisp) {
-		cmd.Com(e)
+	micromode("z", "Press z to repeat "+s, func() {
+		cmd.Com()
 		if !cmd.NoRepeat && macrorec {
 			macro = append(macro, &EditorAction{Global.SetUniversal, Global.Universal, cmd})
 		}
@@ -692,8 +691,9 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 	LoadSyntaxDefs()
+	LoadDefaultCommands()
+	LoadKeys(Emacs)
 	args := fs.Args()
-	env := NewLispInterp(!dumptreequit)
 	if dumptreequit {
 		fmt.Println(WalkCommandTree(Emacs, ""))
 		return
@@ -702,7 +702,7 @@ func main() {
 		Global.Input = "Welcome to Emacs!"
 	}
 	if len(args) > 0 {
-		ferr := EditorOpen(args[0], env)
+		ferr := EditorOpen(args[0])
 		if ferr != nil {
 			Global.Input = ferr.Error()
 			AddErrorMessage(ferr.Error())
@@ -713,7 +713,7 @@ func main() {
 				buffer.MajorMode = "Unknown"
 				Global.Buffers = append(Global.Buffers, buffer)
 				Global.CurrentB = buffer
-				ferr = EditorOpen(fn, env)
+				ferr = EditorOpen(fn)
 				if ferr != nil {
 					Global.Input = ferr.Error()
 					AddErrorMessage(ferr.Error())
@@ -734,7 +734,7 @@ func main() {
 		} else {
 			key, drhl := editorGetKey()
 			t := time.Now()
-			RunCommandForKey(key, env)
+			RunCommandForKey(key)
 			// A bit hacky, but this fixes some of our speed issues when pasting.
 			// Don't do the optimisation if this key and the last were the same!
 			if t.UnixNano()-lt.UnixNano() > TIMEOUT || lastkey == key {

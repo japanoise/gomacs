@@ -3,11 +3,9 @@ package main
 import (
 	"io/ioutil"
 	"path/filepath"
-
-	"github.com/zhemao/glisp/interpreter"
 )
 
-func DiredMode(env *glisp.Glisp) {
+func DiredMode() {
 	dir, perr := filepath.Abs("./")
 	if perr != nil {
 		Global.Input = perr.Error()
@@ -40,7 +38,7 @@ func DiredMode(env *glisp.Glisp) {
 		} else if files[filechosen].IsDir() {
 			dir += "/" + files[filechosen].Name()
 		} else {
-			openFile(dir+"/"+files[filechosen].Name(), env)
+			openFile(dir + "/" + files[filechosen].Name())
 			done = true
 		}
 		dir, err = filepath.Abs(dir)

@@ -1,9 +1,5 @@
 package main
 
-import (
-	"github.com/zhemao/glisp/interpreter"
-)
-
 type EditorAction struct {
 	HasUniversal bool
 	Universal    int
@@ -15,7 +11,7 @@ type EditorMacro []*EditorAction
 var macro EditorMacro
 var macrorec bool = false
 
-func runMacroOnce(env *glisp.Glisp, m []*EditorAction) {
+func runMacroOnce(m []*EditorAction) {
 	if m == nil || len(m) <= 0 {
 		Global.Input = "Zero length or unset macro"
 		return
@@ -24,34 +20,34 @@ func runMacroOnce(env *glisp.Glisp, m []*EditorAction) {
 		if act != nil && act.Command != nil && act.Command.Com != nil {
 			Global.Universal = act.Universal
 			Global.SetUniversal = act.HasUniversal
-			act.Command.Com(env)
+			act.Command.Com()
 			Global.SetUniversal = false
 		}
 	}
 }
 
-func micromode(repeatkey string, msg string, env *glisp.Glisp, f func(*glisp.Glisp)) {
-	f(env)
+func micromode(repeatkey string, msg string, f func()) {
+	f()
 	Global.Input = msg
 	editorRefreshScreen()
 	key, drhl := editorGetKey()
 	for key == repeatkey {
-		f(env)
+		f()
 		editorRefreshScreen()
 		key, drhl = editorGetKey()
 	}
 	Global.SetUniversal = false
-	RunCommandForKey(key, env)
+	RunCommandForKey(key)
 	if drhl {
 		editorRefreshScreen()
 		Global.CurrentB.updateHighlighting()
 	}
 }
 
-func doRunMacro(env *glisp.Glisp) {
+func doRunMacro() {
 	stopRecMacro()
-	micromode("e", "Press e to run macro again", env, func(e *glisp.Glisp) {
-		runMacroOnce(e, macro)
+	micromode("e", "Press e to run macro again", func() {
+		runMacroOnce(macro)
 	})
 }
 

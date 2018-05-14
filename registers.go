@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-
-	"github.com/zhemao/glisp/interpreter"
 )
 
 type RegisterType uint8
@@ -69,15 +67,15 @@ func (r *RegisterList) storeMacroToRegister(register string) {
 	}
 }
 
-func (r *RegisterList) runMacroFromRegister(env *glisp.Glisp, register string) {
+func (r *RegisterList) runMacroFromRegister(register string) {
 	ret := r.Registers[register]
 	if ret == nil || ret.Type != RegisterMacro {
 		Global.Input = register + " is not a macro register"
 		return
 	}
 	stopRecMacro()
-	micromode("e", "Press e to run macro again", env, func(e *glisp.Glisp) {
-		runMacroOnce(e, ret.Macro)
+	micromode("e", "Press e to run macro again", func() {
+		runMacroOnce(ret.Macro)
 	})
 }
 
@@ -126,12 +124,12 @@ func InteractiveGetRegister(prompt string) (*Register, string) {
 	return Global.Registers.Registers[reg], reg
 }
 
-func DoJumpRegister(env *glisp.Glisp) {
+func DoJumpRegister() {
 	register, regname := InteractiveGetRegister("Jump to register: ")
 	if register == nil {
 		Global.Input = "No such register " + regname
 	} else if register.Type == RegisterMacro {
-		Global.Registers.runMacroFromRegister(env, regname)
+		Global.Registers.runMacroFromRegister(regname)
 	} else if register.Type == RegisterPos {
 		Global.Registers.jumpToPositionRegister(regname)
 	} else {
