@@ -31,6 +31,7 @@ type EditorRow struct {
 	Render     string
 	HlState    highlight.State
 	HlMatches  highlight.LineMatch
+	coloff     int
 }
 
 type EditorBuffer struct {
@@ -41,7 +42,6 @@ type EditorBuffer struct {
 	cy           int
 	rx           int
 	rowoff       int
-	coloff       int
 	NumRows      int
 	Rows         []*EditorRow
 	Undo         *EditorUndo
@@ -198,7 +198,7 @@ func updateLineIndexes() {
 
 func editorAppendRow(line string) {
 	Global.CurrentB.Rows = append(Global.CurrentB.Rows, &EditorRow{Global.CurrentB.NumRows,
-		len(line), line, 0, "", nil, nil})
+		len(line), line, 0, "", nil, nil, 0})
 	editorUpdateRow(Global.CurrentB.Rows[Global.CurrentB.NumRows], Global.CurrentB)
 	Global.CurrentB.NumRows++
 	Global.CurrentB.Dirty = true
@@ -222,7 +222,7 @@ func editorInsertRow(at int, line string) {
 	}
 	Global.CurrentB.Rows = append(Global.CurrentB.Rows, nil)
 	copy(Global.CurrentB.Rows[at+1:], Global.CurrentB.Rows[at:])
-	Global.CurrentB.Rows[at] = &EditorRow{at, len(line), line, 0, "", nil, nil}
+	Global.CurrentB.Rows[at] = &EditorRow{at, len(line), line, 0, "", nil, nil, 0}
 	editorUpdateRow(Global.CurrentB.Rows[at], Global.CurrentB)
 	Global.CurrentB.NumRows++
 	Global.CurrentB.Dirty = true

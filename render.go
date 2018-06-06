@@ -75,12 +75,12 @@ func editorRefreshScreen() {
 		}
 		if win == Global.CurrentB {
 			Global.CurrentBHeight = winheight
-			termbox.SetCursor(Global.CurrentB.rx-Global.CurrentB.coloff+gutter, starth+Global.CurrentB.cy-Global.CurrentB.rowoff)
+			termbox.SetCursor(Global.CurrentB.rx-Global.CurrentB.Rows[Global.CurrentB.cy].coloff+gutter, starth+Global.CurrentB.cy-Global.CurrentB.rowoff)
 		}
 		if win.regionActive {
 			win.recalcRegion()
 		}
-		editorDrawRows(starth, winheight*(i+1)+1, win, gutter)
+		editorDrawRows(starth, x, winheight*(i+1)+1, win, gutter)
 	}
 	editorDrawStatusLine(x, y-2, Global.Windows[numwin-1])
 	editorDrawPrompt(y)
@@ -101,14 +101,15 @@ func trimString(s string, coloff int) (string, int) {
 	}
 }
 
-func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
+func editorDrawRows(starty, sx, sy int, buf *EditorBuffer, gutsize int) {
 	for y := starty; y < sy; y++ {
 		filerow := (y - starty) + buf.rowoff
 		if filerow >= buf.NumRows {
-			if buf.coloff == 0 && buf.hasMode("tilde-mode") {
+			if buf.hasMode("tilde-mode") {
 				termbox.SetCell(gutsize, y, '~', termbox.ColorBlue, termbox.ColorDefault)
 			}
 		} else {
+			row := buf.Rows[filerow]
 			if gutsize > 0 {
 				if buf.hasMode("gdi") {
 					termutil.Printstring(string(buf.Rows[filerow].idx), 0, y)
@@ -116,14 +117,19 @@ func editorDrawRows(starty, sy int, buf *EditorBuffer, gutsize int) {
 					termutil.Printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx+1), gutsize-2), 0, y)
 				}
 				termutil.PrintRune(gutsize-2, y, '│', termbox.ColorDefault)
-				if buf.coloff > 0 {
+				if row.coloff > 0 {
 					termutil.PrintRune(gutsize-1, y, '←', termbox.ColorDefault)
 				}
 			}
-			row := buf.Rows[filerow]
-			if buf.coloff < row.RenderSize {
-				ts, off := trimString(row.Render, buf.coloff)
-				row.Print(gutsize, y, buf.coloff, off, ts, buf)
+			if row.coloff < row.RenderSize {
+				ts, off := trimString(row.Render, row.coloff)
+				row.Print(gutsize, y, row.coloff, off, ts, buf)
+			}
+			if row.coloff > 0 && gutsize == 0 {
+				termutil.PrintRune(0, y, '←', termbox.ColorDefault)
+			}
+			if row.RenderSize-row.coloff > sx-gutsize {
+				termutil.PrintRune(sx-1, y, '→', termbox.ColorDefault)
 			}
 		}
 	}

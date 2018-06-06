@@ -20,11 +20,15 @@ func editorScroll(sx, sy int) {
 	if Global.CurrentB.cy >= Global.CurrentB.rowoff+sy {
 		Global.CurrentB.rowoff = Global.CurrentB.cy - sy + 1
 	}
-	if Global.CurrentB.rx < Global.CurrentB.coloff {
-		Global.CurrentB.coloff = Global.CurrentB.rx
+	row := Global.CurrentB.Rows[Global.CurrentB.cy]
+	if Global.CurrentB.rx < row.coloff+3 {
+		row.coloff = Global.CurrentB.rx - 5
+		if row.coloff < 0 {
+			row.coloff = 0
+		}
 	}
-	if Global.CurrentB.rx >= Global.CurrentB.coloff+sx {
-		Global.CurrentB.coloff = Global.CurrentB.rx - sx + 1
+	if Global.CurrentB.rx >= row.coloff+sx-3 {
+		row.coloff = Global.CurrentB.rx - sx + 5
 	}
 }
 
@@ -240,7 +244,6 @@ func editorFindCallback(query string, key string) {
 func editorFind() {
 	saved_cx := Global.CurrentB.cx
 	saved_cy := Global.CurrentB.cy
-	saved_co := Global.CurrentB.coloff
 	saved_ro := Global.CurrentB.rowoff
 
 	query := editorPrompt("Search", editorFindCallback)
@@ -251,7 +254,6 @@ func editorFind() {
 		Global.CurrentB.cx = saved_cx
 		Global.CurrentB.prefcx = Global.CurrentB.cx
 		Global.CurrentB.cy = saved_cy
-		Global.CurrentB.coloff = saved_co
 		Global.CurrentB.rowoff = saved_ro
 	}
 }

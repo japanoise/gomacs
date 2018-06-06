@@ -16,7 +16,7 @@ func (row *EditorRow) screenXtoCx(sx int) int {
 	if Global.CurrentB.hasMode("line-number-mode") {
 		gut = GetGutterWidth(Global.CurrentB.NumRows)
 	}
-	rx := sx - gut - Global.CurrentB.coloff
+	rx := sx - gut - row.coloff
 	return editorRowRxToCx(row, rx)
 }
 
