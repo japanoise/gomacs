@@ -520,9 +520,6 @@ func InitEditor() {
 		[]string{}, false, 0, false, loadDefaultHooks(), nil, false, 0,
 		NewRegisterList(), 80, make(map[string]*CommandList), 0, 0}
 	Global.DefaultModes["terminal-title-mode"] = true
-	buffer.Rows = make([]*EditorRow, 1)
-	buffer.Rows[0] = &EditorRow{Global.CurrentB.NumRows,
-		0, "", 0, "", nil, nil, 0}
 	Emacs = new(CommandList)
 	Emacs.Parent = true
 	funcnames = make(map[string]*CommandFunc)
@@ -721,6 +718,10 @@ func main() {
 			}
 			Global.CurrentB = Global.Buffers[0]
 		}
+	} else {
+		Global.CurrentB.Rows = make([]*EditorRow, 1)
+		Global.CurrentB.Rows[0] = &EditorRow{Global.CurrentB.NumRows,
+			0, "", 0, "", nil, nil, 0}
 	}
 
 	InitTerm()
