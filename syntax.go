@@ -62,6 +62,8 @@ func getColorForGroup(group highlight.Group) termbox.Attribute {
 		color = termbox.ColorCyan
 	case highlight.Groups["statement"]:
 		color = termbox.ColorMagenta
+	case highlight.Groups["todo"]:
+		color = termbox.ColorRed | termbox.AttrReverse
 	default:
 		color = termbox.ColorDefault
 	}
