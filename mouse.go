@@ -16,7 +16,7 @@ func (row *EditorRow) screenXtoCx(sx int) int {
 	if Global.CurrentB.hasMode("line-number-mode") {
 		gut = GetGutterWidth(Global.CurrentB.NumRows)
 	}
-	rx := sx - gut - row.coloff
+	rx := sx - gut + row.coloff
 	return editorRowRxToCx(row, rx)
 }
 
@@ -31,8 +31,8 @@ func JumpToMousePoint() {
 	var cy int
 	Global.CurrentB, cy = screenYtoBufAndCy(Global.MouseY)
 	if cy >= Global.CurrentB.NumRows {
-		Global.CurrentB.cy = Global.CurrentB.NumRows
-		Global.CurrentB.cx = 0
+		Global.CurrentB.cy = Global.CurrentB.NumRows - 1
+		Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy].Size
 	} else {
 		Global.CurrentB.cy = cy
 		Global.CurrentB.cx = Global.CurrentB.Rows[cy].screenXtoCx(Global.MouseX)
