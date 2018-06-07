@@ -1,13 +1,13 @@
-PREFIX=/usr/local
-DESTDIR=${PREFIX}
-BINDIR=bin
-MANDIR=/usr/share/man/man1
-BZ2=bzip2
-GO=go
-INSTALL_PROGRAM=install -m 0755
-INSTALL_FILE=install -m 0644
-VERSION=git
-ARCH=$(shell arch)
+PREFIX?=/usr/local
+DESTDIR?=${PREFIX}
+BINDIR?=bin
+MANDIR?=/usr/share/man/man1
+BZ2?=bzip2
+GO?=go
+INSTALL_PROGRAM?=install -m 0755
+INSTALL_FILE?=install -m 0644
+VERSION?=git
+ARCH?=$(shell arch)
 
 .PHONY: all dist install install-em uninstall uninstall-em clean
 
