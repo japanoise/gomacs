@@ -462,8 +462,8 @@ func gotoLine() {
 	line--
 	if line < 0 {
 		line = 0
-	} else if line > Global.CurrentB.NumRows {
-		line = Global.CurrentB.NumRows
+	} else if line >= Global.CurrentB.NumRows {
+		line = Global.CurrentB.NumRows - 1
 	}
 	Global.CurrentB.cy = line
 	Global.Input = "Jumping to line " + strconv.Itoa(line+1)
