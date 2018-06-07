@@ -1,3 +1,38 @@
+2018-07-07 Release 1.2.0
+
+	Is it a bird? Is it a plane? No! It's Gomacs 1.2.0! This release is the
+	biggest yet, and easily the most satisfied I've ever been with this
+	weird side-project of mine.
+
+	Features:
+	* Mouse support
+	* Syntax files extended and updated
+
+	Bugfixes:
+	* Allow empty files (fixing a crash)
+	* Fix region weirdness (regions were fiddling with the undos)
+	* Fix screen refreshing race condition
+	* Fix highlighting breakage
+	* Fix a divide-by-zero crash
+	* Fix some crashes and edge-cases by removing a legacy feature (see
+	  tweaks section below)
+
+	Tweaks:
+	* Disallow moving outside of the buffer - this is a weird Emacs quirk
+	  that doesn't really suit Gomacs
+	* Use uemacs-style scrolling (line-by-line) for long lines
+	* `capitalize-word` now uses Lowercase → Title
+	* TODO comments now highlighted (in as distasteful a way as possible)
+
+	Furthermore, for all you lisp-haters and sucklessers, there now exists a
+	"lite" version of Gomacs! This version removes all Lisp support from the
+	editor; reducing the binary size at the expense of Gomacs'
+	extensibility. This leaves the bindings hard-coded in, though I'm sure
+	you don't mind that ;) To try it for yourself, check-out and build the
+	"lite" branch.
+
+	Happy hacking!
+
 2017-08-26 Release 1.1.0
 
 	The release that should've been 1.0.0 - it's Gomacs 1.1.0!
