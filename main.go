@@ -703,6 +703,9 @@ func main() {
 		if ferr != nil {
 			Global.Input = ferr.Error()
 			AddErrorMessage(ferr.Error())
+			Global.CurrentB.Rows = make([]*EditorRow, 1)
+			Global.CurrentB.Rows[0] = &EditorRow{Global.CurrentB.NumRows,
+				0, "", 0, "", nil, nil, 0}
 		}
 		if len(args) > 1 {
 			for _, fn := range args[1:] {
@@ -714,6 +717,9 @@ func main() {
 				if ferr != nil {
 					Global.Input = ferr.Error()
 					AddErrorMessage(ferr.Error())
+					Global.CurrentB.Rows = make([]*EditorRow, 1)
+					Global.CurrentB.Rows[0] = &EditorRow{Global.CurrentB.NumRows,
+						0, "", 0, "", nil, nil, 0}
 				}
 			}
 			Global.CurrentB = Global.Buffers[0]
