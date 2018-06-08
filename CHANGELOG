@@ -1,3 +1,7 @@
+2018-07-07 Release 1.2.1
+
+	Bugfix release - fix out-of-bounds on `goto-line`
+
 2018-07-07 Release 1.2.0
 
 	Is it a bird? Is it a plane? No! It's Gomacs 1.2.0! This release is the
