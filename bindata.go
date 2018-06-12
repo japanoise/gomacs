@@ -25,9 +25,11 @@
 // syntax_files/dockerfile.yaml
 // syntax_files/dot.yaml
 // syntax_files/d.yaml
+// syntax_files/elixir.yaml
 // syntax_files/erb.yaml
 // syntax_files/fish.yaml
 // syntax_files/fortran.yaml
+// syntax_files/fsharp.yaml
 // syntax_files/gdscript.yaml
 // syntax_files/gentoo-ebuild.yaml
 // syntax_files/gentoo-etc-portage.yaml
@@ -194,7 +196,7 @@ func syntax_filesAdaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ada.yaml", size: 1545, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/ada.yaml", size: 1545, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -214,7 +216,7 @@ func syntax_filesApacheconfYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/apacheconf.yaml", size: 6527, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/apacheconf.yaml", size: 6527, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -234,7 +236,7 @@ func syntax_filesArduinoYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/arduino.yaml", size: 2816, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/arduino.yaml", size: 2816, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -254,7 +256,7 @@ func syntax_filesAsciidocYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/asciidoc.yaml", size: 1259, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/asciidoc.yaml", size: 1259, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -274,7 +276,7 @@ func syntax_filesAsmYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/asm.yaml", size: 9603, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/asm.yaml", size: 9603, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -294,7 +296,7 @@ func syntax_filesAwkYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/awk.yaml", size: 1499, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/awk.yaml", size: 1499, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -314,7 +316,7 @@ func syntax_filesCaddyfileYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/caddyfile.yaml", size: 470, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/caddyfile.yaml", size: 470, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -334,7 +336,7 @@ func syntax_filesClojureYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/clojure.yaml", size: 979, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/clojure.yaml", size: 979, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -354,7 +356,7 @@ func syntax_filesCmakeYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/cmake.yaml", size: 1181, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/cmake.yaml", size: 1181, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -374,7 +376,7 @@ func syntax_filesCoffeescriptYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/coffeescript.yaml", size: 897, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/coffeescript.yaml", size: 897, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -394,7 +396,7 @@ func syntax_filesColortestYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/colortest.yaml", size: 483, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/colortest.yaml", size: 483, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -414,7 +416,7 @@ func syntax_filesConfYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/conf.yaml", size: 232, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/conf.yaml", size: 232, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -434,7 +436,7 @@ func syntax_filesConkyYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/conky.yaml", size: 6343, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/conky.yaml", size: 6343, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -454,7 +456,7 @@ func syntax_filesCppYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/cpp.yaml", size: 1862, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/cpp.yaml", size: 1862, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -474,7 +476,7 @@ func syntax_filesCrontabYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/crontab.yaml", size: 1248, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/crontab.yaml", size: 1248, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -494,7 +496,7 @@ func syntax_filesCrystalYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/crystal.yaml", size: 1797, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/crystal.yaml", size: 1797, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -514,7 +516,7 @@ func syntax_filesCsharpYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/csharp.yaml", size: 1931, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/csharp.yaml", size: 1931, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -534,7 +536,7 @@ func syntax_filesCssYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/css.yaml", size: 7019, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/css.yaml", size: 7019, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -554,7 +556,7 @@ func syntax_filesCYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/c.yaml", size: 1786, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/c.yaml", size: 1786, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -574,7 +576,7 @@ func syntax_filesCYaml2() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/c++.yaml", size: 1422, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/c++.yaml", size: 1422, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -594,7 +596,7 @@ func syntax_filesCythonYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/cython.yaml", size: 1323, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/cython.yaml", size: 1323, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -614,7 +616,7 @@ func syntax_filesDartYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/dart.yaml", size: 1418, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/dart.yaml", size: 1418, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -634,7 +636,7 @@ func syntax_filesDockerfileYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/dockerfile.yaml", size: 794, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/dockerfile.yaml", size: 794, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -654,7 +656,7 @@ func syntax_filesDotYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/dot.yaml", size: 945, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/dot.yaml", size: 945, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -674,7 +676,27 @@ func syntax_filesDYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/d.yaml", size: 4309, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/d.yaml", size: 4309, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _syntax_filesElixirYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x74\x54\x7f\x6f\xdb\x36\x10\xfd\xdf\x9f\xc2\x71\x5d\x44\x72\x11\xa3\xff\x36\x18\x9a\x15\x4d\x06\x14\xe8\x0f\xac\xeb\xd6\x60\xa2\xc4\x50\xe2\xc9\x26\x4c\x91\xca\xf1\x14\xdb\xcd\xf5\xbb\x0f\x94\x14\xc7\xd9\x16\xc3\xd0\x51\xef\x9e\x8e\x8f\xc7\xbb\xab\x8d\x05\xda\xb7\x70\x3e\x05\x6b\x76\x06\x27\x13\x0d\x04\x15\x9d\x4f\xa6\xd3\xe9\x34\x7a\x9d\x6a\xe0\x7c\x3a\x13\x62\x09\xbb\x39\xf7\x26\xcc\x67\x93\x09\x76\x16\xc2\x40\x3b\x9b\x06\x52\x04\x0d\x38\xea\x99\x65\xa2\xca\xc0\x84\x9d\xab\x18\xa1\x61\x6d\xee\x18\x7d\xe7\x34\x37\x6a\xc7\x8d\x71\xac\x9c\x66\x8f\xec\x3c\x31\xad\xd1\x6f\x19\x95\x09\xc0\x08\x83\x5d\x6b\x26\xcb\xc6\xb1\x05\xb7\xa2\x35\x83\x85\x86\xdb\x8e\x64\xbf\xd0\x10\x08\xbb\x8a\x3a\x04\x26\x2f\x93\x40\x68\xdc\x8a\xab\xb5\x42\x6b\x02\xa5\x6c\x82\x4c\x14\xf9\x86\x4b\xe3\x14\xee\xb9\x34\x34\x72\x4a\xef\x2d\x28\xc7\xb5\xf5\x8a\xb8\xee\x5c\x45\xc6\x3b\x36\x8e\x60\x05\xc8\xf1\x73\x6e\x54\xcb\xce\x58\x76\x5d\x53\x02\x72\x6b\x34\xb7\x1e\x89\x11\x6a\x40\x70\x15\x30\x75\xad\x85\x94\x93\xd2\x10\x97\x7b\x82\xfe\x93\x01\x94\xc1\xfc\x80\x71\x5f\xd9\x2a\x24\xd6\x50\x27\x1a\x2c\xac\x14\x01\xc3\xae\x82\xb6\xdf\x72\xd5\x29\xd4\xc3\xb3\x65\xd3\xb4\x96\x1b\x55\xa1\x1f\x9e\x2d\x37\x5e\x77\x16\xd8\xdf\x01\xa2\xd1\xaa\xb4\xc0\x2d\xb7\xe8\xc9\x57\xde\xf2\x70\xfe\xf4\x82\x83\x59\x19\x2b\xb3\x0a\xc3\xf6\xfd\xd7\x3f\xbe\x5f\x7e\xfe\x96\xb3\xa9\x19\x6c\x00\xee\x9c\x85\x10\xb8\xf2\x4e\x47\x41\x3a\x9e\xdf\x79\x0d\x1c\xc0\xd6\x1c\x5a\xb5\x75\xc3\x53\x5a\xe3\x36\xe3\xb2\xf1\xce\x90\x47\x0e\xe0\x34\xc3\xce\xd0\xb8\x17\xaf\x80\xa4\x72\x5a\x76\xad\x56\x04\xd2\xb8\x1e\x31\xae\xbf\x96\x68\x7c\x1b\xcd\xa3\x5b\xb5\xad\xdd\xb3\x71\xa1\x85\x2a\x26\x75\x03\x12\xa1\xe6\x2e\x00\x6b\xcf\xe0\x74\x2a\x44\x39\x7b\xae\x7e\xac\x51\x21\xa6\x65\x48\xfc\x6d\x67\x10\xb8\x52\x01\xb8\x76\x8c\x50\x81\xb9\x03\x56\x35\x01\x32\xe1\x9e\x2b\x45\xd5\x9a\x11\x42\xd5\x01\x87\xae\x05\xe4\xdb\xce\x53\xcc\xc1\x13\x2b\x43\x6b\x4d\x15\x13\x51\x7b\xe4\xad\xa1\xf5\x20\x62\x54\x51\x79\x17\x48\x3d\x88\x10\x22\x7b\x77\xf6\x77\xfe\xea\x48\xe6\x03\x61\x39\xd4\xc6\xc0\xcb\x5e\x9f\xbd\x19\x59\xff\xa6\x0d\x55\x77\x3e\x9d\xdd\x64\xc5\x4d\xbe\xb8\xe1\x97\x3b\x21\xee\xb3\xe2\x67\xbe\x10\xe2\xe7\x7f\xa2\x1e\xe8\x62\x96\x64\x85\x98\xe5\x9c\x88\xf8\x9b\xa5\xe9\x42\xcc\xf8\x65\xf6\xfb\xf7\xfc\xe2\x28\xc0\x01\x49\xb2\x22\x8d\x48\x3a\x22\xbf\x64\xc5\xdb\x7c\xf1\xf6\xe0\xcf\xb2\x22\x8f\xfe\xfc\x80\xcc\xb3\x62\x1e\x91\xf9\x01\x29\xb2\xa2\x88\x48\x31\x22\x27\x59\x71\x92\x2f\x4e\x9e\x17\x79\x9a\x64\xc5\xe9\x28\xf1\x34\x4d\x17\xa7\xfc\x32\xbb\xdd\xe6\x4f\xf5\xf5\xc0\xb1\xbc\xdb\x6d\xfe\xa8\xae\xf7\x1e\x8b\xeb\x81\x63\x6d\x3d\x70\x2c\xed\x76\x9b\x1f\x94\x3d\x14\xcf\xbe\x29\xbd\x5d\x96\xa8\xaa\x0d\x50\xe8\x6f\xe5\x9e\xe3\xfe\x42\x64\x1c\x03\x0b\x91\xb0\x10\xe9\xd1\x05\x35\x63\xb1\xbd\xc8\x8a\xfb\x7c\xb9\x98\xf3\x8b\xf9\xec\xa9\x73\x59\xa2\x59\xad\x7b\xce\x23\x29\xb2\x46\x5a\x9c\x9a\xcb\x0d\xec\xb7\x1e\x75\xbf\xe5\x79\xa6\xce\x7e\xc4\x8a\x19\xed\xeb\xb3\x37\x32\x5f\xcc\x9e\xa3\x97\x89\x86\x50\xa1\x29\x81\x09\x02\xa5\xcf\xb5\x02\xec\x62\x03\x81\x66\x15\x02\x20\x8d\x46\x0e\x83\x72\x7c\x31\x4e\x6a\xb0\xa4\x0e\xce\xa1\x43\xf4\xd0\x18\x12\x10\x3d\x8e\xeb\x61\xdc\xd6\xb6\x73\x9b\x38\xd1\x3a\x82\xd1\x3c\x06\x19\xdf\x1f\x82\x3c\xe9\xd3\x21\xd5\xa4\x62\x01\x14\x42\x84\x85\x10\xbf\xfe\xef\xb9\x8f\xfb\xc1\x68\x70\x64\x6a\x03\xb8\xec\xc7\xdb\x78\x32\x29\xdf\xbf\xfb\xf8\xf1\xea\xab\x94\x2c\xe5\xe5\x87\xc1\x5e\x7d\xfe\xab\xb7\x9f\xbe\x5c\xfe\xf9\xf1\xaa\x5f\xf6\xc3\x00\x42\xbf\x2e\xad\xaf\x36\x52\xc6\xa9\xda\x87\x7a\xd2\xbf\xe4\x75\x8c\x9d\x5c\x5f\x5f\xf3\xb7\x2f\x97\x5f\xf8\xb7\x0f\xd7\x9f\xae\x58\x88\x8b\xe1\x7f\xc8\x71\x8b\xd0\xa2\xaf\x96\x61\x0d\xa5\x1a\x3a\x4e\x7c\x5f\xbc\x38\x59\xbe\xba\x48\xa6\x3c\x4f\x67\x93\x7f\x02\x00\x00\xff\xff\x5b\x2b\xa6\x36\x18\x07\x00\x00")
+
+func syntax_filesElixirYamlBytes() ([]byte, error) {
+	return bindataRead(
+		_syntax_filesElixirYaml,
+		"syntax_files/elixir.yaml",
+	)
+}
+
+func syntax_filesElixirYaml() (*asset, error) {
+	bytes, err := syntax_filesElixirYamlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "syntax_files/elixir.yaml", size: 1816, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -694,7 +716,7 @@ func syntax_filesErbYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/erb.yaml", size: 2414, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/erb.yaml", size: 2414, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -714,7 +736,7 @@ func syntax_filesFishYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/fish.yaml", size: 2044, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/fish.yaml", size: 2044, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -734,7 +756,27 @@ func syntax_filesFortranYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/fortran.yaml", size: 2752, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/fortran.yaml", size: 2752, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _syntax_filesFsharpYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xe4\x94\xcd\x6e\x23\x37\x0c\xc7\xef\x7e\x0a\xc5\x6d\x91\x64\xd1\x49\x83\x6d\x81\x76\x73\x29\x16\x05\xfa\x06\xbd\xd4\x63\x14\x1c\x89\xf2\xb0\xab\xa1\x06\x12\xe5\x8f\x84\x7e\xf7\x42\x63\x3b\x6b\x27\xd9\x45\x7b\xae\x01\xcf\x68\x28\xf1\x4f\xea\x47\x4a\x9e\x02\xca\x6e\xc4\x07\xe3\x73\x0f\x69\x9c\xcd\x1c\x0a\x5a\x79\x98\x19\x63\x4c\x9d\x65\x18\xf0\xc1\xcc\xdb\xf6\xce\xe7\x5f\xbf\x9d\xcf\x66\xa9\x04\xcc\x87\xf9\xc6\x90\x43\x16\xf2\x84\x69\x5a\xd3\x2d\x3e\x36\x7f\x2e\x17\xf7\xcd\x07\x68\x1e\xff\x5a\x3e\xbd\xff\x7e\xdf\xb6\xdd\x7c\x5a\x6c\xcc\x37\x0e\x6d\x80\x04\x42\x91\xf3\x51\x20\x0b\x08\x0e\xc8\x72\xf0\xbf\x09\x28\xba\x86\xa0\x03\x4a\x1f\x9d\x12\x2b\xb0\xd3\x84\x56\xc7\x44\x6b\x10\xd4\x35\x25\x29\x10\xd4\x46\xce\x92\x80\x58\x6e\xcf\x63\x64\x49\xc5\x4a\x49\x68\x48\x70\x38\x85\x39\xec\x71\x8a\x50\x87\x1a\x47\x64\xb5\x01\x72\xd6\x21\xba\x12\x50\x71\x6b\x71\xac\x99\x29\x6e\x05\x13\x43\xb8\x90\x1d\x41\xaa\xf5\x4b\x69\xfb\xc2\xea\x0b\xdb\x49\x60\x1a\xc4\xa4\x03\x88\xed\x55\xd2\x4e\x37\x24\xfd\x9b\x72\xcd\x10\xdd\x84\xef\x4b\xc2\x90\x75\xd3\x23\x6b\xf4\x93\xbf\x39\x09\xd8\xc8\x8e\xbe\x06\x92\xbc\x4a\x75\xc4\x90\xf1\x22\x74\x17\xa2\x7d\x03\x4b\x87\x2b\x62\x45\x76\x1a\xbb\xbf\xd1\x8a\x1e\x40\x6a\xa6\x95\xfa\x98\x74\xd3\x53\x40\x75\x51\x5d\x64\x54\xa9\xef\x0d\x4b\xbc\x90\x9e\x4a\x02\x2c\x78\xd2\x3f\x19\xee\xba\x18\xc3\x89\x7f\x2a\xa8\x1e\x5e\xa6\x75\x28\x43\xfe\x61\x2a\xca\xb3\x40\x1e\xd1\x12\x9c\x5c\x89\x6d\x28\x0e\x95\xb8\xc7\x44\xa2\xc4\x24\x04\x81\x1e\x31\x5d\x68\xe1\x76\x4c\xe6\x15\xd9\x0b\x29\xc6\x8d\x26\xf4\x3a\x14\x81\x2e\xa0\x06\x78\xdc\x69\x8d\x9c\x44\x13\xd0\x8b\xe4\x3e\xe1\x6e\x13\x93\xcb\x66\xd3\x93\xed\x8d\x8b\x7c\x2d\x06\xb7\x94\xc5\x10\x9b\x68\x61\x08\x6f\x10\x85\x8c\xea\x30\xe0\xaa\xb6\x6d\xc5\x65\x21\xcb\xb1\xbd\xd4\x13\x43\x08\x3b\xf5\xb4\x45\xa7\xab\x10\x3b\x08\x4a\x1c\x88\xeb\xfe\x04\x93\x07\x7b\x1c\x31\x04\x0d\x28\x57\x3a\xe0\xd0\x61\xd2\x7a\x24\xf3\x58\xa7\xb9\x84\xa0\x71\x8d\x29\x91\xc3\xe7\x13\x32\x96\x2e\x90\xfd\xbc\x81\x8b\xac\x12\x4a\x49\xac\x87\xd7\x95\x66\x0c\x87\x62\x83\x90\xd5\x32\x4e\x29\x96\x8c\xf5\x7f\xa5\xeb\x48\x4e\x77\x84\xe1\xf8\xbc\x3a\x17\x7d\x2e\x6e\x96\x44\xbc\x7a\x38\xc2\x32\xb5\x15\x53\x6d\xc3\xeb\xf9\xb3\x09\xd9\x5d\x1a\xf2\x27\x1a\xa7\x8c\xda\xf6\xee\xb3\xf5\xec\x6e\x39\xfd\xce\xe3\x1c\x2a\xf8\x5b\x0f\xf5\xb6\xf9\xee\xcc\xef\xab\x0b\x6b\x8c\x05\x74\x9e\x93\xac\xaf\xdb\xb6\x9d\x0c\xcb\xff\xe0\x7c\xb3\xb8\x6f\x7e\x5e\x3e\xfd\xb8\xd7\xed\xe2\x63\xf3\x3b\x34\xfe\xbe\xf9\xb0\x7c\x7a\xbf\xd7\x72\xfe\xfd\xd3\x5e\xff\x38\xff\xfe\x65\x7f\xfb\xaf\x51\xb5\xf3\x97\xac\xce\x2d\xff\x37\x58\xc3\x74\x8f\xbd\x86\xd4\xde\xb4\xed\xbb\x57\xa0\xda\x77\x6d\x7b\xfb\x12\x8b\x59\x2c\x67\xff\x04\x00\x00\xff\xff\x83\x0b\x31\xb7\xdd\x06\x00\x00")
+
+func syntax_filesFsharpYamlBytes() ([]byte, error) {
+	return bindataRead(
+		_syntax_filesFsharpYaml,
+		"syntax_files/fsharp.yaml",
+	)
+}
+
+func syntax_filesFsharpYaml() (*asset, error) {
+	bytes, err := syntax_filesFsharpYamlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "syntax_files/fsharp.yaml", size: 1757, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -754,7 +796,7 @@ func syntax_filesGdscriptYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/gdscript.yaml", size: 2219, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/gdscript.yaml", size: 2219, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -774,7 +816,7 @@ func syntax_filesGentooEbuildYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/gentoo-ebuild.yaml", size: 2202, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/gentoo-ebuild.yaml", size: 2202, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -794,7 +836,7 @@ func syntax_filesGentooEtcPortageYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/gentoo-etc-portage.yaml", size: 688, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/gentoo-etc-portage.yaml", size: 688, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -814,7 +856,7 @@ func syntax_filesGitCommitYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/git-commit.yaml", size: 846, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/git-commit.yaml", size: 846, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -834,7 +876,7 @@ func syntax_filesGitConfigYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/git-config.yaml", size: 332, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/git-config.yaml", size: 332, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -854,7 +896,7 @@ func syntax_filesGitRebaseTodoYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/git-rebase-todo.yaml", size: 463, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/git-rebase-todo.yaml", size: 463, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -874,7 +916,7 @@ func syntax_filesGlslYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/glsl.yaml", size: 990, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/glsl.yaml", size: 990, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -894,7 +936,7 @@ func syntax_filesGoloYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/golo.yaml", size: 4110, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/golo.yaml", size: 4110, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -914,7 +956,7 @@ func syntax_filesGoYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/go.yaml", size: 1744, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/go.yaml", size: 1744, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -934,7 +976,7 @@ func syntax_filesGroffYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/groff.yaml", size: 769, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/groff.yaml", size: 769, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -954,7 +996,7 @@ func syntax_filesHamlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/haml.yaml", size: 612, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/haml.yaml", size: 612, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -974,7 +1016,7 @@ func syntax_filesHaskellYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/haskell.yaml", size: 1547, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/haskell.yaml", size: 1547, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -994,7 +1036,7 @@ func syntax_filesHtml4Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/html4.yaml", size: 1425, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/html4.yaml", size: 1425, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1014,7 +1056,7 @@ func syntax_filesHtml5Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/html5.yaml", size: 1307, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/html5.yaml", size: 1307, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1034,12 +1076,12 @@ func syntax_filesHtmlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/html.yaml", size: 1682, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/html.yaml", size: 1682, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
-var _syntax_filesIniYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x6c\x8e\xd1\x6a\xe3\x30\x10\x45\xdf\xfd\x15\x42\x6b\x88\xed\x10\xed\xbb\x96\xb0\xec\x6f\xac\x46\x06\xc5\x1e\x27\x43\x65\x59\x48\x93\x96\xb6\xfa\xf8\xe2\x24\x6d\x43\xdb\xb7\xcb\x9d\xc3\xdc\x33\x91\x47\x7e\x8e\xa8\x05\x05\xaa\xaa\x11\x19\x07\xd6\xa2\x12\x42\x88\xf5\x16\xdc\x8c\x5a\x48\x00\xd5\x50\xa0\x32\x62\x7e\xe0\x25\x16\x3f\xf9\xb2\x3c\x62\x4a\x34\x62\x5b\x97\x66\xa6\x19\x5d\x8c\x19\x40\x79\xca\x5c\x22\x85\x69\x49\x43\xc9\xc8\xe7\x08\xa0\x86\xe9\xd8\xd6\xe5\x09\x71\x38\x39\xfe\xad\xb6\x6b\xb5\x84\xa9\x96\x97\xa1\x13\xba\x11\x93\x16\xb2\x07\x30\xe6\xdf\xee\xbf\xdb\xbd\xd8\x2d\x80\xad\x65\x55\xa5\xb3\xc7\xac\x2f\xdc\x4e\x0c\x4b\xc8\xec\x02\xab\xc3\xb2\x78\xc5\xe9\x7c\x95\x3b\xac\x09\xe0\x20\x7f\xc4\x26\xe7\xf3\x8d\xbb\xc4\x3b\x90\x46\x0c\x4c\x13\x5d\xd7\x8d\xd1\x39\xba\x01\xb5\xb5\x9d\xe9\xf7\xb6\xdb\xbf\x73\x39\xe2\x40\xce\x7f\x85\x00\x8c\xea\xae\x9e\x37\x8e\x1d\xe3\x8c\x81\xb5\x90\x66\xff\xc7\x7e\x0a\xcd\xb7\xb6\xe9\xcb\xdd\x87\xf6\x57\x63\xfa\x57\xab\xba\xf6\x6f\xfd\x4d\x3e\x73\xa2\x70\x5c\xc5\x65\x03\x00\xa0\x8a\xe9\x41\xda\xb6\x03\x59\x36\x1f\xcd\xc6\xb6\xdd\x46\x56\x6f\x01\x00\x00\xff\xff\x6d\x34\x27\x87\xc9\x01\x00\x00")
+var _syntax_filesIniYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xac\x90\x41\x8b\xd4\x30\x14\xc7\xef\xfd\x14\x21\x16\xa6\xed\xd2\x78\xcf\x32\x88\xa0\x82\x07\xd9\x8b\x87\x62\x5e\x06\x32\xed\xeb\x6e\x30\x4d\x42\xf2\x46\x51\xf2\xe1\xa5\x9d\x9d\x71\x50\xc1\xcb\xbe\xd3\xeb\xbf\xbf\xe4\xf7\x27\xb3\x75\x48\x3f\x22\x4a\x66\xbd\xad\xaa\x09\x09\x47\x92\xac\x62\x8c\xb1\xf5\x9f\x37\x0b\x4a\xc6\x01\x44\x63\xbd\x2d\x13\xe6\xaf\x14\x62\x71\xb3\x2b\xe1\x1b\xa6\x64\x27\x6c\xeb\xd2\x2c\x76\x41\x13\x63\x06\x10\xce\x66\x2a\xd1\xfa\x39\xa4\xb1\x64\xa4\x53\x04\x10\xe3\xfc\xd8\xd6\xe5\x3b\xe2\xf8\x64\xe8\xb5\xb8\x5b\xa3\xe0\xe7\x9a\x6f\xa2\x27\x34\x13\x26\xc9\xf8\x01\x40\xa9\xb7\xfd\x17\xd3\xff\xd4\x77\x00\xba\xe6\x55\x95\x4e\x0e\xb3\xdc\xb8\x9e\x8d\xc1\x67\x32\x9e\xc4\x31\x04\x27\x28\x9d\xce\xe5\x8e\xeb\x06\x70\xe4\xff\xc4\x66\xe3\xf2\x33\xb7\xad\x37\xa0\x9d\xd0\x93\x9d\xed\xd9\xae\x94\xcc\xd1\x8c\x28\xb5\xee\xd4\x61\xaf\xbb\xfd\x85\xcb\x11\x47\x6b\xdc\x9f\x10\x80\x12\xdd\xb9\xe7\x33\x47\x86\x70\x41\x4f\x92\x71\xb5\xbf\xd7\x7f\x15\xca\x94\xac\x7f\x5c\xcb\xf0\x06\x00\x40\x14\x75\x00\xae\xdb\x0e\x78\xd9\x5d\x93\x9d\x6e\xbb\x1d\xaf\xae\x87\x97\xed\xca\xed\x73\x9d\x4c\x26\xad\x86\x57\xfc\x1a\xa1\x9f\x24\xe3\xf5\xef\xe0\xe6\xd9\x2e\xd3\x33\x0a\x53\x90\x8c\x37\x9f\x1f\xde\x3d\x94\x61\x18\xca\x87\x8f\xc3\xa7\xf7\xad\x7c\xc3\xff\xa7\xba\x7f\x41\xd5\xaf\x00\x00\x00\xff\xff\x29\x32\xb2\x22\x74\x02\x00\x00")
 
 func syntax_filesIniYamlBytes() ([]byte, error) {
 	return bindataRead(
@@ -1054,7 +1096,7 @@ func syntax_filesIniYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ini.yaml", size: 457, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/ini.yaml", size: 628, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1074,7 +1116,7 @@ func syntax_filesInputrcYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/inputrc.yaml", size: 400, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/inputrc.yaml", size: 400, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1094,7 +1136,7 @@ func syntax_filesJavascriptYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/javascript.yaml", size: 2028, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/javascript.yaml", size: 2028, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1114,7 +1156,7 @@ func syntax_filesJavaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/java.yaml", size: 985, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/java.yaml", size: 985, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1134,12 +1176,12 @@ func syntax_filesJsonYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/json.yaml", size: 830, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/json.yaml", size: 830, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
-var _syntax_filesJuliaYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\x93\xdd\x6e\xdb\x30\x0c\x85\xef\xf3\x14\x9a\xdb\x2d\x76\x02\xa7\xbd\xad\xb1\xdf\xd7\x98\xed\x06\xb2\x4c\x27\x6c\x65\x2a\x93\xa8\x15\xd9\xb8\x3d\xfb\x60\xa5\x6d\x96\xb4\x03\x06\x5f\x18\x38\xd6\xf9\x48\x1e\xd1\x03\x5a\xe0\xfd\x0e\x2a\x75\x17\x2d\xea\xd9\xac\x07\x06\xc3\xd5\x4c\x29\xa5\xa6\x8f\xa4\x47\xa8\x54\xd6\x34\xab\x3b\x7b\x99\x25\x79\x0b\xba\x07\x5f\xa9\xec\xf6\xe2\xcd\x6a\x71\x95\x03\x7d\x57\xcb\xe2\x53\x02\xe4\x4a\x2e\x8b\x6c\x36\xf3\xd1\x42\xa8\x66\xe9\xfc\x85\xea\x22\x5a\x2e\x91\x94\xeb\xee\xc0\x70\x48\x72\xa9\x8c\xa3\xc0\x9a\x78\xd5\x39\x67\x53\x91\x2e\x67\x1f\x41\x06\x6d\x03\x14\x4d\xd3\x1d\x0a\x9e\x20\x34\xb3\xc7\x2e\x32\x9c\x53\x2a\x95\xad\xd7\xf5\x97\xf2\xab\x2e\x7f\x5c\x97\x37\xeb\x76\xb9\x5e\x1f\xfd\x3d\x0c\x48\xc8\xe8\xe8\xc9\x87\x3d\x10\xe3\x80\x69\x94\x47\xdf\xba\xfd\x1b\xb0\xa8\xeb\x2a\xec\xb4\x81\xaa\x6d\x17\x75\xde\x1e\x69\xf7\xb0\x7f\x70\xbe\x7f\x42\x05\xd6\x0c\x23\xa4\x1e\xa6\x21\x3a\xd8\x20\x49\xe7\x41\xdf\x8b\xd1\x6c\xb6\x62\x1c\x31\xd2\x34\x5a\x24\x33\x75\x21\x60\x03\xe0\x90\x5e\x02\xd4\xcb\x80\xa4\xad\xdd\xcb\xe0\xbc\x6c\xac\xeb\xb4\x15\xeb\x8c\xb6\x92\xe6\x13\x1c\x04\xc9\xd8\xd8\x83\xe0\xb8\x73\x9e\x25\x06\xa4\x8d\x78\xf8\x16\xd1\x83\x8c\xda\x78\x27\x3b\x8f\xc4\x96\xc4\x03\x47\x4f\xc2\x7e\x2f\xd3\xed\xca\xc3\x16\x2d\xc8\xe8\xfa\x68\xcf\x72\xed\xc1\x38\xaf\xd9\xf9\x97\xb1\xac\x12\xb3\x52\xd9\xe7\x93\x54\x8f\x5e\xb7\x83\x13\x6b\xd8\x8f\x9d\xb3\xab\x27\x79\x8a\xb5\x5c\x2e\xae\xe4\xc3\xdb\xf7\x1f\xdf\xfd\xbe\x6d\x65\xca\x46\x53\x2f\xe4\x58\x9c\x17\x0c\x82\x74\xda\xce\x4e\x7b\x20\xde\x42\x80\x33\x68\xe7\xb5\xb9\x07\x0e\x95\xca\xf2\x3a\x2f\x7e\xfe\x9a\x68\xb5\x34\x4d\x5b\x1c\xdd\x14\xc7\x0e\xfc\x8b\xf5\x3a\xc8\x87\xbb\xa9\xaf\xcb\x9b\x76\x99\x6a\x9e\x1f\x0b\xec\x91\x36\xd3\xb1\x2c\x6f\x9a\xa6\x59\x49\x7d\xdb\x64\x6d\xb1\x68\x32\x99\x3f\x2b\xf3\xb6\x58\xcc\xff\x69\x7e\x6c\x45\x4d\x2b\xe1\xd3\x3a\xa4\x27\x7b\xd6\x81\xfa\x57\xd4\xc3\xef\xa2\xea\xf6\xbf\xb9\xf3\xf9\xfc\x1c\x7a\x22\xbd\x42\x1c\xd3\x86\xbe\x20\x5d\x9c\x73\x2e\x5f\xa3\xfc\x09\x00\x00\xff\xff\x34\x4f\xa3\xe5\x29\x04\x00\x00")
+var _syntax_filesJuliaYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\x93\xdd\x72\x9b\x30\x10\x85\xef\xfd\x14\x2a\x49\x6b\xb0\x07\x27\xb7\x61\xfa\xfb\x1a\x05\xe2\x11\x62\xb1\x37\x11\x2b\x57\x5a\x35\xe3\x76\xdb\x67\xef\x20\x27\x71\xed\xa4\x33\x1d\xae\x38\xe8\x7c\xbb\x7b\xb4\x0c\x68\x81\xf7\x3b\xa8\xd4\x5d\xb4\xa8\x67\xb3\x1e\x18\x0c\x57\x33\xa5\x94\x9a\x3e\x92\x1e\xa1\x52\x59\xd3\xac\xee\xec\x65\x96\xe4\x2d\xe8\x1e\x7c\xa5\xb2\xdb\x8b\x37\xab\xc5\x55\x0e\xf4\x5d\x2d\x8b\x4f\x09\x90\x2b\xb9\x2c\xb2\xd9\xcc\x47\x0b\xa1\x9a\xa5\xf3\x17\xaa\x8b\x68\xb9\x44\x52\xae\xbb\x03\xc3\x21\xc9\xa5\x32\x8e\x02\x6b\xe2\x55\xe7\x9c\x4d\x45\xba\x9c\x7d\x04\x19\xb4\x0d\x50\x34\x4d\x77\x28\x78\x82\xd0\xcc\x1e\xbb\xc8\x70\x4e\xa9\x54\xb6\x5e\xd7\x5f\xca\xaf\xba\xfc\x71\x5d\xde\xac\xdb\xe5\x7a\x7d\xf4\xf7\x30\x20\x21\xa3\xa3\x27\x1f\xf6\x40\x8c\x03\xa6\x51\x1e\x7d\xeb\xf6\x6f\xc0\xa2\xae\xab\xb0\xd3\x06\xaa\xb6\x5d\xd4\x79\x7b\xa4\xdd\xc3\xfe\xc1\xf9\xfe\x09\x15\x58\x33\x8c\x90\x7a\x98\x86\xe8\x60\x83\x24\x9d\x07\x7d\x2f\x46\xb3\xd9\x8a\x71\xc4\x48\xd3\x68\x91\xcc\xd4\x85\x80\x0d\x80\x83\x04\xf6\xd1\x70\x7a\x13\xa0\x5e\x06\x24\x6d\xed\x5e\x06\xe7\x65\x63\x5d\xa7\xad\x58\x67\xb4\x95\x34\xa6\xe0\x20\x48\xc6\xc6\x1e\x04\xc7\x9d\xf3\x2c\x31\x20\x6d\xc4\xc3\xb7\x88\x1e\x64\xd4\xc6\x3b\xd9\x79\x24\xb6\x24\x1e\x38\x7a\x12\xf6\x7b\x99\x2e\x59\x1e\xb6\x68\x41\x46\xd7\x47\x7b\x16\x6f\x0f\xc6\x79\xcd\xce\xbf\x4c\x67\x95\x98\x95\xca\x3e\x9f\x84\x7b\xf4\xba\x1d\x9c\x58\xc3\x7e\xec\x9c\x5d\x3d\xc9\x53\xba\xe5\x72\x71\x25\x1f\xde\xbe\xff\xf8\xee\xf7\x6d\x2b\x53\x44\x9a\x7a\x21\xc7\xe2\xbc\x60\x10\xa4\xd3\x76\x76\xda\x03\xf1\x16\x02\x9c\x41\x3b\xaf\xcd\x3d\x70\xa8\x54\x96\xd7\x79\xf1\xf3\xd7\x44\xab\xa5\x69\xda\xe2\xe8\xa6\x38\x76\xe0\x5f\x6c\xd9\x41\x3e\x5c\x51\x7d\x5d\xde\xb4\xcb\x54\xf3\xfc\x58\x60\x8f\xb4\x99\x8e\x65\x79\xd3\x34\xcd\x4a\xea\xdb\x26\x6b\x8b\x45\x93\xc9\xfc\x59\x99\xb7\xc5\x62\xfe\x4f\xf3\x63\x2b\x6a\xda\x0c\x9f\xb6\x22\x3d\xd9\xb3\x0e\xd4\xbf\xa2\x1e\xfe\x1a\x55\xb7\xff\xcd\x9d\xcf\xe7\xe7\xd0\x13\xe9\x15\xe2\x98\x16\xf5\x05\xe9\xe2\x9c\x73\xf9\x1a\xe5\x4f\x00\x00\x00\xff\xff\x44\x72\x62\x82\x30\x04\x00\x00")
 
 func syntax_filesJuliaYamlBytes() ([]byte, error) {
 	return bindataRead(
@@ -1154,7 +1196,7 @@ func syntax_filesJuliaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/julia.yaml", size: 1065, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/julia.yaml", size: 1072, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1174,7 +1216,7 @@ func syntax_filesKeymapYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/keymap.yaml", size: 612, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/keymap.yaml", size: 612, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1194,7 +1236,7 @@ func syntax_filesKickstartYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/kickstart.yaml", size: 634, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/kickstart.yaml", size: 634, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1214,7 +1256,7 @@ func syntax_filesKotlinYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/kotlin.yaml", size: 1824, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/kotlin.yaml", size: 1824, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1234,7 +1276,7 @@ func syntax_filesLedgerYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ledger.yaml", size: 487, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/ledger.yaml", size: 487, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1254,7 +1296,7 @@ func syntax_filesLfeYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/lfe.yaml", size: 540, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/lfe.yaml", size: 540, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1274,7 +1316,7 @@ func syntax_filesLilypondYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/lilypond.yaml", size: 3835, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/lilypond.yaml", size: 3835, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1294,7 +1336,7 @@ func syntax_filesLispYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/lisp.yaml", size: 496, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/lisp.yaml", size: 496, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1314,7 +1356,7 @@ func syntax_filesLuaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/lua.yaml", size: 3111, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/lua.yaml", size: 3111, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1334,7 +1376,7 @@ func syntax_filesMailYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/mail.yaml", size: 599, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/mail.yaml", size: 599, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1354,7 +1396,7 @@ func syntax_filesMakefileYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/makefile.yaml", size: 1294, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/makefile.yaml", size: 1294, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1374,7 +1416,7 @@ func syntax_filesManYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/man.yaml", size: 271, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/man.yaml", size: 271, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1394,7 +1436,7 @@ func syntax_filesMarkdownYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/markdown.yaml", size: 1049, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/markdown.yaml", size: 1049, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1414,7 +1456,7 @@ func syntax_filesMicroYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/micro.yaml", size: 1306, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/micro.yaml", size: 1306, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1434,7 +1476,7 @@ func syntax_filesMpdconfYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/mpdconf.yaml", size: 474, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/mpdconf.yaml", size: 474, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1454,7 +1496,7 @@ func syntax_filesNanorcYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/nanorc.yaml", size: 1105, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/nanorc.yaml", size: 1105, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1474,7 +1516,7 @@ func syntax_filesNginxYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/nginx.yaml", size: 5020, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/nginx.yaml", size: 5020, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1494,7 +1536,7 @@ func syntax_filesNimYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/nim.yaml", size: 2317, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/nim.yaml", size: 2317, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1514,7 +1556,7 @@ func syntax_filesObjcYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/objc.yaml", size: 2391, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/objc.yaml", size: 2391, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1534,7 +1576,7 @@ func syntax_filesOcamlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ocaml.yaml", size: 1479, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/ocaml.yaml", size: 1479, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1554,7 +1596,7 @@ func syntax_filesOctaveYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/octave.yaml", size: 2586, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/octave.yaml", size: 2586, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1574,7 +1616,7 @@ func syntax_filesPascalYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/pascal.yaml", size: 1856, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/pascal.yaml", size: 1856, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1594,7 +1636,7 @@ func syntax_filesPatchYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/patch.yaml", size: 245, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/patch.yaml", size: 245, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1614,7 +1656,7 @@ func syntax_filesPegYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/peg.yaml", size: 488, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/peg.yaml", size: 488, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1634,7 +1676,7 @@ func syntax_filesPerl6Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/perl6.yaml", size: 1651, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/perl6.yaml", size: 1651, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1654,12 +1696,12 @@ func syntax_filesPerlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/perl.yaml", size: 1799, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/perl.yaml", size: 1799, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
 
-var _syntax_filesPhpYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x84\x56\xef\x6f\xdb\x38\x12\xfd\x7c\xf9\x2b\x1c\xef\xa2\x25\x93\xda\xd9\xfb\x55\x60\xdd\x3a\x42\xb1\xd7\xfd\x54\xdc\x1d\xee\x76\x3f\xdc\x8a\x4a\x41\x51\x23\x8b\x30\x45\xaa\xe4\xc8\xa9\x77\x5f\xef\x6f\x3f\x50\x76\xd2\xe4\x9c\x60\x0d\x41\x89\x38\x43\xcd\xcc\x9b\x37\x8f\x6a\xad\x23\xde\x0f\xb4\x9a\x0d\xdd\x70\x76\xd6\x10\x93\xe1\xd5\xec\x6c\x36\x9b\xcd\xb2\xcd\xeb\x9e\x56\xb3\xb9\x52\xcb\xa1\x1b\xca\x3f\xfd\xf9\x2f\x7f\x4d\xff\xad\x8a\x6f\xe7\x67\x67\x71\x74\x94\x56\x93\xe3\x62\x96\xf6\x7d\x1d\xdc\x32\x0c\x14\x35\x87\xb8\x9a\xcd\xdf\xe2\x7a\x7e\x34\x52\x8c\x87\xa5\xf2\xe6\xbc\x5a\x5e\x14\xf7\x86\xe3\x2e\xd6\x9b\xd5\x6c\x2e\x0a\x2b\xdf\x96\x57\x55\x21\xb4\xa8\xeb\x08\x13\x83\xdf\xf7\x68\x9a\x48\x29\x61\x18\x1c\x31\x22\x69\x44\xb6\xc6\x11\x92\x6d\x08\x63\x63\x83\x2c\x50\x0b\x9d\x48\xb4\xc1\xb3\x2c\xd0\x08\x8b\x20\x61\x37\x70\xc1\x6c\x3f\x8d\x81\x09\x51\x16\x30\x5a\xf8\x9d\x4e\x18\xd8\x06\x2f\x61\xc8\x33\x45\x18\xcb\x04\x13\x44\x43\x70\x70\x9b\x18\xc6\x41\xa2\x11\x9a\xb5\x70\x36\x4d\xef\x03\x39\x10\x6b\xeb\x12\x5a\x0f\xab\x5d\xd8\xc0\x46\x38\xb0\x04\xf5\xa2\xa6\x46\x16\x68\x2d\xb9\x26\x11\xa3\xb5\x1b\x61\xf4\x14\x04\x63\x24\x89\x9c\x16\xda\x10\x7b\x08\x2b\x8b\x36\xea\x9e\x30\xdd\xb3\x77\x57\xfe\x71\xf1\xba\x42\x17\x61\x61\xfb\x0d\xac\x17\xc3\xc8\x48\x12\xdb\xba\xc1\x96\xf6\x1b\xf2\x70\xba\x26\x07\x47\x1b\xf2\x0d\x9c\x15\x7e\x2b\x0b\xf4\x5a\x58\x8f\x01\x71\x2b\xd1\x93\x1f\x85\x65\xea\xf3\x3a\xb1\xd0\xa0\x28\xe1\xf5\x0e\x3e\x88\x43\x2c\x24\x13\xed\xc0\x12\x41\x38\x0c\x2c\xa6\x4a\x31\x21\x31\xf2\x30\xb2\xc4\x20\x74\xd4\x3d\xac\xe1\x31\x12\xf2\x15\x36\x19\x7a\x59\xe0\x13\xa2\x18\xc0\x18\xeb\xbd\x44\x12\x1c\xed\x96\x64\x81\xa4\xfb\x01\x89\x84\x99\x8a\x75\x64\x58\x22\xf5\xda\x39\xa4\x30\x46\x43\x48\x83\xf6\x48\x1c\x83\xdf\x20\x8d\xa2\xc6\x80\xbe\xd7\x71\x2f\xc1\xf4\x99\x75\xee\x26\xdb\x9e\xc0\x51\x9b\x2d\x46\xe1\x64\x81\x9d\x8e\xd8\xd9\x86\x02\x6e\xeb\x28\xc5\x6c\x79\x81\x6b\xf9\x24\x67\x96\xf4\x99\xc9\x37\xd4\x3c\x22\x4f\x1d\x9a\x3d\x1a\xbb\x43\xc7\xbd\x43\x47\xba\x11\x94\xdb\xdf\x86\x90\xfb\xcd\x96\x1d\x81\x75\x9d\xef\x47\x67\x74\x82\x74\x6e\x62\x9c\xbc\xe4\x13\x51\x87\x48\x43\x0c\xe6\x51\xa4\x03\xa2\x48\xbc\x77\xf4\x54\xa2\x03\x19\xab\xdd\x6a\x36\x7f\x51\xde\xbc\x29\xcb\x55\x1a\xb4\xa1\x55\x55\x55\x17\x6f\x1e\x17\xb3\x9a\xcd\xcb\xd5\xba\xba\x5b\xb4\x0d\x79\xb6\xad\xa5\x3c\x33\x42\x3b\x46\xbd\x31\xc1\x85\x88\x8e\xec\xa6\x63\x74\x91\xda\x3b\x52\x04\xbf\x69\x28\x19\xe4\x39\x45\xf0\xc6\x59\xb3\x45\xf0\x6d\x30\x63\x42\xf0\x2e\xe8\x06\xc1\xf7\x61\x4c\x14\x76\x14\x91\xec\xaf\x77\x7d\x89\xe6\x90\x3b\x58\xc7\x0d\x31\xb2\x0c\x60\xa7\xdd\x48\xb8\xb5\x0d\x77\x72\x7d\x97\x91\x09\x3e\xb1\xf6\xbc\x4c\x1c\xad\xcf\xc3\xaa\xe6\xe5\x8d\x9a\x57\x17\x6a\x7e\xe2\xe3\xc7\xbe\x3e\xa4\x5e\x58\xf9\x4d\xf9\xdd\xe2\xfb\x77\x8b\x1f\xab\xdf\x5e\xbf\x7a\xfd\xe5\x99\xf7\x2d\xc7\x98\x31\x10\x2d\x0f\x22\xd3\xad\xe3\xe3\x3f\x1b\xcb\x30\x5d\x0c\x3d\xc9\xd5\xd5\x55\x79\x33\xfb\x43\x75\xf9\xf5\x1d\x7d\x4f\x9e\xb3\xac\x9c\x2f\x16\xcb\xcb\x62\xb1\xb8\x87\xbe\xa1\x56\x8f\x6e\xb2\x29\x55\x88\xa1\x1b\xb0\x96\x6a\x3e\x23\xdf\xac\xd5\x5c\xa9\xaf\x4d\xfa\x8a\xf5\xd2\x38\x9d\x52\x4e\xa3\xd4\x8b\x5f\xdf\x2d\x7e\xf9\x6e\xf1\xfd\xc7\x45\x75\x29\x95\x12\xa7\x2c\x50\xaa\x16\x91\x3e\x8d\x36\x12\xac\x37\x6e\x6c\x48\x8a\x8f\xc1\x1b\x92\x85\x54\xaa\xbe\xdb\x71\x90\xd6\xc9\x3d\x13\x7b\x8a\x81\x03\x6f\x13\xda\xd1\x1f\x46\x87\x4c\x17\x60\x74\x22\x1c\x33\x07\x7d\xb6\x8c\x74\x6b\xd9\x74\xf7\xee\x3a\x65\xb3\xf5\x84\x26\xa0\x21\xe3\xf4\x14\x3c\x4f\x8f\x65\xd8\x2c\x67\xad\x36\x84\xf2\x3d\xa8\xfa\x6c\xe8\xa0\x41\x3a\x46\xbd\xcf\x56\x1c\xc0\x46\x1d\x82\x83\x65\x8a\xd3\x0c\xec\x82\x6d\x1e\x26\xfc\x04\x20\x47\x3c\x94\x52\xaa\xba\x5c\xad\x9e\xa6\x69\xf9\x6e\xf1\x4b\xf5\x00\xb9\x09\xb8\xf4\xbc\xef\xd1\xa7\x7c\x03\xa5\x12\x94\x92\x78\x55\x3d\x04\x6d\xb9\xa5\xfd\x6d\x88\xd3\x6c\x6f\x5c\xa8\xb5\xc3\x30\xd6\xce\x1a\x0c\xd1\xee\x34\x13\x86\x18\xf2\x59\x45\x0d\x12\x6b\xb6\x06\x13\xab\xe4\xfd\x68\xb1\x66\x3a\x32\x44\xd8\x7e\x70\xd3\x43\x82\xae\x53\x96\x9b\x0c\x58\xe6\xa0\xa1\xd0\xc2\xb6\x20\x97\x48\xd8\x56\x16\x20\xdf\xd8\x76\x9a\xa7\x69\x60\x31\x26\xca\xd0\x7b\xba\x05\x77\x31\xdc\xc2\xe8\xdc\x15\x8e\x7b\xdc\x76\xd6\xe5\x44\x32\xba\x82\x7c\x23\x0b\xd1\x86\x48\xda\x74\x8f\x59\xf0\xa8\x7c\x4f\xb7\x4a\xa5\x07\x2c\x3b\x00\x2b\x4f\x75\x43\xd4\x91\xf4\x36\xd7\xc5\xd6\x8f\x84\x4d\xe0\x80\x48\x3c\x46\x2f\x4f\x46\x29\xb7\x35\xef\xe1\x38\x12\x5a\xed\x12\xc1\x8f\xce\xe1\xa7\x7f\xfd\xfc\x1e\x3f\xbe\xfb\xf0\xef\xf7\xf8\xfb\xcf\x1f\x3e\x9c\x6c\xcc\x0d\xce\x2d\x58\x1f\x1b\x21\x70\x85\x4b\x2c\xa0\xd4\x05\x94\x2a\xab\xe7\xe7\x3b\x8f\xf6\x33\xa2\xa5\xd4\xb7\xdc\xd9\x84\x41\x47\xca\xcc\x23\xd7\xe2\xb8\xb6\xb8\x96\xf3\x67\x3f\x1a\xc4\xfa\x1a\xeb\xf5\x1a\xe7\xeb\x35\xa6\x3f\x78\xf1\x02\x4a\xe5\x0b\xab\x15\xd6\x58\x5c\x43\xa9\x73\xf9\x04\x5b\x77\xfa\x2e\xf2\x43\x64\x17\x1f\x1f\x22\x7b\x12\xaf\xcc\xf5\x66\xf2\xe5\x9a\x95\xba\xaf\x1a\x4b\xbc\xc2\x9b\xd3\xda\x1f\xe8\x9f\xc8\x6d\x5b\x62\x92\x41\x79\xa1\xe6\x78\x79\xbf\xf2\xb2\x92\x17\x2f\x4f\xf7\x1e\xfa\xfa\x43\x37\x25\x9a\x7d\x4b\x5d\xb7\x3e\xf2\xee\xa5\x52\x6a\x5a\xa8\xfe\x2f\xd3\x3a\x9f\x8b\xc4\xe9\x50\x58\x09\xa5\x2a\x28\xf5\x1b\x94\xfa\x82\x52\xc8\x4a\x9e\x8a\xa1\xb8\xc1\x83\xa3\x46\x5e\x5d\x2d\x2f\x7e\xd7\xe9\x9b\x53\x9f\xe9\x31\xff\x12\xeb\x98\xb7\x5c\x29\x75\x74\xca\x3f\xf2\xcd\x54\xc3\xc5\xd5\xd7\xb5\xc3\xf7\xe0\xac\xac\xce\x4e\xd4\xf2\x81\x0a\x17\x4f\x69\xe9\x53\xe7\xec\xdb\xf3\xbf\xfd\xe3\x87\x9f\xfe\xf3\xcf\xf7\xcb\xcb\x6c\xfe\x5f\x00\x00\x00\xff\xff\x34\x58\x2b\x7d\xa8\x0a\x00\x00")
+var _syntax_filesPhpYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x84\x56\xef\x8f\xdb\xb8\x11\xfd\xdc\xfd\x2b\xbc\xbe\x43\x42\xee\xc6\xde\xeb\xaf\x00\xe7\xc4\x2b\x04\xd7\xdc\xa7\xa0\x2d\xda\xbb\x0f\x3d\x51\x1b\x50\xd4\xc8\x22\x4c\x91\x0a\x39\xf2\xc6\x77\x2f\xfd\xdb\x0b\xca\xde\x1f\xa9\x77\x71\x82\x20\x5b\xe4\x90\x33\xf3\xe6\xcd\xa3\x5a\xeb\x88\xf7\x03\xad\x66\x43\x37\x9c\x9d\x35\xc4\x64\x78\x35\x3b\x9b\xcd\x66\xb3\x3c\xe7\x75\x4f\xab\xd9\x5c\xa9\xe5\xd0\x0d\xe5\x9f\xfe\xfc\x97\xbf\xa6\xff\x56\xc5\xb7\xf3\xb3\xb3\x38\x3a\x4a\xab\xc9\x70\x31\x4b\xfb\xbe\x0e\x6e\x19\x06\x8a\x9a\x43\x5c\xcd\xe6\x6f\x71\x3d\x3f\x4e\x52\x8c\x87\xa1\xf2\xe6\xbc\x5a\x5e\x14\xf7\x13\xc7\x55\xac\x37\xab\xd9\x5c\x14\x56\xbe\x2d\xaf\xaa\x42\x68\x51\xd7\x11\x26\x06\xbf\xef\xd1\x34\x91\x52\xc2\x30\x38\x62\x44\xd2\x88\x6c\x8d\x23\x24\xdb\x10\xc6\xc6\x06\x59\xa0\x16\x3a\x91\x68\x83\x67\x59\xa0\x11\x16\x41\xc2\x6e\xe0\x82\xd9\x7e\x1a\x03\x13\xa2\x2c\x60\xb4\xf0\x3b\x9d\x30\xb0\x0d\x5e\xc2\x90\x67\x8a\x30\x96\x09\x26\x88\x86\xe0\xe0\x36\x31\x8c\x83\x44\x23\x34\x6b\xe1\x6c\x9a\xf6\x03\x39\x10\x6b\xeb\x12\x5a\x0f\xab\x5d\xd8\xc0\x46\x38\xb0\x04\xf5\xa2\xa6\x46\x16\x68\x2d\xb9\x26\x11\xa3\xb5\x1b\x61\xf4\xe4\x04\x63\x24\x89\x1c\x16\xda\x10\x7b\x08\x2b\x8b\x36\xea\x9e\x30\x3d\xb3\x75\x57\xfe\x71\xf1\xba\x42\x17\x61\x61\xfb\x0d\xac\x17\xc3\xc8\x48\x12\xdb\xba\xc1\x96\xf6\x1b\xf2\x70\xba\x26\x07\x47\x1b\xf2\x0d\x9c\x15\x7e\x2b\x0b\xf4\x5a\x58\x8f\x01\x71\x2b\xd1\x93\x1f\x85\x65\xea\xf3\x38\xb1\xd0\xa0\x28\xe1\xf5\x0e\x3e\x88\x83\x2f\x24\x13\xed\xc0\x12\x41\x38\x0c\x2c\xa6\x4c\x31\x21\x31\xf2\x30\xb2\xc4\x20\x74\xd4\x3d\xac\xe1\x31\x12\xf2\x1d\x36\x19\x7a\x59\xe0\x13\xa2\x18\xc0\x18\xeb\xbd\x44\x12\x1c\xed\x96\x64\x81\xa4\xfb\x01\x89\x84\x99\x92\x75\x64\x58\x22\xf5\xda\x39\xa4\x30\x46\x43\x48\x83\xf6\x48\x1c\x83\xdf\x20\x8d\xa2\xc6\x80\xbe\xd7\x71\x2f\xc1\xf4\x99\x75\xae\x26\xdb\x9e\xc0\x51\x9b\x2d\x46\xe1\x64\x81\x9d\x8e\xd8\xd9\x86\x02\x6e\xeb\x28\xc5\x6c\x79\x81\x6b\xf9\x24\x67\x96\xf4\x99\xc9\x37\xd4\x7c\x45\x9e\x3a\x34\x7b\x34\x76\x87\x8e\x7b\x87\x8e\x74\x23\x28\x97\xbf\x0d\x21\xd7\x9b\x2d\x3b\x02\xeb\x3a\x3f\x8f\xc6\xe8\x04\xe9\x5c\xc4\x38\x59\xc9\x27\xbc\x0e\x91\x86\x18\xcc\x57\x9e\x0e\x88\x22\xf1\xde\xd1\x53\x81\x0e\x64\xac\x76\xab\xd9\xfc\x45\x79\xf3\xa6\x2c\x57\x69\xd0\x86\x56\x55\x55\x5d\xbc\xf9\x3a\x99\xd5\x6c\x5e\xae\xd6\xd5\xdd\xa0\x6d\xc8\xb3\x6d\x2d\xe5\x9e\x11\xda\x31\xea\x8d\x09\x2e\x44\x74\x64\x37\x1d\xa3\x8b\xd4\xde\x91\x22\xf8\x4d\x43\xc9\x20\xf7\x29\x82\x37\xce\x9a\x2d\x82\x6f\x83\x19\x13\x82\x77\x41\x37\x08\xbe\x0f\x63\xa2\xb0\xa3\x88\x64\x7f\xbd\xab\x4b\x34\x87\xd8\xc1\x3a\x6e\x88\x91\x65\x00\x3b\xed\x46\xc2\xad\x6d\xb8\x93\xeb\xbb\x88\x4c\xf0\x89\xb5\xe7\x65\xe2\x68\x7d\x6e\x56\x35\x2f\x6f\xd4\xbc\xba\x50\xf3\x13\x1b\x3f\xf6\xf5\x21\xf4\xc2\xca\x6f\xca\xef\x16\xdf\xbf\x5b\xfc\x58\xfd\xf6\xfa\xd5\xeb\x2f\xcf\xec\xb7\x1c\x63\xc6\x40\xb4\x3c\x88\x4c\xb7\x8e\x8f\x7f\x36\x96\x61\xba\x18\x7a\x92\xab\xab\xab\xf2\x66\xf6\x87\xea\xf2\x61\x8f\xbe\x27\xcf\x59\x56\xce\x17\x8b\xe5\x65\xb1\x58\xdc\x43\xdf\x50\xab\x47\x37\xcd\x29\x55\x88\xa1\x1b\xb0\x96\x6a\x3e\x23\xdf\xac\xd5\x5c\xa9\x87\x22\x3d\x60\xbd\x34\x4e\xa7\x94\xc3\x28\xf5\xe2\xd7\x77\x8b\x5f\xbe\x5b\x7c\xff\x71\x51\x5d\x4a\xa5\xc4\x29\x0b\x94\xaa\x45\xa4\x4f\xa3\x8d\x04\xeb\x8d\x1b\x1b\x92\xe2\x63\xf0\x86\x64\xa1\x54\x7d\xb7\xe0\xa0\xac\x93\x75\xe6\xf5\xe4\x02\x07\xda\x26\xb4\xa3\x3f\x74\x0e\x99\x2e\xc0\xe8\x44\x38\x06\x0e\xfa\x6c\x19\xe9\xd6\xb2\xe9\xee\xcd\x75\xca\xd3\xd6\x13\x9a\x80\x86\x8c\xd3\x93\xef\xdc\x3c\x96\x61\xb3\x9a\xb5\xda\x10\xca\xf7\xa0\xea\xb3\xa1\x83\x04\xe9\x18\xf5\x3e\xcf\xe2\x80\x35\xea\x10\x1c\x2c\x53\x9c\x5a\x60\x17\x6c\x23\x1f\x05\xfc\x04\x1e\x47\x38\x94\x52\xaa\xba\x5c\xad\x9e\x64\x69\x4e\xb0\x7c\xb7\xf8\xa5\x7a\x84\xdd\x04\xdd\x13\x1b\x4f\x10\x3f\xd8\x94\x6f\xa0\x54\x82\x52\x12\xaf\xaa\xc7\xb8\x2d\xb7\xb4\xbf\x0d\x71\xea\xee\x8d\x0b\xb5\x76\x18\xc6\xda\x59\x83\x21\xda\x9d\x66\xc2\x10\x43\x3e\xad\xa8\x41\x62\xcd\xd6\x60\xe2\x95\xbc\x6f\x2e\xd6\x4c\x47\x8e\x08\xdb\x0f\x6e\x7a\x49\xd0\x75\xca\x82\x93\x31\xcb\x2c\x34\x14\x5a\xd8\x16\xe4\x12\x09\xdb\xca\x02\xe4\x1b\xdb\x4e\x1d\x35\xb5\x2c\xc6\x44\x19\x7d\x4f\xb7\xe0\x2e\x86\x5b\x18\x9d\x0b\xc3\x71\x8f\xdb\xce\xba\x1c\x48\x06\x58\x90\x6f\x64\x21\xda\x10\x49\x9b\x4e\x16\xcf\xa6\xef\xe9\x56\xa9\xf4\x88\x67\x07\x6c\xe5\xa9\x72\x88\x3a\x92\xde\xe6\xbc\xd8\xfa\x91\xb0\x09\x1c\x10\x89\xc7\xe8\xe5\x49\x33\xe5\xca\xe6\x35\x1c\x47\x42\xab\x5d\x22\xf8\xd1\x39\xfc\xf4\xaf\x9f\xdf\xe3\xc7\x77\x1f\xfe\xfd\x1e\x7f\xff\xf9\xc3\x87\x93\x85\xb9\xc6\xb9\x04\xeb\x63\x21\x04\xae\x70\x89\x05\x94\xba\x80\x52\x65\xf5\x7c\x87\xe7\xe6\x7e\x46\xb6\x94\xfa\x96\x3b\x9b\x30\xe8\x48\x99\x7c\xe4\x5a\x1c\xc7\x16\xd7\x72\xfe\xec\x67\x83\x58\x5f\x63\xbd\x5e\xe3\x7c\xbd\xc6\xf4\x83\x17\x2f\xa0\x54\xbe\xb1\x5a\x61\x8d\xc5\x35\x94\x3a\x97\x4f\x10\x76\xa7\xef\x3c\x3f\x46\x76\xf1\xf1\x31\xb2\x27\xfe\xca\x9c\x6f\x26\x5f\xce\x59\xa9\xfb\xac\xb1\xc4\x2b\xbc\x39\xcd\xfd\x91\x02\x8a\x5c\xb6\x25\x26\x21\x94\x17\x6a\x8e\x97\xf7\x23\x2f\x2b\x79\xf1\xf2\x74\xed\xa1\xae\x3f\x74\xfa\xd0\x33\x4a\x95\xba\x6e\x7d\xe4\xdd\x4b\xa5\xd4\x34\x50\xfd\x5f\xa4\x75\x3e\x19\x89\xd3\x21\xb1\x12\x4a\x55\x50\xea\x37\x28\xf5\x05\xa5\x90\x95\x3c\x95\x43\x71\x83\x47\x87\x8d\xbc\xba\x5a\x5e\xfc\xae\xd1\x37\xa7\x36\xd3\x6b\xbe\x12\xeb\x98\x97\x5c\x29\x75\x34\xca\x17\xf9\x66\xca\xe1\xe2\xea\x61\xec\xf0\x45\x38\x2b\xab\xb3\x13\xbd\x7c\xa4\xc3\xc5\x53\x6a\xfa\xd4\x49\xfb\xf6\xfc\x6f\xff\xf8\xe1\xa7\xff\xfc\xf3\xfd\xf2\x32\x4f\xff\x2f\x00\x00\xff\xff\x13\xf8\x60\xe7\xaa\x0a\x00\x00")
 
 func syntax_filesPhpYamlBytes() ([]byte, error) {
 	return bindataRead(
@@ -1674,7 +1716,7 @@ func syntax_filesPhpYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/php.yaml", size: 2728, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/php.yaml", size: 2730, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1694,7 +1736,7 @@ func syntax_filesPkgConfigYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/pkg-config.yaml", size: 329, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/pkg-config.yaml", size: 329, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1714,7 +1756,7 @@ func syntax_filesPonyYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/pony.yaml", size: 1293, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/pony.yaml", size: 1293, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1734,7 +1776,7 @@ func syntax_filesPovYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/pov.yaml", size: 718, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/pov.yaml", size: 718, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1754,7 +1796,7 @@ func syntax_filesPowershellYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/PowerShell.yaml", size: 5044, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/PowerShell.yaml", size: 5044, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1774,7 +1816,7 @@ func syntax_filesPoYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/po.yaml", size: 299, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/po.yaml", size: 299, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1794,7 +1836,7 @@ func syntax_filesPrivoxyActionYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/privoxy-action.yaml", size: 1642, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/privoxy-action.yaml", size: 1642, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1814,7 +1856,7 @@ func syntax_filesPrivoxyConfigYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/privoxy-config.yaml", size: 864, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/privoxy-config.yaml", size: 864, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1834,7 +1876,7 @@ func syntax_filesPrivoxyFilterYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/privoxy-filter.yaml", size: 465, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/privoxy-filter.yaml", size: 465, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1854,7 +1896,7 @@ func syntax_filesPuppetYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/puppet.yaml", size: 1534, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/puppet.yaml", size: 1534, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1874,7 +1916,7 @@ func syntax_filesPython2Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/python2.yaml", size: 2533, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/python2.yaml", size: 2533, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1894,7 +1936,7 @@ func syntax_filesPython3Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/python3.yaml", size: 2485, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/python3.yaml", size: 2485, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1914,7 +1956,7 @@ func syntax_filesRestYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/reST.yaml", size: 408, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/reST.yaml", size: 408, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1934,7 +1976,7 @@ func syntax_filesRpmspecYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/rpmspec.yaml", size: 1802, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/rpmspec.yaml", size: 1802, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1954,7 +1996,7 @@ func syntax_filesRubyYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ruby.yaml", size: 1268, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/ruby.yaml", size: 1268, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1974,7 +2016,7 @@ func syntax_filesRustYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/rust.yaml", size: 1188, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/rust.yaml", size: 1188, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1994,7 +2036,7 @@ func syntax_filesRYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/r.yaml", size: 819, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/r.yaml", size: 819, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2014,7 +2056,7 @@ func syntax_filesScalaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/scala.yaml", size: 930, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/scala.yaml", size: 930, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2034,7 +2076,7 @@ func syntax_filesSedYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/sed.yaml", size: 333, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/sed.yaml", size: 333, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2054,7 +2096,7 @@ func syntax_filesShYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/sh.yaml", size: 1933, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/sh.yaml", size: 1933, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2074,7 +2116,7 @@ func syntax_filesSlsYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/sls.yaml", size: 438, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/sls.yaml", size: 438, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2094,7 +2136,7 @@ func syntax_filesSolidityYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/solidity.yaml", size: 1643, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/solidity.yaml", size: 1643, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2114,7 +2156,7 @@ func syntax_filesSqlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/sql.yaml", size: 2213, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/sql.yaml", size: 2213, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2134,7 +2176,7 @@ func syntax_filesSwiftYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/swift.yaml", size: 4444, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/swift.yaml", size: 4444, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2154,7 +2196,7 @@ func syntax_filesSystemdYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/systemd.yaml", size: 5182, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/systemd.yaml", size: 5182, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2174,7 +2216,7 @@ func syntax_filesTclYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/tcl.yaml", size: 2225, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/tcl.yaml", size: 2225, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2194,7 +2236,7 @@ func syntax_filesTexYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/tex.yaml", size: 753, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/tex.yaml", size: 753, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2214,7 +2256,7 @@ func syntax_filesTomlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/toml.yaml", size: 852, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/toml.yaml", size: 852, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2234,7 +2276,7 @@ func syntax_filesTwigYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/twig.yaml", size: 2557, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/twig.yaml", size: 2557, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2254,7 +2296,7 @@ func syntax_filesTypescriptYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/typescript.yaml", size: 1747, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/typescript.yaml", size: 1747, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2274,7 +2316,7 @@ func syntax_filesValaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/vala.yaml", size: 968, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/vala.yaml", size: 968, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2294,7 +2336,7 @@ func syntax_filesVhdlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/vhdl.yaml", size: 2407, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/vhdl.yaml", size: 2407, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2314,7 +2356,7 @@ func syntax_filesViYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/vi.yaml", size: 720, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/vi.yaml", size: 720, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2334,7 +2376,7 @@ func syntax_filesXmlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/xml.yaml", size: 280, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/xml.yaml", size: 280, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2354,7 +2396,7 @@ func syntax_filesXresourcesYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/xresources.yaml", size: 387, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/xresources.yaml", size: 387, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2374,7 +2416,7 @@ func syntax_filesYamlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/yaml.yaml", size: 843, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/yaml.yaml", size: 843, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2394,7 +2436,7 @@ func syntax_filesYumYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/yum.yaml", size: 348, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/yum.yaml", size: 348, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2414,7 +2456,7 @@ func syntax_filesZshYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/zsh.yaml", size: 2123, mode: os.FileMode(420), modTime: time.Unix(1525169484, 0)}
+	info := bindataFileInfo{name: "syntax_files/zsh.yaml", size: 2123, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2496,9 +2538,11 @@ var _bindata = map[string]func() (*asset, error){
 	"syntax_files/dockerfile.yaml": syntax_filesDockerfileYaml,
 	"syntax_files/dot.yaml": syntax_filesDotYaml,
 	"syntax_files/d.yaml": syntax_filesDYaml,
+	"syntax_files/elixir.yaml": syntax_filesElixirYaml,
 	"syntax_files/erb.yaml": syntax_filesErbYaml,
 	"syntax_files/fish.yaml": syntax_filesFishYaml,
 	"syntax_files/fortran.yaml": syntax_filesFortranYaml,
+	"syntax_files/fsharp.yaml": syntax_filesFsharpYaml,
 	"syntax_files/gdscript.yaml": syntax_filesGdscriptYaml,
 	"syntax_files/gentoo-ebuild.yaml": syntax_filesGentooEbuildYaml,
 	"syntax_files/gentoo-etc-portage.yaml": syntax_filesGentooEtcPortageYaml,
@@ -2652,9 +2696,11 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"dart.yaml": &bintree{syntax_filesDartYaml, map[string]*bintree{}},
 		"dockerfile.yaml": &bintree{syntax_filesDockerfileYaml, map[string]*bintree{}},
 		"dot.yaml": &bintree{syntax_filesDotYaml, map[string]*bintree{}},
+		"elixir.yaml": &bintree{syntax_filesElixirYaml, map[string]*bintree{}},
 		"erb.yaml": &bintree{syntax_filesErbYaml, map[string]*bintree{}},
 		"fish.yaml": &bintree{syntax_filesFishYaml, map[string]*bintree{}},
 		"fortran.yaml": &bintree{syntax_filesFortranYaml, map[string]*bintree{}},
+		"fsharp.yaml": &bintree{syntax_filesFsharpYaml, map[string]*bintree{}},
 		"gdscript.yaml": &bintree{syntax_filesGdscriptYaml, map[string]*bintree{}},
 		"gentoo-ebuild.yaml": &bintree{syntax_filesGentooEbuildYaml, map[string]*bintree{}},
 		"gentoo-etc-portage.yaml": &bintree{syntax_filesGentooEtcPortageYaml, map[string]*bintree{}},
