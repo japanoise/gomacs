@@ -50,7 +50,7 @@ func getColorForGroup(group highlight.Group) termbox.Attribute {
 		color = termbox.AttrReverse
 	case highlight.Groups["type.extended"]:
 		color = termbox.ColorDefault
-	case highlight.Groups["preproc"], highlight.Groups["special"]:
+	case highlight.Groups["preproc"], highlight.Groups["special"], highlight.Groups["constant.specialChar"]:
 		color = termbox.ColorYellow
 	case highlight.Groups["comment"], highlight.Groups["preproc.shebang"]:
 		color = termbox.ColorBlue
