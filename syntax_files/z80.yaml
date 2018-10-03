@@ -1,0 +1,63 @@
+filetype: gbz80
+
+detect:
+    filename: "\\.(z80|gbz80)$"
+
+rules:
+    ## Based on rgbasm(5) and gbz80(7) man pages
+    ## Instructions
+    # Arithmetic & logic
+    - statement: "\\b(?i)(adc|add|and|cp|dec|inc|or|sbc|sub|xor)(?-i)\\b"
+    # Bits
+    - statement: "\\b(?i)(bit|res|rl|rlc|rr|rrc|set|sla|sra|srl|swap)(?-i)\\b"
+    # Jumps and subroutines
+    - statement: "\\b(?i)(call|jp|jr|ret|rst)(?-i)\\b"
+    # Stack operations (and ld because it doesn't fit anywhere else)
+    - statement: "\\b(?i)(ld|pop|push)(?-i)\\b"
+    # Misc
+    - statement: "\\b(?i)(ccf|cpl|daa|di|ei|halt|nop|scf|stop)(?-i)\\b"
+
+    ## Registers
+    # 8-bit
+    - identifier: "\\b(?i)(a|b|c|d|e|h|l)(?-i)\\b"
+    # 16-bit
+    - identifier: "\\b(?i)(af|bc|de|hl|sp)(?-i)\\b"
+
+    ## Constants
+    # Number
+    - constant.number: "\\b($|&|%|`)?[0-9A-Fa-f]+\\b"
+    # Label
+    - identifier: "[a-zA-Z0-9._]+:"
+
+    - constant.string:
+        start: "\""
+        end: "\""
+        skip: "\\\\."
+        rules:
+            - constant.specialChar: "\\\\."
+
+    - constant.string:
+        start: "'"
+        end: "'"
+        skip: "\\\\."
+        rules:
+            - constant.specialChar: "\\\\."
+
+    ## Preprocessor
+    # Ball of tar that contains everything except a few functions
+    - preproc: "\\b(?i)(db|dw|ds|section|equ|equs|set|pops|pushs|macro|endm|rsset|rsreset|rb|rw|shift|export|global|purge|incbin|union|nextu|endu|printt|printi|printv|printf|rept|endr|fail|warn|include|if|elif|else|endc|charmap)(?-i)\\b"
+
+    ## Comments
+    # Classic asm ;-style
+    - comment:
+        start: ";"
+        end: "$"
+        rules:
+            - todo: "(TODO|XXX|FIXME):?"
+    # rgbasm *-style
+    - comment:
+        start: "^\\*"
+        end: "$"
+        rules:
+            - todo: "(TODO|XXX|FIXME):?"
+

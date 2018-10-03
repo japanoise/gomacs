@@ -114,6 +114,7 @@
 // syntax_files/xresources.yaml
 // syntax_files/yaml.yaml
 // syntax_files/yum.yaml
+// syntax_files/z80.yaml
 // syntax_files/zsh.yaml
 // DO NOT EDIT!
 
@@ -197,7 +198,7 @@ func syntax_filesAdaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ada.yaml", size: 1545, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/ada.yaml", size: 1545, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -217,7 +218,7 @@ func syntax_filesApacheconfYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/apacheconf.yaml", size: 6527, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/apacheconf.yaml", size: 6527, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -237,7 +238,7 @@ func syntax_filesArduinoYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/arduino.yaml", size: 2816, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/arduino.yaml", size: 2816, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -257,7 +258,7 @@ func syntax_filesAsciidocYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/asciidoc.yaml", size: 1259, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/asciidoc.yaml", size: 1259, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -277,7 +278,7 @@ func syntax_filesAsmYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/asm.yaml", size: 9603, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/asm.yaml", size: 9603, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -297,7 +298,7 @@ func syntax_filesAwkYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/awk.yaml", size: 1499, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/awk.yaml", size: 1499, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -317,7 +318,7 @@ func syntax_filesCaddyfileYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/caddyfile.yaml", size: 470, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/caddyfile.yaml", size: 470, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -337,7 +338,7 @@ func syntax_filesClojureYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/clojure.yaml", size: 979, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/clojure.yaml", size: 979, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -357,7 +358,7 @@ func syntax_filesCmakeYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/cmake.yaml", size: 1181, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/cmake.yaml", size: 1181, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -377,7 +378,7 @@ func syntax_filesCoffeescriptYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/coffeescript.yaml", size: 897, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/coffeescript.yaml", size: 897, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -397,7 +398,7 @@ func syntax_filesColortestYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/colortest.yaml", size: 483, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/colortest.yaml", size: 483, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -417,7 +418,7 @@ func syntax_filesConfYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/conf.yaml", size: 232, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/conf.yaml", size: 232, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -437,7 +438,7 @@ func syntax_filesConkyYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/conky.yaml", size: 6343, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/conky.yaml", size: 6343, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -457,7 +458,7 @@ func syntax_filesCppYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/cpp.yaml", size: 1862, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/cpp.yaml", size: 1862, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -477,7 +478,7 @@ func syntax_filesCrontabYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/crontab.yaml", size: 1248, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/crontab.yaml", size: 1248, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -497,7 +498,7 @@ func syntax_filesCrystalYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/crystal.yaml", size: 1797, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/crystal.yaml", size: 1797, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -517,7 +518,7 @@ func syntax_filesCsharpYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/csharp.yaml", size: 1931, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/csharp.yaml", size: 1931, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -537,7 +538,7 @@ func syntax_filesCssYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/css.yaml", size: 7019, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/css.yaml", size: 7019, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -557,7 +558,7 @@ func syntax_filesCYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/c.yaml", size: 1786, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/c.yaml", size: 1786, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -577,7 +578,7 @@ func syntax_filesCYaml2() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/c++.yaml", size: 1422, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/c++.yaml", size: 1422, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -597,7 +598,7 @@ func syntax_filesCythonYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/cython.yaml", size: 1323, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/cython.yaml", size: 1323, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -617,7 +618,7 @@ func syntax_filesDartYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/dart.yaml", size: 1418, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/dart.yaml", size: 1418, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -637,7 +638,7 @@ func syntax_filesDockerfileYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/dockerfile.yaml", size: 794, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/dockerfile.yaml", size: 794, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -657,7 +658,7 @@ func syntax_filesDotYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/dot.yaml", size: 945, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/dot.yaml", size: 945, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -677,7 +678,7 @@ func syntax_filesDYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/d.yaml", size: 4309, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/d.yaml", size: 4309, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -697,7 +698,7 @@ func syntax_filesElixirYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/elixir.yaml", size: 1816, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/elixir.yaml", size: 1816, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -717,7 +718,7 @@ func syntax_filesErbYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/erb.yaml", size: 2414, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/erb.yaml", size: 2414, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -737,7 +738,7 @@ func syntax_filesFishYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/fish.yaml", size: 2044, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/fish.yaml", size: 2044, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -757,7 +758,7 @@ func syntax_filesFortranYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/fortran.yaml", size: 2752, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/fortran.yaml", size: 2752, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -777,7 +778,7 @@ func syntax_filesFsharpYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/fsharp.yaml", size: 1757, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/fsharp.yaml", size: 1757, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -797,7 +798,7 @@ func syntax_filesGdscriptYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/gdscript.yaml", size: 2219, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/gdscript.yaml", size: 2219, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -817,7 +818,7 @@ func syntax_filesGentooEbuildYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/gentoo-ebuild.yaml", size: 2202, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/gentoo-ebuild.yaml", size: 2202, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -837,7 +838,7 @@ func syntax_filesGentooEtcPortageYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/gentoo-etc-portage.yaml", size: 688, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/gentoo-etc-portage.yaml", size: 688, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -857,7 +858,7 @@ func syntax_filesGitCommitYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/git-commit.yaml", size: 846, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/git-commit.yaml", size: 846, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -877,7 +878,7 @@ func syntax_filesGitConfigYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/git-config.yaml", size: 332, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/git-config.yaml", size: 332, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -897,7 +898,7 @@ func syntax_filesGitRebaseTodoYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/git-rebase-todo.yaml", size: 463, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/git-rebase-todo.yaml", size: 463, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -917,7 +918,7 @@ func syntax_filesGlslYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/glsl.yaml", size: 990, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/glsl.yaml", size: 990, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -937,7 +938,7 @@ func syntax_filesGoloYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/golo.yaml", size: 4110, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/golo.yaml", size: 4110, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -957,7 +958,7 @@ func syntax_filesGoYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/go.yaml", size: 1744, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/go.yaml", size: 1744, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -977,7 +978,7 @@ func syntax_filesGroffYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/groff.yaml", size: 769, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/groff.yaml", size: 769, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -997,7 +998,7 @@ func syntax_filesHamlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/haml.yaml", size: 612, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/haml.yaml", size: 612, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1017,7 +1018,7 @@ func syntax_filesHaskellYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/haskell.yaml", size: 1547, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/haskell.yaml", size: 1547, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1037,7 +1038,7 @@ func syntax_filesHtml4Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/html4.yaml", size: 1425, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/html4.yaml", size: 1425, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1057,7 +1058,7 @@ func syntax_filesHtml5Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/html5.yaml", size: 1307, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/html5.yaml", size: 1307, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1077,7 +1078,7 @@ func syntax_filesHtmlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/html.yaml", size: 1682, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/html.yaml", size: 1682, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1097,7 +1098,7 @@ func syntax_filesInform6Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/inform6.yaml", size: 1371, mode: os.FileMode(420), modTime: time.Unix(1531996261, 0)}
+	info := bindataFileInfo{name: "syntax_files/inform6.yaml", size: 1371, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1117,7 +1118,7 @@ func syntax_filesIniYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ini.yaml", size: 628, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/ini.yaml", size: 628, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1137,7 +1138,7 @@ func syntax_filesInputrcYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/inputrc.yaml", size: 400, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/inputrc.yaml", size: 400, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1157,7 +1158,7 @@ func syntax_filesJavascriptYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/javascript.yaml", size: 2028, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/javascript.yaml", size: 2028, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1177,7 +1178,7 @@ func syntax_filesJavaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/java.yaml", size: 985, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/java.yaml", size: 985, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1197,7 +1198,7 @@ func syntax_filesJsonYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/json.yaml", size: 830, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/json.yaml", size: 830, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1217,7 +1218,7 @@ func syntax_filesJuliaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/julia.yaml", size: 1072, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/julia.yaml", size: 1072, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1237,7 +1238,7 @@ func syntax_filesKeymapYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/keymap.yaml", size: 612, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/keymap.yaml", size: 612, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1257,7 +1258,7 @@ func syntax_filesKickstartYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/kickstart.yaml", size: 634, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/kickstart.yaml", size: 634, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1277,7 +1278,7 @@ func syntax_filesKotlinYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/kotlin.yaml", size: 1824, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/kotlin.yaml", size: 1824, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1297,7 +1298,7 @@ func syntax_filesLedgerYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ledger.yaml", size: 487, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/ledger.yaml", size: 487, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1317,7 +1318,7 @@ func syntax_filesLfeYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/lfe.yaml", size: 540, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/lfe.yaml", size: 540, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1337,7 +1338,7 @@ func syntax_filesLilypondYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/lilypond.yaml", size: 3835, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/lilypond.yaml", size: 3835, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1357,7 +1358,7 @@ func syntax_filesLispYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/lisp.yaml", size: 496, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/lisp.yaml", size: 496, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1377,7 +1378,7 @@ func syntax_filesLuaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/lua.yaml", size: 3111, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/lua.yaml", size: 3111, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1397,7 +1398,7 @@ func syntax_filesMailYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/mail.yaml", size: 599, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/mail.yaml", size: 599, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1417,7 +1418,7 @@ func syntax_filesMakefileYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/makefile.yaml", size: 1294, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/makefile.yaml", size: 1294, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1437,7 +1438,7 @@ func syntax_filesManYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/man.yaml", size: 271, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/man.yaml", size: 271, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1457,7 +1458,7 @@ func syntax_filesMarkdownYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/markdown.yaml", size: 1049, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/markdown.yaml", size: 1049, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1477,7 +1478,7 @@ func syntax_filesMicroYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/micro.yaml", size: 1306, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/micro.yaml", size: 1306, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1497,7 +1498,7 @@ func syntax_filesMpdconfYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/mpdconf.yaml", size: 474, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/mpdconf.yaml", size: 474, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1517,7 +1518,7 @@ func syntax_filesNanorcYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/nanorc.yaml", size: 1105, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/nanorc.yaml", size: 1105, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1537,7 +1538,7 @@ func syntax_filesNginxYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/nginx.yaml", size: 5020, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/nginx.yaml", size: 5020, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1557,7 +1558,7 @@ func syntax_filesNimYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/nim.yaml", size: 2317, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/nim.yaml", size: 2317, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1577,7 +1578,7 @@ func syntax_filesObjcYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/objc.yaml", size: 2391, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/objc.yaml", size: 2391, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1597,7 +1598,7 @@ func syntax_filesOcamlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ocaml.yaml", size: 1479, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/ocaml.yaml", size: 1479, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1617,7 +1618,7 @@ func syntax_filesOctaveYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/octave.yaml", size: 2586, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/octave.yaml", size: 2586, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1637,7 +1638,7 @@ func syntax_filesPascalYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/pascal.yaml", size: 1856, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/pascal.yaml", size: 1856, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1657,7 +1658,7 @@ func syntax_filesPatchYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/patch.yaml", size: 245, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/patch.yaml", size: 245, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1677,7 +1678,7 @@ func syntax_filesPegYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/peg.yaml", size: 488, mode: os.FileMode(420), modTime: time.Unix(1528797677, 0)}
+	info := bindataFileInfo{name: "syntax_files/peg.yaml", size: 488, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1697,7 +1698,7 @@ func syntax_filesPerl6Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/perl6.yaml", size: 1651, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/perl6.yaml", size: 1651, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1717,7 +1718,7 @@ func syntax_filesPerlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/perl.yaml", size: 1799, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/perl.yaml", size: 1799, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1737,7 +1738,7 @@ func syntax_filesPhpYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/php.yaml", size: 2730, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/php.yaml", size: 2730, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1757,7 +1758,7 @@ func syntax_filesPkgConfigYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/pkg-config.yaml", size: 329, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/pkg-config.yaml", size: 329, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1777,7 +1778,7 @@ func syntax_filesPonyYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/pony.yaml", size: 1293, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/pony.yaml", size: 1293, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1797,7 +1798,7 @@ func syntax_filesPovYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/pov.yaml", size: 718, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/pov.yaml", size: 718, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1817,7 +1818,7 @@ func syntax_filesPowershellYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/PowerShell.yaml", size: 5044, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/PowerShell.yaml", size: 5044, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1837,7 +1838,7 @@ func syntax_filesPoYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/po.yaml", size: 299, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/po.yaml", size: 299, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1857,7 +1858,7 @@ func syntax_filesPrivoxyActionYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/privoxy-action.yaml", size: 1642, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/privoxy-action.yaml", size: 1642, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1877,7 +1878,7 @@ func syntax_filesPrivoxyConfigYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/privoxy-config.yaml", size: 864, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/privoxy-config.yaml", size: 864, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1897,7 +1898,7 @@ func syntax_filesPrivoxyFilterYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/privoxy-filter.yaml", size: 465, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/privoxy-filter.yaml", size: 465, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1917,7 +1918,7 @@ func syntax_filesPuppetYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/puppet.yaml", size: 1534, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/puppet.yaml", size: 1534, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1937,7 +1938,7 @@ func syntax_filesPython2Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/python2.yaml", size: 2533, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/python2.yaml", size: 2533, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1957,7 +1958,7 @@ func syntax_filesPython3Yaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/python3.yaml", size: 2485, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/python3.yaml", size: 2485, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1977,7 +1978,7 @@ func syntax_filesRestYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/reST.yaml", size: 408, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/reST.yaml", size: 408, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1997,7 +1998,7 @@ func syntax_filesRpmspecYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/rpmspec.yaml", size: 1802, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/rpmspec.yaml", size: 1802, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2017,7 +2018,7 @@ func syntax_filesRubyYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/ruby.yaml", size: 1268, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/ruby.yaml", size: 1268, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2037,7 +2038,7 @@ func syntax_filesRustYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/rust.yaml", size: 1188, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/rust.yaml", size: 1188, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2057,7 +2058,7 @@ func syntax_filesRYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/r.yaml", size: 819, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/r.yaml", size: 819, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2077,7 +2078,7 @@ func syntax_filesScalaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/scala.yaml", size: 930, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/scala.yaml", size: 930, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2097,7 +2098,7 @@ func syntax_filesSedYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/sed.yaml", size: 333, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/sed.yaml", size: 333, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2117,7 +2118,7 @@ func syntax_filesShYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/sh.yaml", size: 1933, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/sh.yaml", size: 1933, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2137,7 +2138,7 @@ func syntax_filesSlsYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/sls.yaml", size: 438, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/sls.yaml", size: 438, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2157,7 +2158,7 @@ func syntax_filesSolidityYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/solidity.yaml", size: 1643, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/solidity.yaml", size: 1643, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2177,7 +2178,7 @@ func syntax_filesSqlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/sql.yaml", size: 2213, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/sql.yaml", size: 2213, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2197,7 +2198,7 @@ func syntax_filesSwiftYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/swift.yaml", size: 4444, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/swift.yaml", size: 4444, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2217,7 +2218,7 @@ func syntax_filesSystemdYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/systemd.yaml", size: 5182, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/systemd.yaml", size: 5182, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2237,7 +2238,7 @@ func syntax_filesTclYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/tcl.yaml", size: 2225, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/tcl.yaml", size: 2225, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2257,7 +2258,7 @@ func syntax_filesTexYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/tex.yaml", size: 753, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/tex.yaml", size: 753, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2277,7 +2278,7 @@ func syntax_filesTomlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/toml.yaml", size: 852, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/toml.yaml", size: 852, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2297,7 +2298,7 @@ func syntax_filesTwigYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/twig.yaml", size: 2557, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/twig.yaml", size: 2557, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2317,7 +2318,7 @@ func syntax_filesTypescriptYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/typescript.yaml", size: 1747, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/typescript.yaml", size: 1747, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2337,7 +2338,7 @@ func syntax_filesValaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/vala.yaml", size: 968, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/vala.yaml", size: 968, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2357,7 +2358,7 @@ func syntax_filesVhdlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/vhdl.yaml", size: 2407, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/vhdl.yaml", size: 2407, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2377,7 +2378,7 @@ func syntax_filesViYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/vi.yaml", size: 720, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/vi.yaml", size: 720, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2397,7 +2398,7 @@ func syntax_filesXmlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/xml.yaml", size: 280, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/xml.yaml", size: 280, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2417,7 +2418,7 @@ func syntax_filesXresourcesYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/xresources.yaml", size: 387, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/xresources.yaml", size: 387, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2437,7 +2438,7 @@ func syntax_filesYamlYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/yaml.yaml", size: 843, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/yaml.yaml", size: 843, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2457,7 +2458,27 @@ func syntax_filesYumYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/yum.yaml", size: 348, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/yum.yaml", size: 348, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _syntax_filesZ80Yaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xb4\x55\x51\x6f\xdb\x46\x0c\x7e\xf7\xaf\x20\x9c\xac\xb1\x5b\x28\xc8\x1e\xb6\xa5\xee\x43\x90\x66\x2b\xd0\x61\x5d\x87\x6d\x0f\xc1\xea\x6e\xa3\xee\x28\xeb\xda\xd3\xdd\x8d\xa4\xea\x24\xe0\x8f\x1f\x24\xdb\xad\x91\x04\x69\x1f\x36\x01\x32\x01\x1e\xef\xfb\x3e\x93\xf7\x9d\x9a\x10\x49\xaf\x0b\x2d\x60\x55\xdf\x9c\x9e\x4c\x26\x9e\x94\x9c\x2e\x26\x00\x00\xc3\x62\xc2\x8e\x16\x30\x5d\x2e\x8f\x67\x37\xa7\x27\x36\x56\xcd\x0f\xa7\x93\x09\xf7\x91\x64\x53\x77\x70\x00\xcf\x51\xc8\x43\x4e\xc0\xab\x1a\xa5\x9b\x7d\x33\x07\x4c\x7e\x03\x3a\xfb\x6e\x0e\x1d\x26\x28\xb8\x22\xd9\x6d\x78\x99\x44\xb9\x77\x1a\x72\xda\xe6\xe0\x9c\x83\xb6\x1d\x69\x70\xf0\x08\x62\x5e\x05\x37\x2e\x54\x20\x8a\x4a\x1d\x25\x1d\x85\xd4\xb3\xb3\x30\x9f\xa1\x77\x86\xde\x1b\x26\x6f\xae\x98\x27\x67\x21\x39\xcb\x6c\x52\x3b\x93\xbe\xb6\xab\xcc\xf3\xd9\x59\x15\xe6\xcb\x65\x3d\xdd\x52\x3c\x0f\x2a\x0f\x80\xd6\x41\x8d\x49\x8c\xa3\x71\x74\xc6\x6c\xcc\xce\x84\xd4\x24\xa2\x09\x0f\x6f\x34\x59\x63\xb9\x83\xfc\x63\xdf\x15\x19\xff\xb3\xf4\x35\xe7\x5e\x43\xa2\x87\xa8\x1c\xc6\x68\xef\x8a\xbd\x63\x63\x52\x63\xd1\x3b\x90\xbf\x29\xba\xf7\x90\x0b\x31\x8e\x6d\x82\xd9\x00\x1f\x3d\xd4\xe4\xb0\x17\x82\xa0\xe0\x33\x49\x3a\x52\x68\x82\x02\xa6\xeb\x75\x4b\x4c\x40\x51\x68\xfe\x00\x77\xf4\x56\x72\xb1\xd2\x4b\x7b\x87\xf4\x55\x90\x87\xda\xee\x5c\x63\xae\x44\xf3\x88\xe6\x83\x51\xb0\x16\xa3\x5a\xca\xc5\xc4\x35\x26\x9a\xf7\x5b\xb3\x1b\xf6\xaf\xb4\x0a\xa2\xc4\xbb\x49\x9f\x56\x75\xd0\x2d\x4b\xf0\x94\x34\x34\x81\x78\x7f\xba\x56\x9b\x33\x6f\x64\xad\xc5\x3b\x1a\xbf\xfe\xf6\xb3\xfb\x1b\xab\x9d\x79\xb2\x36\x9a\xdc\xa7\xe8\x22\x27\x51\x4c\xba\x53\xf4\x73\xdf\xd5\xc4\x5b\x48\xb7\x5d\x3c\x4e\x63\x76\x8b\x7b\x68\x8f\xec\x2b\xfb\x7b\x7e\xf6\xe6\xa4\x7a\x7a\x5e\xbd\xc0\xaa\x79\xfb\x64\x4f\xd5\x4f\x58\x53\xbc\x4f\xd4\x1b\xac\x6e\xce\xab\x3f\x4e\xaa\xa7\xc7\x7f\xbd\x7d\xb2\xd8\x8a\xd8\xa3\x11\xe5\x90\x56\x1b\x2f\x0d\x8f\x28\xf2\xd8\xf4\xe9\xf4\x63\x8e\x92\xbf\x95\x91\xf7\xa1\x8c\xd2\x96\xcb\xe3\x4f\xd9\x3d\x5b\xee\x9e\x7d\xa6\x42\x2e\x60\xbc\x68\x91\x3f\x6d\xfd\x52\x39\x47\xb7\xd5\x1c\xfd\x5f\x62\x0e\x0e\xe0\x17\xa6\xc2\xd9\x91\x48\xe6\x9d\x79\x31\x46\xc8\x0d\x28\x32\x68\x8b\x3a\x20\x29\x86\x24\x40\x1f\x88\xaf\xb5\x0d\x69\x05\x74\xe5\xa8\x28\x20\x34\xb4\x86\xa6\x4f\x7b\x37\x4c\x05\x65\x03\xba\x77\x50\x7c\x6d\x7e\x6d\x5e\x4c\x68\xac\x34\xfa\xa7\x1f\x5e\x19\x5d\x5f\x72\x91\xd1\x26\x62\x1d\x3a\xce\x46\xc9\x77\xc6\x22\xa3\x63\x99\xc6\x58\x1b\xaf\x4d\xda\xd0\xa8\xd1\x55\xc9\xac\xb6\x8a\xb9\xc6\x68\xa5\xe7\x15\x0d\xb7\x52\x1d\x92\xf5\x69\x40\x4f\x74\xa5\xfd\x80\xd2\x5b\xe1\x90\x54\x37\x21\x6c\xc2\x87\x4d\x68\x8c\xa9\xe8\x50\xc5\xd6\x60\x88\xb6\x46\x4e\x03\x4e\xec\x3d\x59\x68\x8c\xe2\xf8\x23\x34\xd4\x38\x73\x2d\x72\x87\xf7\x9f\xf2\x6e\xf0\xef\xee\x90\x5f\x44\x14\x09\x0e\x50\x3a\x78\x56\x89\x5e\x47\xfa\x38\xfb\xb1\xf0\xee\xcc\x9f\xdd\x9e\xf9\xe1\x67\xa6\xab\xd9\xe7\x05\x4c\x67\xbf\xbf\xfe\xfe\xb5\x5d\x5e\x5e\xda\x8b\x97\x97\xaf\x7e\x98\x2f\xce\x76\x36\xd9\x7c\x20\xe0\xf1\x97\xf1\xff\xb9\x5c\x3e\xfe\x0f\x25\x4c\xfe\x0d\x00\x00\xff\xff\xf6\xb7\x31\x39\xf0\x06\x00\x00")
+
+func syntax_filesZ80YamlBytes() ([]byte, error) {
+	return bindataRead(
+		_syntax_filesZ80Yaml,
+		"syntax_files/z80.yaml",
+	)
+}
+
+func syntax_filesZ80Yaml() (*asset, error) {
+	bytes, err := syntax_filesZ80YamlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "syntax_files/z80.yaml", size: 1776, mode: os.FileMode(420), modTime: time.Unix(1538564181, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2477,7 +2498,7 @@ func syntax_filesZshYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "syntax_files/zsh.yaml", size: 2123, mode: os.FileMode(420), modTime: time.Unix(1528797678, 0)}
+	info := bindataFileInfo{name: "syntax_files/zsh.yaml", size: 2123, mode: os.FileMode(420), modTime: time.Unix(1534410439, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -2648,6 +2669,7 @@ var _bindata = map[string]func() (*asset, error){
 	"syntax_files/xresources.yaml": syntax_filesXresourcesYaml,
 	"syntax_files/yaml.yaml": syntax_filesYamlYaml,
 	"syntax_files/yum.yaml": syntax_filesYumYaml,
+	"syntax_files/z80.yaml": syntax_filesZ80Yaml,
 	"syntax_files/zsh.yaml": syntax_filesZshYaml,
 }
 
@@ -2806,6 +2828,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"xresources.yaml": &bintree{syntax_filesXresourcesYaml, map[string]*bintree{}},
 		"yaml.yaml": &bintree{syntax_filesYamlYaml, map[string]*bintree{}},
 		"yum.yaml": &bintree{syntax_filesYumYaml, map[string]*bintree{}},
+		"z80.yaml": &bintree{syntax_filesZ80Yaml, map[string]*bintree{}},
 		"zsh.yaml": &bintree{syntax_filesZshYaml, map[string]*bintree{}},
 	}},
 }}
