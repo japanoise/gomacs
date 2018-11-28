@@ -13,7 +13,7 @@ func shellCmd(com string, args []string) (string, error) {
 	cmd := exec.Command(com, args...)
 	out, err := cmd.CombinedOutput()
 	// Gomacs doesn't like trailing newlines; strip 'em
-	if out[len(out)-1] == '\n' {
+	if len(out) > 0 && out[len(out)-1] == '\n' {
 		out = out[:len(out)-1]
 	}
 	return string(out), err
