@@ -28,6 +28,9 @@ func screenYtoBufAndCy(sy int) (*EditorBuffer, int) {
 }
 
 func JumpToMousePoint() {
+	if Global.CurrentB.NumRows <= 0 {
+		return
+	}
 	var cy int
 	Global.CurrentB, cy = screenYtoBufAndCy(Global.MouseY)
 	if cy >= Global.CurrentB.NumRows {
@@ -44,6 +47,9 @@ var mousestate byte = GomacsMouseNone
 
 func MouseDragRegion() {
 	buf := Global.CurrentB
+	if buf.NumRows <= 0 {
+		return
+	}
 	cachedcx, cachedcy := buf.cx, buf.cy
 	JumpToMousePoint()
 	if mousestate == GomacsMouseDragging && buf == Global.CurrentB && (cachedcx != buf.cx || cachedcy != buf.cy) {
