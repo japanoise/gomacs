@@ -759,6 +759,11 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "mouse4" "mwheel-scroll-up")
 (emacsbindkey "mouse5" "mwheel-scroll-down")
 (emacsbindkey "up-mouse" "mouse-release")
+(emacsbindkey "f1 a" "apropos-command")
+(emacsbindkey "f1 c" "describe-key-briefly")
+(emacsbindkey "f1 m" "show-modes")
+(emacsbindkey "f1 b" "describe-bindings")
+(emacsbindkey "f1 f1" "quick-help")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

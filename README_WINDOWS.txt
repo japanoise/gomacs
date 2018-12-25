@@ -33,11 +33,6 @@ Windows uses ^H for backspace. There's already a workaround in termbox-util for
 this, but for Gomacs it leaves us with the problem of what to do about the C-h
 family of commands - very useful help functions.
 
-This snippet from the examples should help in this usecase, by mapping the help
-functions to <f1> instead of ^H:
-
-(emacsbindkey "f1 a" "apropos-command")
-(emacsbindkey "f1 c" "describe-key-briefly")
-(emacsbindkey "f1 m" "show-modes")
-(emacsbindkey "f1 b" "describe-bindings")
-(emacsbindkey "f1 f1" "quick-help")
+In keeping with tradition for UI, especially on Windows, the help functions are
+additionally mapped to F1, so wherever you see C-h in the documentation, replace
+it with F1.
