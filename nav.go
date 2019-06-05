@@ -181,7 +181,7 @@ func MoveCursorForthPage() {
 		_, sy := GetScreenSize()
 		Global.CurrentB.cy = Global.CurrentB.rowoff + sy - 1
 		if Global.CurrentB.cy > Global.CurrentB.NumRows {
-			Global.CurrentB.cy = Global.CurrentB.NumRows
+			Global.CurrentB.cy = Global.CurrentB.NumRows - 1
 		}
 		MovePage(false, sy)
 	}
