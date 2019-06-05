@@ -104,7 +104,14 @@ func openFile(fn string, env *glisp.Glisp) {
 		Global.Windows[i] = buffer
 	}
 	Global.CurrentB = buffer
-	EditorOpen(fn, env)
+	ferr := EditorOpen(fn, env)
+	if ferr != nil {
+		Global.Input = ferr.Error()
+		AddErrorMessage(ferr.Error())
+		Global.CurrentB.Rows = make([]*EditorRow, 1)
+		Global.CurrentB.Rows[0] = &EditorRow{Global.CurrentB.NumRows,
+			0, "", 0, "", nil, nil, 0}
+	}
 }
 
 func (e *EditorBuffer) getFilename() string {
