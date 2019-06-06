@@ -183,11 +183,5 @@ rather than using lisp functions, because `C-h c` can't access the lisp code.
 
 Minor modes are stored as a simple map of strings to booleans, for fairly fast
 access. They can be toggled with the command `toggle-mode`, and you can view the
-current buffer's activated modes with the `show-modes` command. Here are the
-modes implemented in the Go code:
-
-- `terminal-title-mode` - use an escape sequence to set the terminal title.
-- `line-number-mode` - display line numbers on the left edge of the buffer.
-- `auto-indent-mode` - copy indentation from previous line when inserting a
-  newline.
-- `tilde-mode` - draw `vi`-style blue tildes on lines outside the file.
+current buffer's activated modes with the `show-modes` command. See the README
+for the list of modes and what they do.

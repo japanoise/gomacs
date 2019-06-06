@@ -544,17 +544,16 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 		Global.quit = true
 		return
 	}
+	var selfins *CommandFunc
 	// Hack fixed (though we won't support any encoding save utf8)
 	if !Global.CurrentB.hasMode("no-self-insert-mode") && utf8.RuneCountInString(key) == 1 {
-		com := &CommandFunc{
+		selfins = &CommandFunc{
 			key,
 			func(*glisp.Glisp) {
 				editorInsertStr(key)
 			},
 			false,
 		}
-		com.Run(env)
-		return
 	}
 	if Global.MajorBindings[Global.CurrentB.MajorMode] != nil {
 		Global.Input = ""
@@ -567,6 +566,10 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 	Global.Input = ""
 	com, comerr := Emacs.GetCommand(key)
 	if comerr != nil {
+		if selfins != nil {
+			selfins.Run(env)
+			return
+		}
 		Global.Input = comerr.Error()
 		return
 	} else if com != nil {

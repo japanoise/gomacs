@@ -55,6 +55,12 @@ func (c *CommandList) PutCommand(key string, command *CommandFunc) {
 	if c.Children == nil {
 		c.Children = make(map[string]*CommandList)
 	}
+	if key == " " {
+		c.Children[key] = &CommandList{false, nil, nil}
+		c.Children[key].Parent = false
+		c.Children[key].Command = command
+		return
+	}
 	keys := strings.Split(key, " ")
 	if c.Children[keys[0]] == nil {
 		c.Children[keys[0]] = &CommandList{false, nil, nil}
@@ -364,4 +370,5 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"mwheel-scroll-down", func(*glisp.Glisp) { MouseScrollDown() }, false})
 	DefineCommand(&CommandFunc{"mouse-release", func(*glisp.Glisp) { MouseRelease() }, false})
 	DefineCommand(&CommandFunc{"mouse-yank-primary", func(*glisp.Glisp) { MouseYankXsel() }, false})
+	DefineCommand(&CommandFunc{"insert-space-maybe-fill", func(*glisp.Glisp) { insertSpaceMaybeFill() }, false})
 }

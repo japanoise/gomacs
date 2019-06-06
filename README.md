@@ -226,6 +226,9 @@ command. Here's what each mode does:
 - `line-number-mode` - display line numbers on the left edge of the buffer.
 - `auto-indent-mode` - copy indentation from previous line when inserting a
   newline.
+- `auto-fill-mode` - automatically fill (wrap) the current paragraph to
+  `fill-column` characters (default 80, change with `C-x f`) when inserting a
+  space.
 - `tilde-mode` - draw `vi`-style blue tildes on lines outside the file
 - `xsel-jump-to-cursor-mode` - jump to the mouse cursor position before pasting
   from the X selection
