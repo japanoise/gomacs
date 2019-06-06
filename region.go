@@ -420,7 +420,7 @@ func FillString(s string) string {
 				break
 			}
 			ww := termutil.RunewidthStr(word)
-			if lw+ww > Global.Fillcolumn {
+			if lw+ww+1 > Global.Fillcolumn {
 				ret.WriteString("\n" + word)
 				lw = ww
 			} else {
