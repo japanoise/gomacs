@@ -474,3 +474,11 @@ func insertSpaceMaybeFill() {
 	}
 	editorInsertStr(" ")
 }
+
+func doFillParagraphOrRegion() {
+	if Global.CurrentB.regionActive {
+		doFillRegion()
+	} else {
+		doFillParagraph()
+	}
+}

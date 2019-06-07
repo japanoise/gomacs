@@ -371,4 +371,5 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"mouse-release", func(*glisp.Glisp) { MouseRelease() }, false})
 	DefineCommand(&CommandFunc{"mouse-yank-primary", func(*glisp.Glisp) { MouseYankXsel() }, false})
 	DefineCommand(&CommandFunc{"insert-space-maybe-fill", func(*glisp.Glisp) { insertSpaceMaybeFill() }, false})
+	DefineCommand(&CommandFunc{"fill-paragraph-or-region", func(env *glisp.Glisp) { doFillParagraphOrRegion() }, false})
 }

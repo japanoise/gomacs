@@ -742,7 +742,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x r i" "insert-register")
 (emacsbindkey "C-x r C-@" "point-to-register")
 (emacsbindkey "C-x C-k x" "kmacro-to-register")
-(emacsbindkey "M-q" "fill-paragraph")
+(emacsbindkey "M-q" "fill-paragraph-or-region")
 (emacsbindkey "C-x f" "set-fill-column")
 (emacsbindkey "M-~" "not-modified")
 (emacsbindkey "M-!" "shell-command")
