@@ -187,6 +187,7 @@ yet - I'll try to keep this list up to date!
 - `M-!` - Run shell command (add a universal argument to output to buffer)
 - `M-|` - Run shell command on region (add a universal argument to replace
   region with output)
+- `M-/` - Auto-complete
 
 ## Customization
 

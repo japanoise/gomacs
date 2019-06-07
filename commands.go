@@ -644,4 +644,5 @@ Current key bindings:
 		func(env *glisp.Glisp) {
 			doFillParagraphOrRegion()
 		}, false})
+	DefineCommand(&CommandFunc{"auto-complete", autoComplete, false})
 }

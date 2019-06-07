@@ -1,10 +1,12 @@
 package main
 
 import (
+	"regexp"
 	"strings"
 	"unicode/utf8"
 
 	"github.com/japanoise/termbox-util"
+	glisp "github.com/zhemao/glisp/interpreter"
 )
 
 func indexEndOfBackwardWord() int {
@@ -149,4 +151,67 @@ func indexOfFirstWord(s string) int {
 		}
 	}
 	return len(s)
+}
+
+func getBackwardWord() string {
+	return Global.CurrentB.Rows[Global.CurrentB.cy].
+		Data[indexEndOfBackwardWord():Global.CurrentB.cx]
+}
+
+func autoComplete(env *glisp.Glisp) {
+	word := getBackwardWord()
+	re, err := regexp.Compile(`\b` + regexp.QuoteMeta(word) + `(\w+)`)
+	if err != nil {
+		Global.Input = err.Error()
+	}
+
+	matches := []string{}
+	for _, buf := range Global.Buffers {
+		for _, row := range buf.Rows {
+			somematches := re.FindAllStringSubmatch(row.Data, -1)
+			if len(somematches) > 0 {
+			MATCH:
+				for _, match := range somematches {
+					for _, pmatch := range matches {
+						if pmatch == match[1] {
+							continue MATCH
+						}
+					}
+					matches = append(matches, match[1])
+				}
+			}
+		}
+	}
+	lm := len(matches)
+
+	if lm == 0 {
+		Global.Input = "No matches for " + word
+		return
+	} else if lm == 1 {
+		editorInsertStr(matches[0])
+		return
+	}
+
+	index := 0
+	first := true
+	ocx, ocy := Global.CurrentB.cx, Global.CurrentB.cy
+	micromode("M-/", "Press M-/ again to cycle through complete candidates",
+		env, func(*glisp.Glisp) {
+			if first {
+				first = false
+			} else {
+				bufKillRegion(Global.CurrentB, ocx,
+					Global.CurrentB.cx, ocy, ocy)
+			}
+			editorRowInsertStr(Global.CurrentB.Rows[ocy],
+				Global.CurrentB, ocx, matches[index])
+			Global.CurrentB.cx = ocx + len(matches[index])
+
+			index++
+			if index >= lm {
+				index = 0
+			}
+		})
+
+	editorAddInsertUndo(ocx, ocy, matches[index])
 }
