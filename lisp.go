@@ -766,6 +766,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "f1 f1" "quick-help")
 (emacsbindkey " " "insert-space-maybe-fill")
 (emacsbindkey "M-/" "auto-complete")
+(emacsbindkey "C-t" "transpose-chars")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/japanoise/termbox-util"
@@ -481,4 +482,55 @@ func doFillParagraphOrRegion() {
 	} else {
 		doFillParagraph()
 	}
+}
+
+func doTransposeChars() {
+	cx := Global.CurrentB.cx
+	cy := Global.CurrentB.cy
+	if cy == 0 && cx == 0 {
+		Global.Input = "Beginning of buffer"
+		return
+	} else if cy >= Global.CurrentB.NumRows-1 && Global.CurrentB.Rows[cy].Size <= cx {
+		Global.Input = "End of buffer"
+		return
+	} else if Global.CurrentB.Rows[cy].Size == 0 {
+		Global.Input = "Nothing to transpose."
+		return
+	} else if Global.CurrentB.Rows[cy].Size <= cx {
+		if Global.CurrentB.Rows[cy+1].Size == 0 {
+			Global.Input = "Nothing to transpose."
+			return
+		}
+		first := Global.CurrentB.Rows[cy].Data[cx-1]
+		second := Global.CurrentB.Rows[cy+1].Data[0]
+		transposeRegion(Global.CurrentB, cx-1, 1,
+			cy, cy+1,
+			func(string) string {
+				return fmt.Sprintf("%c\n%c", second, first)
+			})
+		return
+	} else if cx == 0 {
+		Global.CurrentB.MoveCursorLeft()
+		cx = Global.CurrentB.cx
+		cy = Global.CurrentB.cy
+		if Global.CurrentB.Rows[cy].Size == 0 {
+			Global.Input = "Nothing to transpose."
+			return
+		}
+		first := Global.CurrentB.Rows[cy].Data[cx-1]
+		second := Global.CurrentB.Rows[cy+1].Data[0]
+		transposeRegion(Global.CurrentB, cx-1, 1,
+			cy, cy+1,
+			func(string) string {
+				return fmt.Sprintf("%c\n%c", second, first)
+			})
+		return
+	}
+	first := Global.CurrentB.Rows[cy].Data[cx-1]
+	second := Global.CurrentB.Rows[cy].Data[cx]
+	transposeRegion(Global.CurrentB, cx-1, cx+1,
+		cy, cy,
+		func(string) string {
+			return fmt.Sprintf("%c%c", second, first)
+		})
 }

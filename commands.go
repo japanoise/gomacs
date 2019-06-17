@@ -645,4 +645,8 @@ Current key bindings:
 			doFillParagraphOrRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"auto-complete", autoComplete, false})
+	DefineCommand(&CommandFunc{"transpose-chars",
+		func(env *glisp.Glisp) {
+			doTransposeChars()
+		}, false})
 }

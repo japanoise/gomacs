@@ -147,6 +147,7 @@ yet - I'll try to keep this list up to date!
 - `M-q` - Fill paragraph or region (justify it to the width of the fill column)
 - `M-x fill-region` - Fill region
 - `C-x f` - Set the fill column
+- `C-t` - Transpose (swap) characters at point
 
 ### Region operations
 
