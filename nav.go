@@ -140,6 +140,9 @@ func MovePage(back bool, sy int) {
 }
 
 func MoveCursorBackPage() {
+	if Global.CurrentB.NumRows == 0 {
+		return
+	}
 	if Global.SetUniversal {
 		sy := Global.Universal
 		if sy < 0 {
@@ -164,6 +167,9 @@ func MoveCursorBackPage() {
 }
 
 func MoveCursorForthPage() {
+	if Global.CurrentB.NumRows == 0 {
+		return
+	}
 	if Global.SetUniversal {
 		sy := Global.Universal
 		if sy < 0 {
