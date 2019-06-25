@@ -9,42 +9,56 @@ import (
 	glisp "github.com/zhemao/glisp/interpreter"
 )
 
-func indexEndOfBackwardWord() int {
+func indexEndOfBackwardWord() (int, int) {
 	cx, icy := Global.CurrentB.cx, Global.CurrentB.cy
 	if icy >= Global.CurrentB.NumRows {
-		return cx
+		return cx, icy
 	}
 	pre := true
-	for cx > 0 {
-		r, rs :=
-			utf8.DecodeLastRuneInString(Global.CurrentB.Rows[icy].Data[:cx])
-		if !termutil.WordCharacter(r) && !pre {
-			return cx
-		} else {
-			pre = false
+	for cy := icy; cy >= 0; cy-- {
+		if cy != icy {
+			cx = Global.CurrentB.Rows[cy].Size
 		}
-		cx -= rs
+		for cx > 0 {
+			r, rs :=
+				utf8.DecodeLastRuneInString(Global.CurrentB.Rows[cy].Data[:cx])
+			if !termutil.WordCharacter(r) && !pre {
+				return cx, cy
+			} else if termutil.WordCharacter(r) {
+				pre = false
+			}
+			cx -= rs
+		}
+		if !pre {
+			return cx, cy
+		}
 	}
-	return cx
+	return cx, 0
 }
 
-func indexEndOfForwardWord() int {
+func indexEndOfForwardWord() (int, int) {
 	cx, icy := Global.CurrentB.cx, Global.CurrentB.cy
 	if icy >= Global.CurrentB.NumRows {
-		return cx
+		return cx, icy
 	}
-	l := Global.CurrentB.Rows[icy].Size
 	pre := true
-	for cx < l {
-		r, rs := utf8.DecodeRuneInString(Global.CurrentB.Rows[icy].Data[cx:])
-		if !termutil.WordCharacter(r) && !pre {
-			return cx
-		} else {
-			pre = false
+	for cy := icy; cy < Global.CurrentB.NumRows; cy++ {
+		l := Global.CurrentB.Rows[cy].Size
+		for cx < l {
+			r, rs := utf8.DecodeRuneInString(Global.CurrentB.Rows[cy].Data[cx:])
+			if !termutil.WordCharacter(r) && !pre {
+				return cx, cy
+			} else if termutil.WordCharacter(r) {
+				pre = false
+			}
+			cx += rs
 		}
-		cx += rs
+		if !pre {
+			return cx, cy
+		}
+		cx = 0
 	}
-	return cx
+	return cx, icy
 }
 
 func delBackWord() {
@@ -54,9 +68,11 @@ func delBackWord() {
 		if icy >= Global.CurrentB.NumRows {
 			return
 		}
-		ncx := indexEndOfBackwardWord()
-		if ncx < icx {
-			Global.Clipboard = rowDelRange(Global.CurrentB.Rows[icy], ncx, icx, Global.CurrentB)
+		ncx, ncy := indexEndOfBackwardWord()
+		if ncx < icx || ncy != icy {
+			ret := bufKillRegion(Global.CurrentB, ncx, icx, ncy, icy)
+			editorAddRegionUndo(false, ncx, icx, ncy, icy, ret)
+			Global.Clipboard = ret
 			Global.CurrentB.cx = ncx
 		}
 	}
@@ -68,7 +84,7 @@ func moveBackWord() {
 		if Global.CurrentB.cx == 0 {
 			Global.CurrentB.MoveCursorLeft()
 		}
-		Global.CurrentB.cx = indexEndOfBackwardWord()
+		Global.CurrentB.cx, Global.CurrentB.cy = indexEndOfBackwardWord()
 		Global.CurrentB.prefcx = Global.CurrentB.cx
 	}
 }
@@ -80,9 +96,11 @@ func delForwardWord() {
 		if icy >= Global.CurrentB.NumRows {
 			return
 		}
-		ncx := indexEndOfForwardWord()
-		if ncx > icx {
-			Global.Clipboard = rowDelRange(Global.CurrentB.Rows[icy], icx, ncx, Global.CurrentB)
+		ncx, ncy := indexEndOfForwardWord()
+		if ncx > icx || ncy != icy {
+			ret := bufKillRegion(Global.CurrentB, icx, ncx, icy, ncy)
+			editorAddRegionUndo(false, icx, ncx, icy, ncy, ret)
+			Global.Clipboard = ret
 		}
 	}
 }
@@ -94,10 +112,7 @@ func moveForwardWord() {
 		if icy >= Global.CurrentB.NumRows {
 			return
 		}
-		if Global.CurrentB.cx == Global.CurrentB.Rows[icy].Size {
-			Global.CurrentB.MoveCursorRight()
-		}
-		Global.CurrentB.cx = indexEndOfForwardWord()
+		Global.CurrentB.cx, Global.CurrentB.cy = indexEndOfForwardWord()
 		Global.CurrentB.prefcx = Global.CurrentB.cx
 	}
 }
@@ -105,10 +120,10 @@ func moveForwardWord() {
 func upcaseWord() {
 	times := getRepeatTimes()
 	for i := 0; i < times; i++ {
-		icx := Global.CurrentB.cx
-		endc := indexEndOfForwardWord()
+		icx, icy := Global.CurrentB.cx, Global.CurrentB.cy
+		endc, endl := indexEndOfForwardWord()
 		if endc > icx {
-			transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.ToUpper)
+			transposeRegion(Global.CurrentB, icx, endc, icy, endl, strings.ToUpper)
 		}
 	}
 }
@@ -116,22 +131,22 @@ func upcaseWord() {
 func downcaseWord() {
 	times := getRepeatTimes()
 	for i := 0; i < times; i++ {
-		icx := Global.CurrentB.cx
-		endc := indexEndOfForwardWord()
+		icx, icy := Global.CurrentB.cx, Global.CurrentB.cy
+		endc, endl := indexEndOfForwardWord()
 		if endc > icx {
-			transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, strings.ToLower)
+			transposeRegion(Global.CurrentB, icx, endc, icy, endl, strings.ToLower)
 		}
 	}
 }
 
 func capitalizeWord() {
 	times := getRepeatTimes()
-	icx := Global.CurrentB.cx
-	endc := icx
+	icx, icy := Global.CurrentB.cx, Global.CurrentB.cy
+	endc, endl := icx, icy
 	for i := 0; i < times; i++ {
-		endc = indexEndOfForwardWord()
+		endc, endl = indexEndOfForwardWord()
 	}
-	transposeRegion(Global.CurrentB, icx, endc, Global.CurrentB.cy, Global.CurrentB.cy, func(s string) string { return strings.Title(strings.ToLower(s)) })
+	transposeRegion(Global.CurrentB, icx, endc, icy, endl, func(s string) string { return strings.Title(strings.ToLower(s)) })
 }
 
 func indexOfLastWord(s string) int {
@@ -154,8 +169,8 @@ func indexOfFirstWord(s string) int {
 }
 
 func getBackwardWord() string {
-	return Global.CurrentB.Rows[Global.CurrentB.cy].
-		Data[indexEndOfBackwardWord():Global.CurrentB.cx]
+	bwx, bwy := indexEndOfBackwardWord()
+	return getRegionText(Global.CurrentB, bwx, Global.CurrentB.cx, bwy, Global.CurrentB.cy)
 }
 
 func autoComplete(env *glisp.Glisp) {

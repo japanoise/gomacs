@@ -148,6 +148,7 @@ yet - I'll try to keep this list up to date!
 - `M-x fill-region` - Fill region
 - `C-x f` - Set the fill column
 - `C-t` - Transpose (swap) characters at point
+- `M-t` - Transpose (swap) words at point
 
 ### Region operations
 

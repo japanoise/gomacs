@@ -514,6 +514,14 @@ Current key bindings:
 	if Global.debug {
 		DefineCommand(&CommandFunc{"debug-undo", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.CurrentB.Undo, "\n", Global.CurrentB.Undo.prev)) }, false})
 		DefineCommand(&CommandFunc{"debug-universal", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.Universal), fmt.Sprint(Global.SetUniversal)) }, false})
+		DefineCommand(&CommandFunc{"debug-buffer", func(*glisp.Glisp) {
+			linedata := make([]string, Global.CurrentB.NumRows+2)
+			linedata[0] = fmt.Sprintf("cx: %d, cy: %d", Global.CurrentB.cx, Global.CurrentB.cy)
+			for i, row := range Global.CurrentB.Rows {
+				linedata[i+1] = fmt.Sprintf("Size: %d, data: \"%s\"", row.Size, row.Data)
+			}
+			showMessages(linedata...)
+		}, false})
 	}
 	DefineCommand(&CommandFunc{"repeat",
 		func(env *glisp.Glisp) {
@@ -648,5 +656,9 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"transpose-chars",
 		func(env *glisp.Glisp) {
 			doTransposeChars()
+		}, false})
+	DefineCommand(&CommandFunc{"transpose-words",
+		func(env *glisp.Glisp) {
+			doTransposeWords()
 		}, false})
 }

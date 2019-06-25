@@ -534,3 +534,32 @@ func doTransposeChars() {
 			return fmt.Sprintf("%c%c", second, first)
 		})
 }
+
+func doTransposeWords() {
+	buf := Global.CurrentB
+	if buf.cy == buf.NumRows-1 && buf.cx == buf.Rows[buf.cy].Size {
+		moveBackWord()
+		Global.Input = "Don't have two things to transpose"
+		return
+	}
+	if buf.cx == 0 || buf.cx == buf.Rows[buf.cy].Size {
+		Global.Input = "Cowardlily refusing to transpose at SoL or EoL"
+		return
+	}
+	moveBackWord()
+	backcx, backcy := buf.cx, buf.cy
+	moveForwardWord()
+	ebackcx := buf.cx
+	first := buf.Rows[backcy].Data[backcx:ebackcx]
+	moveForwardWord()
+	eforthcx := buf.cx
+	moveBackWord()
+	forthcx, forthcy := buf.cx, buf.cy
+	second := buf.Rows[forthcy].Data[forthcx:eforthcx]
+	middle := getRegionText(buf, ebackcx, forthcx, backcy, forthcy)
+	transposeRegion(buf, backcx, eforthcx,
+		backcy, forthcy,
+		func(string) string {
+			return fmt.Sprintf("%s%s%s", second, middle, first)
+		})
+}
