@@ -542,10 +542,10 @@ func doTransposeWords() {
 		Global.Input = "Don't have two things to transpose"
 		return
 	}
-	if buf.cx == 0 || buf.cx == buf.Rows[buf.cy].Size {
+	/*if buf.cx == 0 || buf.cx == buf.Rows[buf.cy].Size {
 		Global.Input = "Cowardlily refusing to transpose at SoL or EoL"
 		return
-	}
+	}*/
 	moveBackWord()
 	backcx, backcy := buf.cx, buf.cy
 	moveForwardWord()
@@ -562,4 +562,5 @@ func doTransposeWords() {
 		func(string) string {
 			return fmt.Sprintf("%s%s%s", second, middle, first)
 		})
+	Global.Input = fmt.Sprintf("first: %q, middle: %q, second: %q", first, middle, second)
 }
