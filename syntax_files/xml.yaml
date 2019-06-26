@@ -1,10 +1,9 @@
 filetype: xml
 
 detect:
-    filename: "\\.(xml|sgml?|rng|plist)$"
+    filename: "\\.(xml|sgml?|rng|plist|svg)$"
 
 rules:
-    - identifier: "<.*?>"
     - comment:
         start: "<!DOCTYPE"
         end: "[/]?>"
@@ -14,3 +13,11 @@ rules:
         end: "-->"
         rules: []
     - special: "&[^;]*;"
+    - identifier:
+        start: "<"
+        end: "/?>"
+        rules:
+            - constant.string:
+                start: "\""
+                end: "\""
+                rules: []
