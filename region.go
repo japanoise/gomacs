@@ -535,15 +535,15 @@ func doTransposeChars() {
 		})
 }
 
+func isRegionInvalid(startc, endc, startl, endl int) bool {
+	return (startl == endl && startc >= endc) || startl > endl
+}
+
 func doTransposeWords() {
 	buf := Global.CurrentB
 	if buf.cy == buf.NumRows-1 && buf.cx == buf.Rows[buf.cy].Size {
 		moveBackWord()
 		Global.Input = "Don't have two things to transpose"
-		return
-	}
-	if buf.cx == 0 || buf.cx == buf.Rows[buf.cy].Size {
-		Global.Input = "Cowardlily refusing to transpose at SoL or EoL"
 		return
 	}
 	moveBackWord()
@@ -557,6 +557,10 @@ func doTransposeWords() {
 	forthcx, forthcy := buf.cx, buf.cy
 	second := buf.Rows[forthcy].Data[forthcx:eforthcx]
 	middle := getRegionText(buf, ebackcx, forthcx, backcy, forthcy)
+	if isRegionInvalid(backcx, eforthcx, backcy, forthcy) {
+		Global.Input = "Don't have two things to transpose"
+		return
+	}
 	transposeRegion(buf, backcx, eforthcx,
 		backcy, forthcy,
 		func(string) string {
