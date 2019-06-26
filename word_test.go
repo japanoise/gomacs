@@ -131,3 +131,44 @@ func TestTransposeWordsAtEof(t *testing.T) {
 		t.Error("Expected 6 for cx but was actually", Global.CurrentB.cx)
 	}
 }
+
+func TestTransposeWordsMultiline(t *testing.T) {
+	InitEditor()
+	editorInsertStr("test1")
+	editorInsertNewline(false)
+	editorInsertStr("test2")
+	Global.CurrentB.cx = 0
+	doTransposeWords()
+	Global.CurrentB.FailIfBufferNe([]string{"test2", "test1"}, t)
+	Global.CurrentB.cx = 0
+	doTransposeWords()
+	Global.CurrentB.FailIfBufferNe([]string{"test1", "test2"}, t)
+}
+
+func TestTransposeWordsAtBof(t *testing.T) {
+	InitEditor()
+	editorInsertStr("test1 test2")
+	doTransposeWords()
+	Global.CurrentB.cx = 0
+}
+
+func TestTransposeWordsWithBlankFinalLine(t *testing.T) {
+	editorInsertStr("test1")
+	editorInsertNewline(false)
+	editorInsertStr("test2")
+	editorInsertNewline(false)
+	Global.CurrentB.cx = 5
+	Global.CurrentB.cy = 1
+	doTransposeWords()
+}
+
+func TestTransposeWordsWithBlankInitialLine(t *testing.T) {
+	editorInsertNewline(false)
+	editorInsertStr("test1")
+	editorInsertNewline(false)
+	editorInsertStr("test2")
+	editorInsertNewline(false)
+	Global.CurrentB.cx = 0
+	Global.CurrentB.cy = 1
+	doTransposeWords()
+}
