@@ -10,23 +10,20 @@ rules:
     - statement: "[!&=]"
     - constant.number: "\\b[0-9]+\\b"
 
+    - comment:
+        start: "^[ \t]*\""
+        end: "$"
+        rules: []
+
     - constant.string:
         start: "\""
         end: "\""
         skip: "\\\\."
         rules:
             - constant.specialChar: "\\\\."
-
     - constant.string:
         start: "'"
         end: "'"
         skip: "\\\\."
         rules:
             - constant.specialChar: "\\\\."
-
-    - constant.comment:
-        start: "\""
-        end: "$"
-        rules: []
-        
-
