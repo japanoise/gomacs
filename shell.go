@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"os/exec"
 	"strings"
 
+	"github.com/kballard/go-shellquote"
 	"github.com/zhemao/glisp/interpreter"
 )
 
@@ -38,14 +38,16 @@ func shellCmdAction(com string, args []string) {
 }
 
 func doShellCmd() {
-	com := editorPrompt("Command to run", nil)
-	arg := editorPrompt("Argument 1 (Blank, C-c or C-g for none)", nil)
-	args := []string{}
-	for arg != "" {
-		args = append(args, arg)
-		arg = editorPrompt(fmt.Sprintf("Argument %d (Blank, C-c or C-g for none)", 1+len(args)), nil)
+	var words []string
+	var err error
+	for len(words) == 0 {
+		words, err = shellquote.Split(editorPrompt("Shell command", nil))
+		if err != nil {
+			Global.Input = err.Error()
+			return
+		}
 	}
-	shellCmdAction(com, args)
+	shellCmdAction(words[0], words[1:])
 }
 
 func shellCmdWithInput(input, com string, args []string) (string, error) {
@@ -90,14 +92,16 @@ func shellCmdRegion(com string, args []string) {
 }
 
 func doShellCmdRegion() {
-	com := editorPrompt("Command to run", nil)
-	arg := editorPrompt("Argument 1 (Blank, C-c or C-g for none)", nil)
-	args := []string{}
-	for arg != "" {
-		args = append(args, arg)
-		arg = editorPrompt(fmt.Sprintf("Argument %d (Blank, C-c or C-g for none)", 1+len(args)), nil)
+	var words []string
+	var err error
+	for len(words) == 0 {
+		words, err = shellquote.Split(editorPrompt("Shell command", nil))
+		if err != nil {
+			Global.Input = err.Error()
+			return
+		}
 	}
-	shellCmdRegion(com, args)
+	shellCmdRegion(words[0], words[1:])
 }
 
 func replaceBufferWithShellCommand(buf *EditorBuffer, com string, args []string, env *glisp.Glisp) {
