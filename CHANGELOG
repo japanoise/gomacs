@@ -1,3 +1,41 @@
+2019-08-10 Release 1.3.0
+
+	What's that coming over the hill, is it a Gomacs, is it a Gomacs?
+
+	It sure is, and at long last! After over a year since the last
+	release, and giving us a nice round number at 256 commits, it's
+	Gomacs 1.3.0!
+
+	Features:
+	* Transpose words and transpose chars with M-t and C-t
+	* Shell commands have a much better interface now
+	* Syntax highlighting for gbz80 and Inform 6
+	* Auto-fill mode
+
+	Bugfixes:
+	* Crashes are rarer than ever ;)
+
+	Tweaks:
+	* Syntax improvements as compared to upstream
+	* Fill-column behaves as it should now (fixed an off-by-one)
+	* constant.specialChar entities are highlighted in yellow now
+	* M-q is now fill-paragraph-or-region
+
+	This will probably be the last big release to be tagged 1.*.*, as
+	my problems with Gomacs now are of a wider scale. Let's look at
+	some possible improvements for 2.0.0!
+
+	* Zygomys for our Lisp again
+	* Lisp features from GNU Emacs
+	* Pasting tweaks (it's the last visual bug in Gomacs, but a tricky one)
+	* Horizontal windows (which would require rewriting a lot of draw code!)
+
+	I'm also thinking of release engineering here! The master branch
+	should now be for releases only. I'll branch it off to a separate
+	develop branch for those 2.0.0 tweaks (this means go-get should be
+	much less risky, as you'll be getting one signed-off for release
+	instead).
+
 2018-07-07 Release 1.2.1
 
 	Bugfix release - fix out-of-bounds on `goto-line`
