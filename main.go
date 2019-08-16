@@ -67,7 +67,7 @@ type EditorState struct {
 	Tabsize                 int
 	Prompt                  string
 	NoSyntax                bool
-	Windows                 []*EditorBuffer
+	WindowTree              *winTree
 	CurrentBHeight          int
 	Clipboard               string
 	SoftTab                 bool
@@ -516,9 +516,10 @@ func InitEditor() {
 	buffer := &EditorBuffer{}
 	buffer.MajorMode = "Unknown"
 	Global = EditorState{false, "", buffer, []*EditorBuffer{buffer}, 4, "",
-		false, []*EditorBuffer{buffer}, 0, "", false, make(map[string]bool),
-		[]string{}, false, 0, false, loadDefaultHooks(), nil, false, 0,
-		NewRegisterList(), 80, make(map[string]*CommandList), 0, 0}
+		false, &winTree{false, false, true, buffer, nil, nil, nil}, 0,
+		"", false, make(map[string]bool), []string{}, false, 0, false,
+		loadDefaultHooks(), nil, false, 0, NewRegisterList(), 80,
+		make(map[string]*CommandList), 0, 0}
 	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true

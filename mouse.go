@@ -2,8 +2,6 @@ package main
 
 import (
 	"os/exec"
-
-	"github.com/nsf/termbox-go"
 )
 
 const (
@@ -21,10 +19,11 @@ func (row *EditorRow) screenXtoCx(sx int) int {
 }
 
 func screenYtoBufAndCy(sy int) (*EditorBuffer, int) {
-	_, ssy := termbox.Size()
-	bufheight := ssy / len(Global.Windows)
-	buf := Global.Windows[sy/bufheight]
-	return buf, buf.rowoff + sy%bufheight
+	return getFocusWindow().buf, sy // Wrong, but it'll get it to compile
+	//	_, ssy := termbox.Size()
+	//	bufheight := ssy / len(Global.Windows)
+	//	buf := Global.Windows[sy/bufheight]
+	//	return buf, buf.rowoff + sy%bufheight
 }
 
 func JumpToMousePoint() {

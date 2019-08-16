@@ -1,59 +1,170 @@
 package main
 
 import (
+	termbox "github.com/nsf/termbox-go"
 	"github.com/zhemao/glisp/interpreter"
 )
 
-func getCurrentWindow() int {
-	for i, win := range Global.Windows {
-		if win == Global.CurrentB {
-			return i
-		}
-	}
-	return -1
+type winTree struct {
+	split   bool
+	hor     bool
+	focused bool
+	buf     *EditorBuffer
+	childLT *winTree
+	childRB *winTree
+	Parent  *winTree
 }
 
-func getIndexOfCurrentBuffer() int {
-	for i, buf := range Global.Buffers {
-		if buf == Global.CurrentB {
-			return i
-		}
-	}
-	return -1
+func getFocusWindow() *winTree {
+	return getWindowWithProps(func(t *winTree) bool { return t.focused },
+		Global.WindowTree)
 }
 
-func splitWindows() {
-	Global.Windows = append(Global.Windows, Global.CurrentB)
+func getWindowWithProps(f func(*winTree) bool, t *winTree) *winTree {
+	if !t.split {
+		if f(t) {
+			return t
+		}
+		return nil
+	}
+	ret := getWindowWithProps(f, t.childLT)
+	if ret == nil {
+		return getWindowWithProps(f, t.childRB)
+	}
+	return ret
+
+}
+
+func (t *winTree) mapTree(f func(*winTree)) {
+	if t.split {
+		t.childLT.mapTree(f)
+		t.childRB.mapTree(f)
+	} else {
+		f(t)
+	}
+}
+
+func vSplit() {
+	win := getFocusWindow()
+	win.focused = false
+	win.split = true
+	win.hor = false
+	win.childLT = &winTree{false, false, true, win.buf, nil, nil, win}
+	win.childRB = &winTree{false, false, false, win.buf, nil, nil, win}
+	win.buf = nil
+}
+
+func hSplit() {
+	win := getFocusWindow()
+	win.focused = false
+	win.split = true
+	win.hor = true
+	win.childLT = &winTree{false, false, true, win.buf, nil, nil, win}
+	win.childRB = &winTree{false, false, false, win.buf, nil, nil, win}
+	win.buf = nil
 }
 
 func closeOtherWindows() {
-	Global.Windows = []*EditorBuffer{Global.CurrentB}
+	win := getFocusWindow()
+	Global.WindowTree = win
 }
 
 func closeThisWindow() {
-	if len(Global.Windows) == 1 {
+	win := getFocusWindow()
+
+	if win == Global.WindowTree {
 		Global.Input = "Can't delete the only window!"
 		return
 	}
-	i := getCurrentWindow()
-	copy(Global.Windows[i:], Global.Windows[i+1:])
-	Global.Windows[len(Global.Windows)-1] = nil
-	Global.Windows = Global.Windows[:len(Global.Windows)-1]
-	if i >= len(Global.Windows) {
-		Global.CurrentB = Global.Windows[len(Global.Windows)-1]
+
+	parent := win.Parent
+
+	if parent.childLT == win {
+		parent.buf = parent.childRB.buf
 	} else {
-		Global.CurrentB = Global.Windows[i]
+		parent.buf = parent.childLT.buf
 	}
+	parent.childLT = nil
+	parent.childRB = nil
+	parent.split = false
+	parent.focused = true
 }
 
 func switchWindow() {
-	cur := getCurrentWindow()
-	cur++
-	if cur >= len(Global.Windows) {
-		Global.CurrentB = Global.Windows[0]
-	} else {
-		Global.CurrentB = Global.Windows[cur]
+	win := getFocusWindow()
+
+	if win == Global.WindowTree {
+		Global.Input = "Only window"
+		return
 	}
+
+	win.focused = false
+
+	parent := win.Parent
+	cwin := win
+
+	for parent != nil {
+		if parent.childLT == cwin {
+			parent.childRB.setFocus()
+			return
+		}
+		cwin = parent
+		parent = cwin.Parent
+	}
+
+	Global.WindowTree.setFocus()
+}
+
+func (t *winTree) setFocus() {
+	if t.split {
+		t.childLT.setFocus()
+	} else {
+		t.focused = true
+		Global.CurrentB = t.buf
+	}
+}
+
+func (t *winTree) draw(x, y, wx, wy int) {
+	if t.split {
+		if t.hor {
+			t.childLT.draw(x, y, wx/2, wy)
+
+			for i := 0; i < wy; i++ {
+				termbox.SetCell(
+					x+(wx/2), y+i, '│',
+					termbox.ColorDefault,
+					termbox.ColorDefault)
+			}
+
+			termbox.SetCell(x+wx/2, y+wy, ' ',
+				termbox.ColorDefault|termbox.AttrReverse,
+				termbox.ColorDefault)
+
+			t.childRB.draw(x+(wx/2)+1, y, (wx / 2), wy)
+		} else {
+			t.childLT.draw(x, y, wx, wy/2)
+			t.childRB.draw(x, y+1+(wy/2), wx, (wy/2)-1)
+		}
+		return
+	}
+	gutter := 0
+	if t.buf.hasMode("line-number-mode") && t.buf.NumRows > 0 {
+		gutter = GetGutterWidth(t.buf.NumRows)
+	}
+
+	editorDrawStatusLine(x, y+wy, wx, t)
+	editorScroll(wx-gutter, wy)
+
+	if t.focused {
+		Global.CurrentBHeight = wy
+		termbox.SetCursor(
+			Global.CurrentB.rx-Global.CurrentB.Rows[Global.CurrentB.cy].coloff+gutter+x,
+			y+Global.CurrentB.cy-Global.CurrentB.rowoff)
+	}
+	if t.buf.regionActive {
+		t.buf.recalcRegion()
+	}
+	editorDrawRows(x, y, x+wx, y+wy, t.buf, gutter)
 }
 
 func editorWriteFile(env *glisp.Glisp) {
@@ -73,11 +184,11 @@ func editorVisitFile(env *glisp.Glisp) {
 	}
 	oldcb := Global.CurrentB
 	openFile(fn, env)
-	for i, buf := range Global.Windows {
-		if buf == oldcb {
-			Global.Windows[i] = Global.CurrentB
+	Global.WindowTree.mapTree(func(t *winTree) {
+		if t.buf == oldcb {
+			t.buf = Global.CurrentB
 		}
-	}
+	})
 	for i, buf := range Global.Buffers {
 		if buf == oldcb {
 			killGivenBuffer(i)
@@ -97,12 +208,16 @@ func editorFindFile(env *glisp.Glisp) {
 func openFile(fn string, env *glisp.Glisp) {
 	buffer := &EditorBuffer{}
 	Global.Buffers = append(Global.Buffers, buffer)
-	i := getCurrentWindow()
-	if i < 0 {
-		Global.Windows = []*EditorBuffer{buffer}
+
+	win := getFocusWindow()
+	if win == nil {
+		Global.WindowTree = &winTree{}
+		Global.WindowTree.focused = true
+		Global.WindowTree.buf = buffer
 	} else {
-		Global.Windows[i] = buffer
+		win.buf = buffer
 	}
+
 	Global.CurrentB = buffer
 	ferr := EditorOpen(fn, env)
 	if ferr != nil {
@@ -150,8 +265,8 @@ func editorSwitchBuffer() {
 	if in == 0 {
 		showMessages(Global.messages...)
 	} else {
-		i := getCurrentWindow()
-		Global.Windows[i] = Global.Buffers[in-1]
+		win := getFocusWindow()
+		win.buf = Global.Buffers[in-1]
 		Global.CurrentB = Global.Buffers[in-1]
 	}
 }
@@ -196,11 +311,11 @@ func killGivenBuffer(i int) {
 	Global.Buffers = Global.Buffers[:len(Global.Buffers)-1]
 
 	// Replace any instance of the killed buffer in the window list with replacement
-	for wi, win := range Global.Windows {
-		if win == kb {
-			Global.Windows[wi] = rb
+	Global.WindowTree.mapTree(func(t *winTree) {
+		if t.buf == kb {
+			t.buf = rb
 		}
-	}
+	})
 
 	// Delete any mentions of this buffer in the registers
 	for _, reg := range Global.Registers.Registers {
@@ -224,8 +339,8 @@ func killBuffer() {
 }
 
 func callFunOtherWindow(f func()) {
-	if len(Global.Windows) == 1 {
-		splitWindows()
+	if !Global.WindowTree.split {
+		vSplit()
 	}
 	switchWindow()
 	f()
@@ -235,6 +350,16 @@ func callFunOtherWindowAndGoBack(f func()) {
 	oldcb := Global.CurrentB
 	callFunOtherWindow(f)
 	Global.CurrentB = oldcb
+}
+
+func getIndexOfCurrentBuffer() int {
+	win := getFocusWindow()
+	for i, buf := range Global.Buffers {
+		if buf == win.buf {
+			return i
+		}
+	}
+	return -1
 }
 
 func KillBufferAndWindow() {
