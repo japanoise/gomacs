@@ -70,9 +70,8 @@ func getColorForGroup(group highlight.Group) termbox.Attribute {
 	return color
 }
 
-func (row *EditorRow) Print(x, y, offset, runeoff int, ts string, buf *EditorBuffer) {
+func (row *EditorRow) Print(x, y, offset, runeoff, sx int, ts string, buf *EditorBuffer) {
 	if buf.regionActive && buf.region.startl <= row.idx && row.idx < buf.region.endl {
-		sx, _ := termbox.Size()
 		for i := x; i <= sx; i++ {
 			termbox.SetCell(i, y, ' ', termbox.AttrReverse, termbox.ColorDefault)
 		}
@@ -85,6 +84,10 @@ func (row *EditorRow) Print(x, y, offset, runeoff int, ts string, buf *EditorBuf
 	os := 0
 	ri := 0
 	for in, ru := range ts {
+		if x+os >= sx {
+			termutil.PrintRune(x+os-1, y, '→', termbox.ColorDefault)
+			return
+		}
 		if Global.NoSyntax || buf.Highlighter == nil {
 			color = termbox.ColorDefault
 		} else if group, ok := row.HlMatches[ri+offset]; ok {

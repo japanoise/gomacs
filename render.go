@@ -98,13 +98,10 @@ func editorDrawRows(startx, starty, sx, sy int, buf *EditorBuffer, gutsize int) 
 			}
 			if row.coloff < row.RenderSize {
 				ts, off := trimString(row.Render, row.coloff)
-				row.Print(startx+gutsize, y, row.coloff, off, ts, buf)
+				row.Print(startx+gutsize, y, row.coloff, off, sx-gutsize, ts, buf)
 			}
 			if row.coloff > 0 && gutsize == 0 {
 				termutil.PrintRune(startx, y, '←', termbox.ColorDefault)
-			}
-			if row.RenderSize-row.coloff > sx {
-				termutil.PrintRune(sx-1, y, '→', termbox.ColorDefault)
 			}
 		}
 	}
