@@ -348,9 +348,10 @@ func callFunOtherWindow(f func()) {
 }
 
 func callFunOtherWindowAndGoBack(f func()) {
-	oldcb := Global.CurrentB
+	oldfw := getFocusWindow()
 	callFunOtherWindow(f)
-	Global.CurrentB = oldcb
+	getFocusWindow().focused = false
+	oldfw.setFocus()
 }
 
 func getIndexOfCurrentBuffer() int {
