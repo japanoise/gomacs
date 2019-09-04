@@ -109,6 +109,44 @@ func editorDrawRows(startx, starty, sx, sy int, buf *EditorBuffer, gutsize int) 
 	}
 }
 
+func editorDrawRowsFocused(startx, starty, sx, sy int, buf *EditorBuffer, gutsize int) {
+	for y := starty; y < sy; y++ {
+		filerow := (y - starty) + buf.rowoff
+		if filerow >= buf.NumRows {
+			if buf.hasMode("tilde-mode") {
+				termbox.SetCell(startx+gutsize, y, '~', termbox.ColorBlue, termbox.ColorDefault)
+			}
+		} else {
+			row := buf.Rows[filerow]
+			if gutsize > 0 {
+				if buf.hasMode("gdi") {
+					termutil.Printstring(string(buf.Rows[filerow].idx), startx, y)
+				} else {
+					termutil.Printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx+1), gutsize-2), startx, y)
+				}
+				termutil.PrintRune(startx+gutsize-2, y, '│', termbox.ColorDefault)
+				if row.coloff > 0 {
+					termutil.PrintRune(startx+gutsize-1, y, '←', termbox.ColorDefault)
+				}
+			}
+			if filerow == buf.cy {
+				termbox.SetCursor(0, y)
+			}
+			if row.coloff < row.RenderSize {
+				ts, off := trimString(row.Render, row.coloff)
+				if filerow == buf.cy {
+					row.PrintWCursor(startx+gutsize, y, row.coloff, off, sx-gutsize, ts, buf)
+				} else {
+					row.Print(startx+gutsize, y, row.coloff, off, sx-gutsize, ts, buf)
+				}
+			}
+			if row.coloff > 0 && gutsize == 0 {
+				termutil.PrintRune(startx, y, '←', termbox.ColorDefault)
+			}
+		}
+	}
+}
+
 func editorUpdateStatus(buf *EditorBuffer) string {
 	fn := buf.getRenderName()
 	dc := '-'

@@ -70,6 +70,54 @@ func getColorForGroup(group highlight.Group) termbox.Attribute {
 	return color
 }
 
+func (row *EditorRow) PrintWCursor(x, y, offset, runeoff, sx int, ts string, buf *EditorBuffer) {
+	if buf.regionActive && buf.region.startl <= row.idx && row.idx < buf.region.endl {
+		for i := x; i <= sx; i++ {
+			termbox.SetCell(i, y, ' ', termbox.AttrReverse, termbox.ColorDefault)
+		}
+		if buf.region.startl < row.idx {
+			termutil.PrintstringColored(termbox.AttrReverse, ts, x, y)
+			return
+		}
+	}
+	color := termbox.ColorDefault
+	os := 0
+	ri := 0
+	for in, ru := range ts {
+		if x+os >= sx {
+			termutil.PrintRune(x+os-1, y, '→', termbox.ColorDefault)
+			return
+		}
+		if runeoff+in == buf.cx {
+			termbox.SetCursor(x+os, y)
+		}
+		if Global.NoSyntax || buf.Highlighter == nil {
+			color = termbox.ColorDefault
+		} else if group, ok := row.HlMatches[ri+offset]; ok {
+			color = getColorForGroup(group)
+		} else if in == 0 && runeoff != 0 {
+			groupi, oki := row.HlMatches[offset]
+			for i := 1; !oki && i <= offset; i++ {
+				groupi, oki = row.HlMatches[offset-i]
+			}
+			color = getColorForGroup(groupi)
+		}
+		// See comment in original function
+		if buf.regionActive &&
+			((row.idx == buf.region.startl && buf.region.startl == buf.region.endl && offset+os < buf.region.endc && offset+os >= buf.region.startc) ||
+				(buf.region.startl != buf.region.endl && ((row.idx == buf.region.startl && offset+os >= buf.region.startc) || (row.idx == buf.region.endl && offset+os < buf.region.endc)))) {
+			termutil.PrintRune(x+os, y, ru, termbox.AttrReverse)
+		} else {
+			termutil.PrintRune(x+os, y, ru, color)
+		}
+		os += termutil.Runewidth(ru)
+		ri++
+	}
+	if buf.cx == row.Size {
+		termbox.SetCursor(x+os, y)
+	}
+}
+
 func (row *EditorRow) Print(x, y, offset, runeoff, sx int, ts string, buf *EditorBuffer) {
 	if buf.regionActive && buf.region.startl <= row.idx && row.idx < buf.region.endl {
 		for i := x; i <= sx; i++ {

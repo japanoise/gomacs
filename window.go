@@ -155,17 +155,16 @@ func (t *winTree) draw(x, y, wx, wy int) {
 	editorDrawStatusLine(x, y+wy, wx, t)
 	editorScroll(wx-gutter, wy)
 
-	if t.focused {
-		Global.CurrentBHeight = wy
-		row := Global.CurrentB.Rows[Global.CurrentB.cy]
-		termbox.SetCursor(
-			gutter+x+Global.CurrentB.rx-row.coloff,
-			y+Global.CurrentB.cy-Global.CurrentB.rowoff)
-	}
 	if t.buf.regionActive {
 		t.buf.recalcRegion()
 	}
-	editorDrawRows(x, y, x+wx, y+wy, t.buf, gutter)
+
+	if t.focused {
+		Global.CurrentBHeight = wy
+		editorDrawRowsFocused(x, y, x+wx, y+wy, t.buf, gutter)
+	} else {
+		editorDrawRows(x, y, x+wx, y+wy, t.buf, gutter)
+	}
 }
 
 func editorWriteFile(env *glisp.Glisp) {
