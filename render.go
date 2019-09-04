@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math"
 	"strconv"
-	"strings"
 	"sync"
 
 	"github.com/japanoise/termbox-util"
@@ -67,13 +66,16 @@ func trimString(s string, coloff int) (string, int) {
 	if coloff == 0 {
 		return s, 0
 	}
-	sr := []rune(s)
-	if coloff < len(sr) {
-		ret := string(sr[coloff:])
-		return ret, strings.Index(s, ret)
-	} else {
-		return "", 0
+	if coloff < len(s) {
+		rw := 0
+		for i, ru := range s {
+			if rw >= coloff {
+				return s[i:], i
+			}
+			rw += termutil.Runewidth(ru)
+		}
 	}
+	return "", 0
 }
 
 func editorDrawRows(startx, starty, sx, sy int, buf *EditorBuffer, gutsize int) {
@@ -113,8 +115,8 @@ func editorUpdateStatus(buf *EditorBuffer) string {
 	if buf.Dirty {
 		dc = '*'
 	}
-	return fmt.Sprintf("-%c %s - (%s) %d:%d", dc, fn, buf.MajorMode,
-		buf.cy+1, buf.cx)
+	return fmt.Sprintf("-%c %s - (%s) %d:%d [%d, rx: %d]", dc, fn, buf.MajorMode,
+		buf.cy+1, buf.cx, buf.Rows[buf.cy].coloff, buf.rx)
 }
 
 func GetScreenSize() (int, int) {

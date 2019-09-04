@@ -157,8 +157,9 @@ func (t *winTree) draw(x, y, wx, wy int) {
 
 	if t.focused {
 		Global.CurrentBHeight = wy
+		row := Global.CurrentB.Rows[Global.CurrentB.cy]
 		termbox.SetCursor(
-			Global.CurrentB.rx-Global.CurrentB.Rows[Global.CurrentB.cy].coloff+gutter+x,
+			gutter+x+Global.CurrentB.rx-row.coloff,
 			y+Global.CurrentB.cy-Global.CurrentB.rowoff)
 	}
 	if t.buf.regionActive {
