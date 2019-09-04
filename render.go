@@ -115,8 +115,8 @@ func editorUpdateStatus(buf *EditorBuffer) string {
 	if buf.Dirty {
 		dc = '*'
 	}
-	return fmt.Sprintf("-%c %s - (%s) %d:%d [%d, rx: %d]", dc, fn, buf.MajorMode,
-		buf.cy+1, buf.cx, buf.Rows[buf.cy].coloff, buf.rx)
+	return fmt.Sprintf("-%c %s - (%s) %d:%d", dc, fn, buf.MajorMode,
+		buf.cy+1, buf.cx)
 }
 
 func GetScreenSize() (int, int) {
