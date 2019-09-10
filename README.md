@@ -255,6 +255,18 @@ Furthermore, apart from sandy, none of these editors support syntax highlighting
 
 Finally, and most importantly, it's a fun project I've always wanted to do ;)
 
+## Contributing
+
+I welcome issues and pull requests. I'd love to have a partner or team to work
+on Gomacs with me.
+
+Gomacs contributors should be (in rough order of importance):
+
+1. Kind and reasonable
+2. Competent with Golang or willing to learn
+3. Able and willing to chat with or contact me outside of GitHub
+4. Enthusiastic about improving Gomacs and/or the ersatz-emacs landscape
+
 ## Credits
 
 Thanks to nsf for termbox and godit (from which the suspend code comes.)
