@@ -16,15 +16,17 @@
   well as the main loop. An ongoing project is to extract code from here and into
   dedicated files.
 - modes.go - dealing with modes
+- mouse.go - mouse handling code
 - nav.go - navigation code
 - paragraph.go - paragraph-based commands
+- rectangle.go - rectangle-based commands
 - registers.go - commands that save, load, and run from registers
 - region.go - functions and commands for acting upon the selected region.
 - render.go - rendering and drawing functions
 - shell.go - commands that use external programs
-- suspend.go - placeholder for non-Linux platforms (which don't have suspend
+- suspend.go - placeholder for non-POSIX platforms (which don't have suspend
   functionality)
-- suspend_linux.go - suspend functionality for Linux
+  * suspend_posix.go - suspend functionality for POSIX systems
 - syntax.go - syntax highlighting functionality lives here.
 - undo.go - creating, storing and destroying undo data. Doing undos and redos.
 - window.go - window manipulation code.
@@ -62,6 +64,10 @@ to install them anywhere. They are written in a simple yaml format.
 
 The undo struct is based at least in part on the one in [the suckless editor Sandy.](http://tools.suckless.org/sandy)
 However, most of the undo logic is custom.
+
+The binary-tree model of window management comes from my hex editor,
+[Zerz,](https://github.com/japanoise/zerz) and ultimately is inspired by i3's
+and tmux's model of hsplits and vsplits.
 
 ## The main function
 
