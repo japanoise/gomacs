@@ -110,6 +110,7 @@ func editorDrawRows(startx, starty, sx, sy int, buf *EditorBuffer, gutsize int) 
 }
 
 func editorDrawRowsFocused(startx, starty, sx, sy int, buf *EditorBuffer, gutsize int) {
+	termbox.SetCursor(startx, starty)
 	for y := starty; y < sy; y++ {
 		filerow := (y - starty) + buf.rowoff
 		if filerow >= buf.NumRows {
