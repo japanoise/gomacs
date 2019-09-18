@@ -88,7 +88,7 @@ func (row *EditorRow) PrintWCursor(x, y, offset, runeoff, sx int, ts string, buf
 			termutil.PrintRune(x+os-1, y, '→', termbox.ColorDefault)
 			return
 		}
-		if runeoff+in == buf.cx {
+		if offset+os == buf.rx {
 			termbox.SetCursor(x+os, y)
 		}
 		if Global.NoSyntax || buf.Highlighter == nil {
