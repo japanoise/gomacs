@@ -115,6 +115,32 @@ func switchWindow() {
 	Global.WindowTree.setFocus()
 }
 
+func switchWindowOrientation() {
+	win := getFocusWindow()
+
+	if win == Global.WindowTree {
+		Global.Input = "Only window"
+		return
+	}
+
+	parent := win.Parent
+	parent.hor = !parent.hor
+}
+
+func swapWindows() {
+	win := getFocusWindow()
+
+	if win == Global.WindowTree {
+		Global.Input = "Only window"
+		return
+	}
+
+	parent := win.Parent
+	bak := parent.childLT
+	parent.childLT = parent.childRB
+	parent.childRB = bak
+}
+
 func (t *winTree) setFocus() {
 	if t.split {
 		t.childLT.setFocus()

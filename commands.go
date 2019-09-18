@@ -663,4 +663,12 @@ Current key bindings:
 		func(env *glisp.Glisp) {
 			doTransposeWords()
 		}, false})
+	DefineCommand(&CommandFunc{"rotate-windows",
+		func(env *glisp.Glisp) {
+			switchWindowOrientation()
+		}, false})
+	DefineCommand(&CommandFunc{"swap-windows",
+		func(env *glisp.Glisp) {
+			swapWindows()
+		}, false})
 }
