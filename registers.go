@@ -99,8 +99,8 @@ func (r *RegisterList) jumpToPositionRegister(regname string) {
 		return
 	} else if reg.Type == RegisterPos {
 		if reg.PosBuffer != Global.CurrentB {
-			i := getCurrentWindow()
-			Global.Windows[i] = reg.PosBuffer
+			win := getFocusWindow()
+			win.buf = reg.PosBuffer
 			Global.CurrentB = reg.PosBuffer
 		}
 		if reg.Posy >= Global.CurrentB.NumRows {

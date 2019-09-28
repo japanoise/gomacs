@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/japanoise/gomacs.svg?branch=master)](https://travis-ci.org/japanoise/gomacs)
 [![codecov](https://codecov.io/gh/japanoise/gomacs/branch/master/graph/badge.svg)](https://codecov.io/gh/japanoise/gomacs)
 [![Go Report Card](https://goreportcard.com/badge/github.com/japanoise/gomacs)](https://goreportcard.com/report/github.com/japanoise/gomacs)
+![Gomacs button](http://ctrl-c.club/~chameleon/projects/gomacs/gomacs-but.png)
 
 # Gomacs - Go Powered Emacs!
 
@@ -254,6 +255,18 @@ Other terminal based Emacsen are available, but they each have their problems:
 Furthermore, apart from sandy, none of these editors support syntax highlighting.
 
 Finally, and most importantly, it's a fun project I've always wanted to do ;)
+
+## Contributing
+
+I welcome issues and pull requests. I'd love to have a partner or team to work
+on Gomacs with me.
+
+Gomacs contributors should be (in rough order of importance):
+
+1. Kind and reasonable
+2. Competent with Golang or willing to learn
+3. Able and willing to chat with or contact me outside of GitHub
+4. Enthusiastic about improving Gomacs and/or the ersatz-emacs landscape
 
 ## Credits
 

@@ -287,7 +287,9 @@ func LoadDefaultCommands() {
 	DefineCommand(&CommandFunc{"delete-other-windows",
 		func(env *glisp.Glisp) { closeOtherWindows() }, false})
 	DefineCommand(&CommandFunc{"split-window",
-		func(env *glisp.Glisp) { splitWindows() }, false})
+		func(env *glisp.Glisp) { vSplit() }, false})
+	DefineCommand(&CommandFunc{"split-window-right",
+		func(env *glisp.Glisp) { hSplit() }, false})
 	DefineCommand(&CommandFunc{"find-file-other-window",
 		func(env *glisp.Glisp) {
 			callFunOtherWindow(func() { editorFindFile(env) })
@@ -660,5 +662,13 @@ Current key bindings:
 	DefineCommand(&CommandFunc{"transpose-words",
 		func(env *glisp.Glisp) {
 			doTransposeWords()
+		}, false})
+	DefineCommand(&CommandFunc{"rotate-windows",
+		func(env *glisp.Glisp) {
+			switchWindowOrientation()
+		}, false})
+	DefineCommand(&CommandFunc{"swap-windows",
+		func(env *glisp.Glisp) {
+			swapWindows()
 		}, false})
 }

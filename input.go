@@ -56,14 +56,242 @@ func editorGetKeyNoRefresh() string {
 	}
 }
 
+func recalcBuffer(result string) (string, int, int, int) {
+	rlen := len(result)
+	return result, rlen, 0, 0
+}
+
+func backwordWordIndex(buffer string, bufpos int) int {
+	r, rs := utf8.DecodeLastRuneInString(buffer[:bufpos])
+	ret := bufpos - rs
+	r, rs = utf8.DecodeLastRuneInString(buffer[:ret])
+	for ret > 0 && termutil.WordCharacter(r) {
+		ret -= rs
+		r, rs = utf8.DecodeLastRuneInString(buffer[:ret])
+	}
+	return ret
+}
+
+func forwardWordIndex(buffer string, bufpos int) int {
+	r, rs := utf8.DecodeRuneInString(buffer[bufpos:])
+	ret := bufpos + rs
+	r, rs = utf8.DecodeRuneInString(buffer[ret:])
+	for ret < len(buffer) && termutil.WordCharacter(r) {
+		ret += rs
+		r, rs = utf8.DecodeRuneInString(buffer[ret:])
+	}
+	return ret
+}
+
+//As prompt, but calls a function after every keystroke.
+func PromptWithCallback(prompt string, refresh func(int, int), callback func(string, string)) string {
+	if callback == nil {
+		return DynamicPromptWithCallback(prompt, refresh, nil)
+	} else {
+		return DynamicPromptWithCallback(prompt, refresh, func(a, b string) string {
+			callback(a, b)
+			return a
+		})
+	}
+}
+
+//As prompt, but calls a function after every keystroke that can modify the query.
+func DynamicPromptWithCallback(prompt string, refresh func(int, int), callback func(string, string) string) string {
+	return EditDynamicWithCallback("", prompt, refresh, callback)
+}
+
+// EditDynamicWithCallback takes a default value, prompt, refresh
+// function, and callback. It allows the user to edit the default
+// value. It returns what the user entered.
+func EditDynamicWithCallback(defval, prompt string, refresh func(int, int), callback func(string, string) string) string {
+	var buffer string
+	var bufpos, cursor, offset int
+	if defval == "" {
+		buffer = ""
+		bufpos = 0
+		cursor = 0
+		offset = 0
+	} else {
+		x, _ := termbox.Size()
+		buffer = defval
+		bufpos = len(buffer)
+		if termutil.RunewidthStr(buffer) > x {
+			cursor = x - 1
+			offset = len(buffer) + 1 - x
+		} else {
+			offset = 0
+			cursor = termutil.RunewidthStr(buffer)
+		}
+	}
+	iw := termutil.RunewidthStr(prompt + ": ")
+	for {
+		buflen := len(buffer)
+		x, y := termbox.Size()
+		if refresh != nil {
+			refresh(x, y)
+		}
+		termutil.ClearLine(x, y-1)
+		for iw+cursor >= x {
+			offset++
+			cursor--
+		}
+		for iw+cursor < iw {
+			offset--
+			cursor++
+		}
+		t, _ := trimString(buffer, offset)
+		termutil.Printstring(prompt+": "+t, 0, y-1)
+		termbox.SetCursor(iw+cursor, y-1)
+		termbox.Flush()
+		ev := termbox.PollEvent()
+		if ev.Type != termbox.EventKey {
+			continue
+		}
+		key := ParseTermboxEvent(ev)
+		switch key {
+		case "LEFT", "C-b":
+			if bufpos > 0 {
+				r, rs := utf8.DecodeLastRuneInString(buffer[:bufpos])
+				bufpos -= rs
+				cursor -= termutil.Runewidth(r)
+			}
+		case "RIGHT", "C-f":
+			if bufpos < buflen {
+				r, rs := utf8.DecodeRuneInString(buffer[bufpos:])
+				bufpos += rs
+				cursor += termutil.Runewidth(r)
+			}
+		case "C-a":
+			fallthrough
+		case "Home":
+			bufpos = 0
+			cursor = 0
+			offset = 0
+		case "C-e":
+			fallthrough
+		case "End":
+			bufpos = buflen
+			if termutil.RunewidthStr(buffer) > x {
+				cursor = x - 1
+				offset = buflen + 1 - x
+			} else {
+				offset = 0
+				cursor = termutil.RunewidthStr(buffer)
+			}
+		case "C-y":
+			bp := bufpos
+			buffer, buflen, bufpos, cursor = recalcBuffer(
+				buffer[:bufpos] + Global.Clipboard + buffer[bufpos:])
+			bufpos = bp + len(Global.Clipboard)
+			cursor = termutil.RunewidthStr(buffer[:bufpos])
+		case "C-c":
+			fallthrough
+		case "C-g":
+			if callback != nil {
+				result := callback(buffer, key)
+				if result != buffer {
+					offset = 0
+					buffer, buflen, bufpos, cursor = recalcBuffer(result)
+				}
+			}
+			return defval
+		case "RET":
+			if callback != nil {
+				result := callback(buffer, key)
+				if result != buffer {
+					offset = 0
+					buffer, buflen, bufpos, cursor = recalcBuffer(result)
+				}
+			}
+			return buffer
+		case "C-d":
+			fallthrough
+		case "deletechar":
+			if bufpos < buflen {
+				r, rs := utf8.DecodeRuneInString(buffer[bufpos:])
+				bufpos += rs
+				cursor += termutil.Runewidth(r)
+			} else {
+				if callback != nil {
+					result := callback(buffer, key)
+					if result != buffer {
+						offset = 0
+						buffer, buflen, bufpos, cursor = recalcBuffer(result)
+					}
+				}
+				continue
+			}
+			fallthrough
+		case "DEL", "C-h":
+			if buflen > 0 {
+				if bufpos == buflen {
+					r, rs := utf8.DecodeLastRuneInString(buffer)
+					buffer = buffer[0 : buflen-rs]
+					bufpos -= rs
+					cursor -= termutil.Runewidth(r)
+				} else if bufpos > 0 {
+					r, rs := utf8.DecodeLastRuneInString(buffer[:bufpos])
+					buffer = buffer[:bufpos-rs] + buffer[bufpos:]
+					bufpos -= rs
+					cursor -= termutil.Runewidth(r)
+				}
+			}
+		case "C-u":
+			buffer = ""
+			buflen = 0
+			bufpos = 0
+			cursor = 0
+			offset = 0
+		case "M-DEL":
+			if buflen > 0 && bufpos > 0 {
+				delto := backwordWordIndex(buffer, bufpos)
+				buffer = buffer[:delto] + buffer[bufpos:]
+				buflen = len(buffer)
+				bufpos = delto
+				cursor = termutil.RunewidthStr(buffer[:bufpos])
+			}
+		case "M-d":
+			if buflen > 0 && bufpos < buflen {
+				delto := forwardWordIndex(buffer, bufpos)
+				buffer = buffer[:bufpos] + buffer[delto:]
+				buflen = len(buffer)
+			}
+		case "M-b":
+			if buflen > 0 && bufpos > 0 {
+				bufpos = backwordWordIndex(buffer, bufpos)
+				cursor = termutil.RunewidthStr(buffer[:bufpos])
+			}
+		case "M-f":
+			if buflen > 0 && bufpos < buflen {
+				bufpos = forwardWordIndex(buffer, bufpos)
+				cursor = termutil.RunewidthStr(buffer[:bufpos])
+			}
+		default:
+			if utf8.RuneCountInString(key) == 1 {
+				r, _ := utf8.DecodeLastRuneInString(buffer)
+				buffer = buffer[:bufpos] + key + buffer[bufpos:]
+				bufpos += len(key)
+				cursor += termutil.Runewidth(r)
+			}
+		}
+		if callback != nil {
+			result := callback(buffer, key)
+			if result != buffer {
+				offset = 0
+				buffer, buflen, bufpos, cursor = recalcBuffer(result)
+			}
+		}
+	}
+}
+
 func editorPrompt(prompt string, callback func(string, string)) string {
-	ret := termutil.PromptWithCallback(prompt, func(int, int) { editorRefreshScreen() }, callback)
+	ret := PromptWithCallback(prompt, func(int, int) { editorRefreshScreen() }, callback)
 	Global.Input = ret
 	return ret
 }
 
 func tabCompletedEditorPrompt(prompt string, getCandidates func(string) []string) string {
-	ret := termutil.DynamicPromptWithCallback(prompt, func(int, int) { editorRefreshScreen() }, func(query, key string) string {
+	ret := DynamicPromptWithCallback(prompt, func(int, int) { editorRefreshScreen() }, func(query, key string) string {
 		if key == "TAB" || key == "C-i" {
 			if getCandidates == nil {
 				return query

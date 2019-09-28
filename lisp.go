@@ -358,7 +358,7 @@ func lispAddSaveHook(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Se
 }
 
 func lispOnlyWindow(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
-	return glisp.SexpBool(len(Global.Windows) == 1), nil
+	return glisp.SexpBool(Global.WindowTree == getFocusWindow()), nil
 }
 
 func lispSetTabStop(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
@@ -685,6 +685,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "C-x 0" "delete-window")
 (emacsbindkey "C-x 1" "delete-other-windows")
 (emacsbindkey "C-x 2" "split-window")
+(emacsbindkey "C-x 3" "split-window-right")
 (emacsbindkey "C-x 4 C-f" "find-file-other-window")
 (emacsbindkey "C-x 4 f" "find-file-other-window")
 (emacsbindkey "C-x 4 b" "switch-buffer-other-window")
@@ -768,6 +769,8 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "M-/" "auto-complete")
 (emacsbindkey "C-t" "transpose-chars")
 (emacsbindkey "M-t" "transpose-words")
+(emacsbindkey "C-x 4 r" "rotate-windows")
+(emacsbindkey "C-x 4 s" "swap-windows")
 `)
 	if err != nil {
 		fmt.Println(err.Error())

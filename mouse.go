@@ -3,7 +3,7 @@ package main
 import (
 	"os/exec"
 
-	"github.com/nsf/termbox-go"
+	termbox "github.com/nsf/termbox-go"
 )
 
 const (
@@ -11,35 +11,67 @@ const (
 	GomacsMouseDragging
 )
 
-func (row *EditorRow) screenXtoCx(sx int) int {
+func (t *winTree) mouseInBuffer(x, y, wx, wy, mx, my int) (int, int, *EditorBuffer) {
+	if !(x <= mx && mx <= x+wx && y <= my && my <= y+wx) {
+		// Do nothing
+		return 0, 0, nil
+	} else if t.split {
+		if t.hor {
+			rx, ry, rbuf := t.childLT.mouseInBuffer(x, y, wx/2, wy, mx, my)
+
+			if rbuf != nil {
+				return rx, ry, rbuf
+			}
+
+			return t.childRB.mouseInBuffer(x+(wx/2)+1, y, (wx / 2),
+				wy, mx, my)
+		}
+		rx, ry, rbuf := t.childLT.mouseInBuffer(x, y, wx, wy/2, mx, my)
+
+		if rbuf != nil {
+			return rx, ry, rbuf
+		}
+
+		return t.childRB.mouseInBuffer(x, y+1+(wy/2), wx, (wy/2)-1, mx, my)
+	}
+
+	cy := t.buf.rowoff + my%wy
+
+	if cy >= Global.CurrentB.NumRows {
+		return 0, cy, t.buf
+	}
+
+	row := Global.CurrentB.Rows[cy]
 	gut := 0
 	if Global.CurrentB.hasMode("line-number-mode") {
 		gut = GetGutterWidth(Global.CurrentB.NumRows)
 	}
-	rx := sx - gut + row.coloff
-	return editorRowRxToCx(row, rx)
+	rx := mx - x - gut + row.coloff
+
+	Global.WindowTree.mapTree(func(wt *winTree) { wt.focused = false })
+	t.setFocus()
+
+	return editorRowRxToCx(row, rx), cy, t.buf
 }
 
-func screenYtoBufAndCy(sy int) (*EditorBuffer, int) {
-	_, ssy := termbox.Size()
-	bufheight := ssy / len(Global.Windows)
-	buf := Global.Windows[sy/bufheight]
-	return buf, buf.rowoff + sy%bufheight
+func getMousePoint(mx, my int) (int, int, *EditorBuffer) {
+	sx, sy := termbox.Size()
+	return Global.WindowTree.mouseInBuffer(0, 0, sx, sy-2, mx, my)
 }
 
 func JumpToMousePoint() {
 	if Global.CurrentB.NumRows <= 0 {
 		return
 	}
-	var cy int
-	Global.CurrentB, cy = screenYtoBufAndCy(Global.MouseY)
+	var cx, cy int
+	cx, cy, Global.CurrentB = getMousePoint(Global.MouseX, Global.MouseY)
 	if cy >= Global.CurrentB.NumRows {
 		Global.CurrentB.cy = Global.CurrentB.NumRows - 1
 		Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy].Size
 	} else {
 		Global.CurrentB.cy = cy
-		Global.CurrentB.cx = Global.CurrentB.Rows[cy].screenXtoCx(Global.MouseX)
-		Global.CurrentB.prefcx = Global.CurrentB.cx
+		Global.CurrentB.cx = cx
+		Global.CurrentB.prefcx = cx
 	}
 }
 
@@ -64,7 +96,7 @@ func MouseDragRegion() {
 }
 
 func MouseScrollUp() {
-	Global.CurrentB, _ = screenYtoBufAndCy(Global.MouseY)
+	_, _, Global.CurrentB = getMousePoint(Global.MouseX, Global.MouseY)
 	if Global.CurrentB.rowoff > 0 {
 		Global.CurrentB.rowoff--
 	} else {
@@ -76,7 +108,7 @@ func MouseScrollUp() {
 }
 
 func MouseScrollDown() {
-	Global.CurrentB, _ = screenYtoBufAndCy(Global.MouseY)
+	_, _, Global.CurrentB = getMousePoint(Global.MouseX, Global.MouseY)
 	if Global.CurrentB.rowoff < Global.CurrentB.NumRows {
 		Global.CurrentB.rowoff++
 	} else {

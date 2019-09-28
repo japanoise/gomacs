@@ -1,3 +1,18 @@
+2019-09-28 Release 1.4.0
+
+	CHANGE DA GOMACS, MY FINAL MESSAGE, GOODB YE!
+
+	Yep, I told a lie in the last changelog ;) We're here, we're
+	queer, we're Gomacs 1.4.0! This is largely a feature release.
+	Some of these changes were too important to wait for 2.0.0.
+	I like the go-gettable Gomacs to be as rad as possible, so now
+	that we're stable again, it makes sense to merge.
+
+	* Horizontal windows!
+	* Window management commands
+	* Yank from the clipboard into the minibuffer
+	* Updated syntax files
+
 2019-08-10 Release 1.3.0
 
 	What's that coming over the hill, is it a Gomacs, is it a Gomacs?

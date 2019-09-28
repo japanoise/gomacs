@@ -223,7 +223,7 @@ func editorFindCallback(query string, key string) {
 	}
 	current := last_match
 	ql := len(query)
-	for range Global.CurrentB.Rows {
+	for _ = range(Global.CurrentB.Rows) {
 		current += direction
 		if current == -1 {
 			current = Global.CurrentB.NumRows - 1
