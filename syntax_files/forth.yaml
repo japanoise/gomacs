@@ -1,0 +1,23 @@
+filetype: forth
+
+detect:
+    filename: "\\.4th$"
+
+rules:
+    - statement: "\\b(IF|THEN|ELSE|UNLESS)\\b"
+
+    - constant.string:
+        start: "\\b.\"\\b"
+        end: "\""
+
+    - comment:
+        start: "\\\\"
+        end: "$"
+        rules:
+            - todo: "TODO:?"
+
+    - comment:
+        start: "\\b\\(\\b"
+        end: "\\b\\)\\b"
+        rules:
+            - todo: "TODO:?"
