@@ -12,6 +12,8 @@ has an embedded Lisp, [powered by Glisp.](https://github.com/zhemao/glisp)
 This puts it in the realm of true Emacs! It also supports syntax highlighting
 for a wide array of languages; see the `syntax-files/` directory.
 
+*If you find Gomacs useful, consider [supporting me on Patreon](https://www.patreon.com/japanoise) - at just $2000 a month I can justify working on it full-time!*
+
 Closely follows
 [the modified version of Kilo found in this tutorial](http://viewsourcecode.org/snaptoken/kilo)
 in terms of the inner workings of the editor. Inspiration also comes from
