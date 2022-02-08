@@ -14,8 +14,8 @@ ARCH?=$(shell arch)
 all: gomacs gomacs.1.bz2
 
 gomacs:
-	GO111MODULE=off ${GO} get -u -v
-	GO111MODULE=off ${GO} build -v -o gomacs
+	${GO} get -u -v
+	${GO} build -v -o gomacs
 
 gomacs.1.bz2: gomacs.1
 	${BZ2} -f -k gomacs.1
