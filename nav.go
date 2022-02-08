@@ -20,6 +20,9 @@ func editorScroll(sx, sy int) {
 	if Global.CurrentB.cy >= Global.CurrentB.rowoff+sy {
 		Global.CurrentB.rowoff = Global.CurrentB.cy - sy + 1
 	}
+	if Global.CurrentB.NumRows == 0 {
+		return
+	}
 	row := Global.CurrentB.Rows[Global.CurrentB.cy]
 	if Global.CurrentB.rx < row.coloff+3 {
 		row.coloff = Global.CurrentB.rx - 5
@@ -223,7 +226,7 @@ func editorFindCallback(query string, key string) {
 	}
 	current := last_match
 	ql := len(query)
-	for _ = range(Global.CurrentB.Rows) {
+	for _ = range Global.CurrentB.Rows {
 		current += direction
 		if current == -1 {
 			current = Global.CurrentB.NumRows - 1

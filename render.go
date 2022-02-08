@@ -154,7 +154,7 @@ func editorUpdateStatus(buf *EditorBuffer) string {
 	if buf.Dirty {
 		dc = '*'
 	}
-	if buf.hasMode("column-bytes-mode") {
+	if buf.hasMode("column-bytes-mode") || buf.NumRows == 0 {
 		return fmt.Sprintf("-%c %s - (%s) %d:%d", dc, fn, buf.MajorMode,
 			buf.cy+1, buf.cx)
 	}
