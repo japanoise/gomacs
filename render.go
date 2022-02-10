@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/japanoise/termbox-util"
+	termutil "github.com/japanoise/termbox-util"
 	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
 )
@@ -88,11 +88,7 @@ func editorDrawRows(startx, starty, sx, sy int, buf *EditorBuffer, gutsize int) 
 		} else {
 			row := buf.Rows[filerow]
 			if gutsize > 0 {
-				if buf.hasMode("gdi") {
-					termutil.Printstring(string(buf.Rows[filerow].idx), startx, y)
-				} else {
-					termutil.Printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx+1), gutsize-2), startx, y)
-				}
+				termutil.Printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx+1), gutsize-2), startx, y)
 				termutil.PrintRune(startx+gutsize-2, y, '│', termbox.ColorDefault)
 				if row.coloff > 0 {
 					termutil.PrintRune(startx+gutsize-1, y, '←', termbox.ColorDefault)
@@ -120,11 +116,7 @@ func editorDrawRowsFocused(startx, starty, sx, sy int, buf *EditorBuffer, gutsiz
 		} else {
 			row := buf.Rows[filerow]
 			if gutsize > 0 {
-				if buf.hasMode("gdi") {
-					termutil.Printstring(string(buf.Rows[filerow].idx), startx, y)
-				} else {
-					termutil.Printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx+1), gutsize-2), startx, y)
-				}
+				termutil.Printstring(runewidth.FillLeft(LineNrToString(buf.Rows[filerow].idx+1), gutsize-2), startx, y)
 				termutil.PrintRune(startx+gutsize-2, y, '│', termbox.ColorDefault)
 				if row.coloff > 0 {
 					termutil.PrintRune(startx+gutsize-1, y, '←', termbox.ColorDefault)
