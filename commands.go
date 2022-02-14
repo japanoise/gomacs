@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/zhemao/glisp/interpreter"
+	glisp "github.com/zhemao/glisp/interpreter"
 )
 
 type CommandList struct {
@@ -278,7 +278,7 @@ func LoadDefaultCommands() {
 		func(env *glisp.Glisp) { editorUndoAction() }, false})
 	DefineCommand(&CommandFunc{"indent",
 		func(env *glisp.Glisp) {
-			editorInsertStr(getTabString())
+			editorIndent()
 		}, false})
 	DefineCommand(&CommandFunc{"other-window",
 		func(env *glisp.Glisp) { switchWindow() }, false})
