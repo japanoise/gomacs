@@ -234,11 +234,11 @@ func editorFindCallback(query string, key string) {
 			current = 0
 		}
 		row := Global.CurrentB.Rows[current]
-		match := strings.Index(row.Render, query)
+		match := strings.Index(row.Data, query)
 		if match > -1 {
 			last_match = current
 			Global.CurrentB.cy = current
-			Global.CurrentB.cx = editorRowRxToCx(row, match)
+			Global.CurrentB.cx = match
 			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			Global.CurrentB.MarkX = Global.CurrentB.cx + ql
@@ -336,13 +336,13 @@ func doReplaceString() {
 	ql := len(orig)
 	nl := len(replace)
 	for cy, row := range Global.CurrentB.Rows {
-		match := strings.LastIndex(row.Render, orig)
+		match := strings.LastIndex(row.Data, orig)
 		if match != -1 {
-			count := strings.Count(row.Render, orig)
+			count := strings.Count(row.Data, orig)
 			matches += count
 			lines++
 			Global.CurrentB.cy = cy
-			Global.CurrentB.cx = editorRowRxToCx(row, match+ql-(count*(ql-nl)))
+			Global.CurrentB.cx = match + ql - (count * (ql - nl))
 			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			Global.CurrentB.Dirty = true
@@ -443,7 +443,7 @@ func doReplaceRegexp() {
 			matches += count
 			lines++
 			Global.CurrentB.cy = cy
-			Global.CurrentB.cx = editorRowRxToCx(row, row.Size)
+			Global.CurrentB.cx = row.Size
 			Global.CurrentB.prefcx = Global.CurrentB.cx
 			Global.CurrentB.rowoff = Global.CurrentB.NumRows
 			Global.CurrentB.Dirty = true
