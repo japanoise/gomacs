@@ -15,9 +15,10 @@ import (
 	"time"
 	"unicode/utf8"
 
+	termutil "github.com/japanoise/termbox-util"
 	"github.com/mitchellh/go-homedir"
 	"github.com/nsf/termbox-go"
-	"github.com/zhemao/glisp/interpreter"
+	glisp "github.com/zhemao/glisp/interpreter"
 	"github.com/zyedidia/highlight"
 )
 
@@ -134,23 +135,21 @@ func saveBuffersKillEmacs(env *glisp.Glisp) {
 }
 
 func rowUpdateRender(row *EditorRow) {
-	tabs := 0
-	for _, rv := range row.Data {
-		if rv == '\t' {
-			tabs++
-		}
-	}
 	var buffer bytes.Buffer
-	row.RenderSize = row.Size + tabs*(Global.Tabsize-1) + 1
+	rx := 0
 	for _, rv := range row.Data {
 		if rv == '\t' {
-			for i := 0; i < Global.Tabsize; i++ {
+			nextts := nextTabStop(rx)
+			for i := 0; i < nextts; i++ {
 				buffer.WriteByte(' ')
 			}
+			rx += nextts
 		} else {
 			buffer.WriteRune(rv)
+			rx += termutil.Runewidth(rv)
 		}
 	}
+	row.RenderSize = rx
 	row.Render = buffer.String()
 }
 
@@ -285,6 +284,16 @@ func editorInsertStr(s string) {
 	editorAddInsertUndo(Global.CurrentB.cx, Global.CurrentB.cy, s)
 	editorRowInsertStr(Global.CurrentB.Rows[Global.CurrentB.cy], Global.CurrentB, Global.CurrentB.cx, s)
 	Global.CurrentB.cx += len(s)
+}
+
+func editorIndent() {
+	tab := getTabString()
+	if Global.SoftTab {
+		buf := Global.CurrentB
+		rx := editorRowCxToRx(buf.Rows[buf.cy])
+		tab = tab[:nextTabStop(rx)]
+	}
+	editorInsertStr(tab)
 }
 
 func editorDelChar() {

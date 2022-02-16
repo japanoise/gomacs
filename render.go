@@ -18,6 +18,10 @@ func init() {
 	redrawLock = &sync.Mutex{}
 }
 
+func nextTabStop(rx int) int {
+	return Global.Tabsize - rx%Global.Tabsize
+}
+
 func (row *EditorRow) cxToRx(cx int) int {
 	rx := 0
 	for i, rv := range row.Data {
@@ -25,7 +29,7 @@ func (row *EditorRow) cxToRx(cx int) int {
 			break
 		}
 		if rv == '\t' {
-			rx += Global.Tabsize
+			rx += nextTabStop(rx)
 		} else {
 			rx += termutil.Runewidth(rv)
 		}
@@ -43,7 +47,7 @@ func editorRowRxToCx(row *EditorRow, rx int) int {
 	for cx = 0; cx < row.Size; {
 		rv, len := utf8.DecodeRuneInString(row.Data[cx:])
 		if rv == '\t' {
-			cur_rx += Global.Tabsize
+			cur_rx += nextTabStop(rx)
 		} else {
 			cur_rx += termutil.Runewidth(rv)
 		}
