@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 	"unicode/utf8"
 
-	"github.com/japanoise/termbox-util"
+	termutil "github.com/japanoise/termbox-util"
 	"github.com/nsf/termbox-go"
 )
 
@@ -265,6 +266,15 @@ func EditDynamicWithCallback(defval, prompt string, refresh func(int, int), call
 			if buflen > 0 && bufpos < buflen {
 				bufpos = forwardWordIndex(buffer, bufpos)
 				cursor = termutil.RunewidthStr(buffer[:bufpos])
+			}
+		case "C-i", "TAB":
+			// Allow tabs to be input only for commands which have no need for
+			// tab completion.
+			if prompt == "Search" || prompt == "Find" || prompt == "Find regexp" ||
+				strings.HasPrefix(prompt, "Replace ") && strings.HasSuffix(prompt, " with") {
+				buffer = buffer[:bufpos] + "\t" + buffer[bufpos:]
+				bufpos++
+				cursor++
 			}
 		default:
 			if utf8.RuneCountInString(key) == 1 {
