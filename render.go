@@ -5,6 +5,7 @@ import (
 	"math"
 	"strconv"
 	"sync"
+	"unicode/utf8"
 
 	termutil "github.com/japanoise/termbox-util"
 	"github.com/mattn/go-runewidth"
@@ -43,15 +44,17 @@ func editorRowCxToRx(row *EditorRow) int {
 func editorRowRxToCx(row *EditorRow, rx int) int {
 	cur_rx := 0
 	var cx int
-	for cx = 0; cx < row.Size; cx++ {
-		if row.Data[cx] == '\t' {
-			cur_rx += nextTabStop(cur_rx)
+	for cx = 0; cx < row.Size; {
+		rv, len := utf8.DecodeRuneInString(row.Data[cx:])
+		if rv == '\t' {
+			cur_rx += nextTabStop(rx)
 		} else {
-			cur_rx++
+			cur_rx += termutil.Runewidth(rv)
 		}
 		if cur_rx > rx {
 			return cx
 		}
+		cx += len
 	}
 	return cx
 }
