@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 	"unicode/utf8"
 
@@ -266,6 +267,10 @@ func EditDynamicWithCallback(defval, prompt string, refresh func(int, int), call
 				bufpos = forwardWordIndex(buffer, bufpos)
 				cursor = termutil.RunewidthStr(buffer[:bufpos])
 			}
+		case "C-i", "TAB":
+			buffer = buffer[:bufpos] + "\t" + buffer[bufpos:]
+			bufpos++
+			cursor++
 		default:
 			if utf8.RuneCountInString(key) == 1 {
 				r, _ := utf8.DecodeLastRuneInString(buffer)
@@ -293,6 +298,8 @@ func editorPrompt(prompt string, callback func(string, string)) string {
 func tabCompletedEditorPrompt(prompt string, getCandidates func(string) []string) string {
 	ret := DynamicPromptWithCallback(prompt, func(int, int) { editorRefreshScreen() }, func(query, key string) string {
 		if key == "TAB" || key == "C-i" {
+			// HACK: Remove tabs from query
+			query = strings.ReplaceAll(query, "\t", "")
 			if getCandidates == nil {
 				return query
 			}
