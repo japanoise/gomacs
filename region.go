@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/japanoise/termbox-util"
+	termutil "github.com/japanoise/termbox-util"
 )
 
 type Region struct {

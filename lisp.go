@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 
 	"github.com/mitchellh/go-homedir"
-	"github.com/zhemao/glisp/interpreter"
+	glisp "github.com/zhemao/glisp/interpreter"
 )
 
 func lispGetKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {

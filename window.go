@@ -2,7 +2,7 @@ package main
 
 import (
 	termbox "github.com/nsf/termbox-go"
-	"github.com/zhemao/glisp/interpreter"
+	glisp "github.com/zhemao/glisp/interpreter"
 )
 
 type winTree struct {
