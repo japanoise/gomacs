@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/zhemao/glisp/interpreter"
-)
+import glisp "github.com/zhemao/glisp/interpreter"
 
 type EditorAction struct {
 	HasUniversal bool

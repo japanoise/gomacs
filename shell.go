@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/kballard/go-shellquote"
-	"github.com/zhemao/glisp/interpreter"
+	glisp "github.com/zhemao/glisp/interpreter"
 )
 
 func shellCmd(com string, args []string) (string, error) {

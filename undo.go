@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/zhemao/glisp/interpreter"
+	glisp "github.com/zhemao/glisp/interpreter"
 )
 
 type EditorUndo struct {
