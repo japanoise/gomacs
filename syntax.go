@@ -3,9 +3,9 @@ package main
 import (
 	"strings"
 
-	"github.com/japanoise/termbox-util"
+	termutil "github.com/japanoise/termbox-util"
 	"github.com/nsf/termbox-go"
-	"github.com/zhemao/glisp/interpreter"
+	glisp "github.com/zhemao/glisp/interpreter"
 	"github.com/zyedidia/highlight"
 )
 

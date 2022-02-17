@@ -5,7 +5,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/japanoise/termbox-util"
+	termutil "github.com/japanoise/termbox-util"
 	"github.com/nsf/termbox-go"
 )
 
