@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"time"
 	"unicode/utf8"
 
@@ -270,8 +269,7 @@ func EditDynamicWithCallback(defval, prompt string, refresh func(int, int), call
 		case "C-i", "TAB":
 			// Allow tabs to be input only for commands which have no need for
 			// tab completion.
-			if prompt == "Search" || prompt == "Find" || prompt == "Find regexp" ||
-				strings.HasPrefix(prompt, "Replace ") && strings.HasSuffix(prompt, " with") {
+			if isSearchPrompt(prompt) {
 				buffer = buffer[:bufpos] + "\t" + buffer[bufpos:]
 				bufpos++
 				cursor++
