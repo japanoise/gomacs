@@ -469,10 +469,7 @@ func doFillRegion() {
 }
 
 func insertSpaceMaybeFill() {
-	if Global.CurrentB.hasMode("auto-fill-mode") &&
-		Global.CurrentB.Rows[Global.CurrentB.cy].RenderSize >= Global.Fillcolumn {
-		doFillParagraph()
-	}
+	doAutoFillParagraph()
 	editorInsertStr(" ")
 }
 

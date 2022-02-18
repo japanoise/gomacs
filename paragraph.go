@@ -48,16 +48,36 @@ func forwardParagraph() {
 	}
 }
 
+func doAutoFillParagraph() {
+	buf := Global.CurrentB
+	if buf.NumRows == 0 {
+		return
+	}
+	row := buf.Rows[buf.cy]
+	if buf.hasMode("aggressive-fill-mode") && row.RenderSize >= Global.Fillcolumn {
+		doFillParagraph()
+	} else if buf.hasMode("auto-fill-mode") && editorRowCxToRx(row) >= Global.Fillcolumn {
+		startl := buf.cy
+		endl := startl
+		runeidx, space := savePointBeforeFill(startl, endl)
+		doFillLines(startl, endl)
+		restorePointAfterFill(startl, buf.cy, runeidx, space)
+	}
+}
+
 func doFillParagraph() {
-	startl := indexPreviousBlankLine()
-	endl := indexNextBlankLine() - 1
 	if Global.CurrentB.NumRows == 0 {
 		return
-	} else {
-		runeidx, space := savePointBeforeFill(startl, endl)
-		transposeRegion(Global.CurrentB, 0, Global.CurrentB.Rows[endl].Size, startl, endl, FillString)
-		restorePointAfterFill(runeidx, space)
 	}
+	startl := indexPreviousBlankLine()
+	endl := indexNextBlankLine() - 1
+	runeidx, space := savePointBeforeFill(startl, endl)
+	doFillLines(startl, endl)
+	restorePointAfterFill(indexPreviousBlankLine(), Global.CurrentB.cy, runeidx, space)
+}
+
+func doFillLines(startl, endl int) {
+	transposeRegion(Global.CurrentB, 0, Global.CurrentB.Rows[endl].Size, startl, endl, FillString)
 }
 
 func savePointBeforeFill(startl, endl int) (int, bool) {
@@ -90,10 +110,8 @@ rowloop:
 	return runeidx, space
 }
 
-func restorePointAfterFill(runeidx int, space bool) {
+func restorePointAfterFill(startl, endl, runeidx int, space bool) {
 	buf := Global.CurrentB
-	startl := indexPreviousBlankLine()
-	endl := buf.cy // transposeRegion leaves point at end
 	cur_runeidx := 0
 	for cy := startl; cy <= endl; cy++ {
 		for cx, rv := range buf.Rows[cy].Data {
