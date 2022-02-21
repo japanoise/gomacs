@@ -93,9 +93,9 @@ All very straightforward!
 
 ## Lisp hacking
 
-[Make sure to read the Glisp documentation.](https://github.com/zhemao/glisp/wiki)
-Note that Glisp catches most crashes, and writes out the stacktrace to the
-file crash.log in the current directory. If you get stuck (sometimes Glisp will
+[Make sure to read the Zygomys documentation.](https://github.com/glycerine/zygomys/wiki)
+Note that Zygomys catches most crashes, and writes out the stacktrace to the
+file crash.log in the current directory. If you get stuck (sometimes Zygomys will
 crash and not get restarted) hit the `<f12>` key, which will quit Gomacs
 immediately.
 
