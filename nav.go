@@ -417,6 +417,15 @@ func doQueryReplaceRegexp() {
 				prestring = prestring + matchstring[:match[1]]
 				matchstring = matchstring[match[1]:]
 			}
+			if matchlen == 0 {
+				if len(matchstring) == 0 {
+					break
+				}
+				// Force forward progress
+				_, rl := utf8.DecodeRuneInString(matchstring)
+				prestring += matchstring[:rl]
+				matchstring = matchstring[rl:]
+			}
 			match = pattern.FindStringIndex(matchstring)
 		}
 	}
