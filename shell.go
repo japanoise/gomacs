@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/kballard/go-shellquote"
-	glisp "github.com/zhemao/glisp/interpreter"
+	glisp "github.com/glycerine/zygomys/zygo"
 )
 
 func shellCmd(com string, args []string) (string, error) {
@@ -104,7 +104,7 @@ func doShellCmdRegion() {
 	shellCmdRegion(words[0], words[1:])
 }
 
-func replaceBufferWithShellCommand(buf *EditorBuffer, com string, args []string, env *glisp.Glisp) {
+func replaceBufferWithShellCommand(buf *EditorBuffer, com string, args []string, env *glisp.Zlisp) {
 	if buf.NumRows == 0 {
 		return
 	}

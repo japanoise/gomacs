@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	glisp "github.com/zhemao/glisp/interpreter"
+	glisp "github.com/glycerine/zygomys/zygo"
 )
 
 type CommandList struct {
@@ -20,7 +20,7 @@ var funcnames map[string]*CommandFunc
 
 type CommandFunc struct {
 	Name     string
-	Com      func(env *glisp.Glisp)
+	Com      func(env *glisp.Zlisp)
 	NoRepeat bool
 }
 
@@ -149,7 +149,7 @@ func DescribeKeyBriefly() {
 	}
 }
 
-func RunCommand(env *glisp.Glisp) {
+func RunCommand(env *glisp.Zlisp) {
 	cmdname := StrToCmdName(tabCompletedEditorPrompt("Run command", func(prefix string) []string {
 		halfcmd := StrToCmdName(prefix)
 		ret := []string{}
@@ -170,12 +170,12 @@ func RunCommand(env *glisp.Glisp) {
 	}
 }
 
-func RunNamedCommand(env *glisp.Glisp, cmdname string) error {
+func RunNamedCommand(env *glisp.Zlisp, cmdname string) error {
 	cmd := funcnames[cmdname]
 	if cmd == nil && strings.HasSuffix(cmdname, "mode") {
 		cmd = &CommandFunc{
 			cmdname,
-			func(*glisp.Glisp) {
+			func(*glisp.Zlisp) {
 				doToggleMode(cmdname)
 			},
 			false,
@@ -188,7 +188,7 @@ func RunNamedCommand(env *glisp.Glisp, cmdname string) error {
 	}
 }
 
-func (cmd *CommandFunc) Run(env *glisp.Glisp) error {
+func (cmd *CommandFunc) Run(env *glisp.Zlisp) error {
 	if cmd.Com != nil {
 		cmd.Com(env)
 		if !cmd.NoRepeat {
@@ -232,166 +232,166 @@ func AproposCommand() {
 
 func LoadDefaultCommands() {
 	DefineCommand(&CommandFunc{"describe-key-briefly",
-		func(env *glisp.Glisp) { DescribeKeyBriefly() }, false})
+		func(env *glisp.Zlisp) { DescribeKeyBriefly() }, false})
 	DefineCommand(&CommandFunc{"run-command", RunCommand, true})
 	DefineCommand(&CommandFunc{"redo", editorRedoAction, false})
 	DefineCommand(&CommandFunc{"suspend-emacs",
-		func(env *glisp.Glisp) { suspend() }, false})
+		func(env *glisp.Zlisp) { suspend() }, false})
 	DefineCommand(&CommandFunc{"move-end-of-line",
-		func(env *glisp.Glisp) { MoveCursorToEol() }, false})
+		func(env *glisp.Zlisp) { MoveCursorToEol() }, false})
 	DefineCommand(&CommandFunc{"move-beginning-of-line",
-		func(env *glisp.Glisp) { MoveCursorToBol() }, false})
+		func(env *glisp.Zlisp) { MoveCursorToBol() }, false})
 	DefineCommand(&CommandFunc{"scroll-up-command",
-		func(env *glisp.Glisp) { MoveCursorBackPage() }, false})
+		func(env *glisp.Zlisp) { MoveCursorBackPage() }, false})
 	DefineCommand(&CommandFunc{"scroll-down-command",
-		func(env *glisp.Glisp) { MoveCursorForthPage() }, false})
+		func(env *glisp.Zlisp) { MoveCursorForthPage() }, false})
 	DefineCommand(&CommandFunc{"save-buffer",
-		func(env *glisp.Glisp) { EditorSave(env) }, false})
+		func(env *glisp.Zlisp) { EditorSave(env) }, false})
 	DefineCommand(&CommandFunc{"delete-char",
-		func(env *glisp.Glisp) { editorDelForwardChar() }, false})
+		func(env *glisp.Zlisp) { editorDelForwardChar() }, false})
 	DefineCommand(&CommandFunc{"delete-backward-char",
-		func(env *glisp.Glisp) { editorDelChar() }, false})
+		func(env *glisp.Zlisp) { editorDelChar() }, false})
 	DefineCommand(&CommandFunc{"find-file",
-		func(env *glisp.Glisp) { editorFindFile(env) }, false})
+		func(env *glisp.Zlisp) { editorFindFile(env) }, false})
 	DefineCommand(&CommandFunc{"insert-newline-and-indent",
-		func(env *glisp.Glisp) { editorInsertNewline(true) }, false})
+		func(env *glisp.Zlisp) { editorInsertNewline(true) }, false})
 	DefineCommand(&CommandFunc{"insert-newline-maybe-indent",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			editorInsertNewline(Global.CurrentB.hasMode("indent-mode"))
 		}, false})
 	DefineCommand(&CommandFunc{"insert-newline",
-		func(env *glisp.Glisp) { editorInsertNewline(false) }, false})
+		func(env *glisp.Zlisp) { editorInsertNewline(false) }, false})
 	DefineCommand(&CommandFunc{"isearch",
-		func(env *glisp.Glisp) { editorFind() }, false})
+		func(env *glisp.Zlisp) { editorFind() }, false})
 	DefineCommand(&CommandFunc{"buffers-list",
-		func(env *glisp.Glisp) { editorSwitchBuffer() }, false})
+		func(env *glisp.Zlisp) { editorSwitchBuffer() }, false})
 	DefineCommand(&CommandFunc{"end-of-buffer",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			Global.CurrentB.MoveCursorToEndOfBuffer()
 		}, false})
 	DefineCommand(&CommandFunc{"beginning-of-buffer",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			Global.CurrentB.cy = 0
 			Global.CurrentB.cx = 0
 		}, false})
 	DefineCommand(&CommandFunc{"undo",
-		func(env *glisp.Glisp) { editorUndoAction() }, false})
+		func(env *glisp.Zlisp) { editorUndoAction() }, false})
 	DefineCommand(&CommandFunc{"indent",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			editorIndent()
 		}, false})
 	DefineCommand(&CommandFunc{"other-window",
-		func(env *glisp.Glisp) { switchWindow() }, false})
+		func(env *glisp.Zlisp) { switchWindow() }, false})
 	DefineCommand(&CommandFunc{"delete-window",
-		func(env *glisp.Glisp) { closeThisWindow() }, false})
+		func(env *glisp.Zlisp) { closeThisWindow() }, false})
 	DefineCommand(&CommandFunc{"delete-other-windows",
-		func(env *glisp.Glisp) { closeOtherWindows() }, false})
+		func(env *glisp.Zlisp) { closeOtherWindows() }, false})
 	DefineCommand(&CommandFunc{"split-window",
-		func(env *glisp.Glisp) { vSplit() }, false})
+		func(env *glisp.Zlisp) { vSplit() }, false})
 	DefineCommand(&CommandFunc{"split-window-right",
-		func(env *glisp.Glisp) { hSplit() }, false})
+		func(env *glisp.Zlisp) { hSplit() }, false})
 	DefineCommand(&CommandFunc{"find-file-other-window",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			callFunOtherWindow(func() { editorFindFile(env) })
 		}, false})
 	DefineCommand(&CommandFunc{"switch-buffer-other-window",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			callFunOtherWindow(editorSwitchBuffer)
 		}, false})
 	DefineCommand(&CommandFunc{"set-mark",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			setMark(Global.CurrentB)
 		}, false})
 	DefineCommand(&CommandFunc{"kill-region",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doKillRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"yank-region",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doYankRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"copy-region",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doCopyRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"forward-word",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			moveForwardWord()
 		}, false})
 	DefineCommand(&CommandFunc{"backward-word",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			moveBackWord()
 		}, false})
 	DefineCommand(&CommandFunc{"backward-kill-word",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			delBackWord()
 		}, false})
 	DefineCommand(&CommandFunc{"kill-word",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			delForwardWord()
 		}, false})
 	DefineCommand(&CommandFunc{"recenter-top-bottom",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			editorCentreView()
 		}, false})
 	DefineCommand(&CommandFunc{"kill-buffer",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			killBuffer()
 		}, false})
 	DefineCommand(&CommandFunc{"kill-line",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			killToEol()
 		}, false})
 	DefineCommand(&CommandFunc{"downcase-region",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doLCRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"upcase-region",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doUCRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"upcase-word",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			upcaseWord()
 		}, false})
 	DefineCommand(&CommandFunc{"downcase-word",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			downcaseWord()
 		}, false})
 	DefineCommand(&CommandFunc{"capitalize-word",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			capitalizeWord()
 		}, false})
 	DefineCommand(&CommandFunc{"toggle-mode",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			mode := editorPrompt("Which mode?", nil)
 			Global.CurrentB.toggleMode(StrToCmdName(mode))
 		}, false})
 	DefineCommand(&CommandFunc{"show-modes",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			showModes()
 		}, false})
 	DefineCommand(&CommandFunc{"forward-char",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			Global.CurrentB.MoveCursorRight()
 		}, false})
 	DefineCommand(&CommandFunc{"backward-char",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			Global.CurrentB.MoveCursorLeft()
 		}, false})
 	DefineCommand(&CommandFunc{"next-line",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			Global.CurrentB.MoveCursorDown()
 		}, false})
 	DefineCommand(&CommandFunc{"previous-line",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			Global.CurrentB.MoveCursorUp()
 		}, false})
 	DefineCommand(&CommandFunc{"describe-bindings",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doDescribeBindings()
 		}, false})
-	DefineCommand(&CommandFunc{"quick-help", func(*glisp.Glisp) {
+	DefineCommand(&CommandFunc{"quick-help", func(*glisp.Zlisp) {
 		showMessages(`Welcome to Gomacs - Go-powered emacs!
 
 If you've not edited your rc file (see README.md or the man page),
@@ -411,113 +411,113 @@ Current key bindings:
 `, WalkCommandTree(Emacs, ""))
 	}, false})
 	DefineCommand(&CommandFunc{"dired-mode",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			DiredMode(env)
 		}, false})
 	DefineCommand(&CommandFunc{"goto-line",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			gotoLine()
 		}, false})
 	DefineCommand(&CommandFunc{"goto-char",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			gotoChar()
 		}, false})
 	DefineCommand(&CommandFunc{"start-macro",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			recMacro()
 		}, true})
 	DefineCommand(&CommandFunc{"end-macro",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			stopRecMacro()
 		}, true})
 	DefineCommand(&CommandFunc{"end-macro-and-run",
-		func(e *glisp.Glisp) {
+		func(e *glisp.Zlisp) {
 			doRunMacro(e)
 		}, true})
 	DefineCommand(&CommandFunc{"kill-buffer-and-window",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			KillBufferAndWindow()
 		}, false})
 	DefineCommand(&CommandFunc{"view-messages",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			showMessages(Global.messages...)
 		}, false})
 	DefineCommand(&CommandFunc{"query-replace",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doQueryReplace()
 		}, false})
 	DefineCommand(&CommandFunc{"replace-string",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doReplaceString()
 		}, false})
 	DefineCommand(&CommandFunc{"what-cursor-position",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			whatCursorPosition()
 		}, false})
 	DefineCommand(&CommandFunc{"save-some-buffers",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doSaveSomeBuffers(env)
 		}, false})
 	DefineCommand(&CommandFunc{"apropos-command",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			AproposCommand()
 		}, false})
 	DefineCommand(&CommandFunc{"quoted-insert",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			InsertRaw()
 		}, false})
 	DefineCommand(&CommandFunc{"exchange-point-and-mark",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doSwapMarkAndCursor(Global.CurrentB)
 		}, false})
 	DefineCommand(&CommandFunc{"universal-argument",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			SetUniversalArgument(env)
 		}, true})
 	DefineCommand(&CommandFunc{"forward-paragraph",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			forwardParagraph()
 		}, false})
 	DefineCommand(&CommandFunc{"backward-paragraph",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			backwardParagraph()
 		}, false})
 	DefineCommand(&CommandFunc{"zap-to-char",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			zapToChar()
 		}, false})
 	DefineCommand(&CommandFunc{"dired-other-window",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			callFunOtherWindow(func() {
 				DiredMode(env)
 			})
 		}, false})
 	DefineCommand(&CommandFunc{"scroll-other-window",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			callFunOtherWindowAndGoBack(func() {
 				MoveCursorForthPage()
 				editorScroll(GetScreenSize())
 			})
 		}, false})
 	DefineCommand(&CommandFunc{"scroll-other-window-back",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			callFunOtherWindowAndGoBack(func() {
 				MoveCursorBackPage()
 				editorScroll(GetScreenSize())
 			})
 		}, false})
 	DefineCommand(&CommandFunc{"write-file",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			editorWriteFile(env)
 		}, false})
 	DefineCommand(&CommandFunc{"visit-file",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			editorVisitFile(env)
 		}, false})
 	if Global.debug {
-		DefineCommand(&CommandFunc{"debug-undo", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.CurrentB.Undo, "\n", Global.CurrentB.Undo.prev)) }, false})
-		DefineCommand(&CommandFunc{"debug-universal", func(*glisp.Glisp) { showMessages(fmt.Sprint(Global.Universal), fmt.Sprint(Global.SetUniversal)) }, false})
-		DefineCommand(&CommandFunc{"debug-buffer", func(*glisp.Glisp) {
+		DefineCommand(&CommandFunc{"debug-undo", func(*glisp.Zlisp) { showMessages(fmt.Sprint(Global.CurrentB.Undo, "\n", Global.CurrentB.Undo.prev)) }, false})
+		DefineCommand(&CommandFunc{"debug-universal", func(*glisp.Zlisp) { showMessages(fmt.Sprint(Global.Universal), fmt.Sprint(Global.SetUniversal)) }, false})
+		DefineCommand(&CommandFunc{"debug-buffer", func(*glisp.Zlisp) {
 			linedata := make([]string, Global.CurrentB.NumRows+2)
 			linedata[0] = fmt.Sprintf("cx: %d, cy: %d", Global.CurrentB.cx, Global.CurrentB.cy)
 			for i, row := range Global.CurrentB.Rows {
@@ -527,149 +527,149 @@ Current key bindings:
 		}, false})
 	}
 	DefineCommand(&CommandFunc{"repeat",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			RepeatCommand(env)
 		}, true})
 	DefineCommand(&CommandFunc{"display-buffer",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			callFunOtherWindowAndGoBack(editorSwitchBuffer)
 		}, false})
 	DefineCommand(&CommandFunc{"untabify",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doUntabifyRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"tabify",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doTabifyRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"jump-to-register",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			DoJumpRegister(env)
 		}, false})
 	DefineCommand(&CommandFunc{"copy-to-register",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			DoSaveTextToRegister()
 		}, false})
 	DefineCommand(&CommandFunc{"kmacro-to-register",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			DoSaveMacroToRegister()
 		}, false})
 	DefineCommand(&CommandFunc{"insert-register",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			DoInsertTextFromRegister()
 		}, false})
 	DefineCommand(&CommandFunc{"point-to-register",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			DoSavePositionToRegister()
 		}, false})
 	DefineCommand(&CommandFunc{"view-register",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			DoDescribeRegister()
 		}, false})
 	DefineCommand(&CommandFunc{"fill-region",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doFillRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"fill-paragraph",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doFillParagraph()
 		}, false})
 	DefineCommand(&CommandFunc{"set-fill-column",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			setFillColumn()
 		}, false})
 	DefineCommand(&CommandFunc{"not-modified",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			Global.CurrentB.Dirty = false
 			Global.Input = "Modification flag cleared."
 		}, false})
 	DefineCommand(&CommandFunc{"query-replace-regexp",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doQueryReplaceRegexp()
 		}, false})
 	DefineCommand(&CommandFunc{"replace-regexp",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doReplaceRegexp()
 		}, false})
 	DefineCommand(&CommandFunc{"shell-command",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doShellCmd()
 		}, false})
 	DefineCommand(&CommandFunc{"shell-command-on-region",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doShellCmdRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"string-rectangle",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doStringRectangle()
 		}, false})
 	DefineCommand(&CommandFunc{"copy-rectangle-as-kill",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doCopyRectangle()
 		}, false})
 	DefineCommand(&CommandFunc{"copy-rectangle-to-register",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			rectToRegister()
 		}, false})
 	DefineCommand(&CommandFunc{"kill-rectangle",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doKillRectangle()
 		}, false})
 	DefineCommand(&CommandFunc{"yank-rectangle",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			doYankRectangle()
 		}, false})
 	DefineCommand(&CommandFunc{"keyboard-quit",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			keyboardQuit()
 		}, false})
 	DefineCommand(&CommandFunc{"mouse-set-point",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			JumpToMousePoint()
 		}, false})
 	DefineCommand(&CommandFunc{"mouse-drag-region",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			MouseDragRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"mwheel-scroll-up",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			MouseScrollUp()
 		}, false})
 	DefineCommand(&CommandFunc{"mwheel-scroll-down",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			MouseScrollDown()
 		}, false})
 	DefineCommand(&CommandFunc{"mouse-release",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			MouseRelease()
 		}, false})
 	DefineCommand(&CommandFunc{"mouse-yank-primary",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			MouseYankXsel()
 		}, false})
 	DefineCommand(&CommandFunc{"insert-space-maybe-fill",
-		func(*glisp.Glisp) {
+		func(*glisp.Zlisp) {
 			insertSpaceMaybeFill()
 		}, false})
 	DefineCommand(&CommandFunc{"fill-paragraph-or-region",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doFillParagraphOrRegion()
 		}, false})
 	DefineCommand(&CommandFunc{"auto-complete", autoComplete, false})
 	DefineCommand(&CommandFunc{"transpose-chars",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doTransposeChars()
 		}, false})
 	DefineCommand(&CommandFunc{"transpose-words",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			doTransposeWords()
 		}, false})
 	DefineCommand(&CommandFunc{"rotate-windows",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			switchWindowOrientation()
 		}, false})
 	DefineCommand(&CommandFunc{"swap-windows",
-		func(env *glisp.Glisp) {
+		func(env *glisp.Zlisp) {
 			swapWindows()
 		}, false})
 }

@@ -3,9 +3,9 @@ package main
 import (
 	"strings"
 
+	glisp "github.com/glycerine/zygomys/zygo"
 	termutil "github.com/japanoise/termbox-util"
 	"github.com/nsf/termbox-go"
-	glisp "github.com/zhemao/glisp/interpreter"
 	"github.com/zyedidia/highlight"
 )
 
@@ -178,14 +178,7 @@ func LoadSyntaxDefs() {
 	highlight.ResolveIncludes(defs)
 }
 
-func editorSelectSyntaxHighlight(buf *EditorBuffer, env *glisp.Glisp) {
-	if strings.HasSuffix(buf.Filename, "gomacs.lisp") {
-		buf.Highlighter = highlight.NewHighlighter(highlight.DetectFiletype(defs, "gomacs.zy", []byte{}))
-		buf.MajorMode = buf.Highlighter.Def.FileType
-		ExecHooksForMode(env, buf.MajorMode)
-		buf.Highlight()
-		return
-	}
+func editorSelectSyntaxHighlight(buf *EditorBuffer, env *glisp.Zlisp) {
 	var first []byte
 	if buf.NumRows > 0 {
 		first = []byte(buf.Rows[0].Data)

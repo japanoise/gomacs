@@ -4,10 +4,10 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	glisp "github.com/zhemao/glisp/interpreter"
+	glisp "github.com/glycerine/zygomys/zygo"
 )
 
-func DiredMode(env *glisp.Glisp) {
+func DiredMode(env *glisp.Zlisp) {
 	dir, perr := filepath.Abs("./")
 	if perr != nil {
 		Global.Input = perr.Error()

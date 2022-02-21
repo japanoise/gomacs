@@ -6,7 +6,7 @@ import (
 	"unicode/utf8"
 
 	termutil "github.com/japanoise/termbox-util"
-	glisp "github.com/zhemao/glisp/interpreter"
+	glisp "github.com/glycerine/zygomys/zygo"
 )
 
 func indexEndOfBackwardWord() (int, int) {
@@ -173,7 +173,7 @@ func getBackwardWord() string {
 	return getRegionText(Global.CurrentB, bwx, Global.CurrentB.cx, bwy, Global.CurrentB.cy)
 }
 
-func autoComplete(env *glisp.Glisp) {
+func autoComplete(env *glisp.Zlisp) {
 	word := getBackwardWord()
 	re, err := regexp.Compile(`\b` + regexp.QuoteMeta(word) + `(\w+)`)
 	if err != nil {
@@ -211,7 +211,7 @@ func autoComplete(env *glisp.Glisp) {
 	first := true
 	ocx, ocy := Global.CurrentB.cx, Global.CurrentB.cy
 	micromode("M-/", "Press M-/ again to cycle through complete candidates",
-		env, func(*glisp.Glisp) {
+		env, func(*glisp.Zlisp) {
 			if first {
 				first = false
 			} else {

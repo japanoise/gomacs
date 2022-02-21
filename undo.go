@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	glisp "github.com/zhemao/glisp/interpreter"
+	glisp "github.com/glycerine/zygomys/zygo"
 )
 
 type EditorUndo struct {
@@ -234,7 +234,7 @@ func editorUndoAction() {
 	}
 }
 
-func doOneRedo(env *glisp.Glisp) {
+func doOneRedo(env *glisp.Zlisp) {
 	if Global.CurrentB.Redo == nil {
 		Global.Input = "No further redo information."
 	} else {
@@ -252,6 +252,6 @@ func doOneRedo(env *glisp.Glisp) {
 	}
 }
 
-func editorRedoAction(env *glisp.Glisp) {
+func editorRedoAction(env *glisp.Zlisp) {
 	micromode("C-_", "Press C-_ or C-/ to redo again", env, doOneRedo)
 }
