@@ -1,6 +1,10 @@
 package main
 
-import glisp "github.com/zhemao/glisp/interpreter"
+import (
+	"fmt"
+
+	glisp "github.com/zhemao/glisp/interpreter"
+)
 
 // Minor Modes
 type ModeList map[string]bool
@@ -19,24 +23,34 @@ func (e *EditorBuffer) AddDefaultModes() {
 	}
 }
 
-func (e *EditorBuffer) toggleMode(mode string) bool {
-	if e.hasMode(mode) {
-		e.Modes[mode] = false
-	} else {
-		e.Modes[mode] = true
-	}
-	return e.Modes[mode]
-}
-
-func (e *EditorBuffer) setMode(mode string, enabled bool) {
+func (e *EditorBuffer) toggleMode(mode string) (bool, error) {
 	if e.Modes == nil {
 		e.Modes = make(ModeList)
 	}
-	e.Modes[mode] = enabled
+	return e.setMode(mode, !e.hasMode(mode))
+}
+
+func defMode(mode string) {
+	Global.MinorModes[mode] = true
+}
+
+func (e *EditorBuffer) setMode(mode string, enabled bool) (bool, error) {
+	if e.Modes == nil {
+		e.Modes = make(ModeList)
+	}
+	if Global.MinorModes[mode] {
+		e.Modes[mode] = enabled
+		return e.Modes[mode], nil
+	}
+	return e.Modes[mode], fmt.Errorf("%s is not a defined minor mode", mode)
 }
 
 func doToggleMode(mode string) {
-	enabled := Global.CurrentB.toggleMode(mode)
+	enabled, err := Global.CurrentB.toggleMode(mode)
+	if err != nil {
+		Global.Input = err.Error()
+		return
+	}
 	if enabled {
 		Global.Input = mode + " enabled"
 	} else {

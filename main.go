@@ -86,6 +86,7 @@ type EditorState struct {
 	MajorBindings           map[string]*CommandList
 	MouseX                  int
 	MouseY                  int
+	MinorModes              map[string]bool
 }
 
 var Global EditorState
@@ -528,7 +529,7 @@ func InitEditor() {
 		false, &winTree{false, false, true, buffer, nil, nil, nil}, 0,
 		"", false, make(map[string]bool), []string{}, false, 0, false,
 		loadDefaultHooks(), nil, false, 0, NewRegisterList(), 80,
-		make(map[string]*CommandList), 0, 0}
+		make(map[string]*CommandList), 0, 0, make(map[string]bool)}
 	Global.DefaultModes["terminal-title-mode"] = true
 	Emacs = new(CommandList)
 	Emacs.Parent = true

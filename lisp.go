@@ -440,6 +440,21 @@ func lispRemDefaultMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp
 	return glisp.SexpNull, glisp.WrongNargs
 }
 
+func lispDefMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	if len(args) == 1 {
+		var modename string
+		switch t := args[0].(type) {
+		case glisp.SexpStr:
+			modename = StrToCmdName(string(t))
+		default:
+			return glisp.SexpNull, errors.New("Arg needs to be a string")
+		}
+		defMode(modename)
+		return glisp.SexpNull, nil
+	}
+	return glisp.SexpNull, glisp.WrongNargs
+}
+
 func lispSetMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) == 1 {
 		var modename string
@@ -449,8 +464,8 @@ func lispSetMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, 
 		default:
 			return glisp.SexpNull, errors.New("Arg needs to be a string")
 		}
-		Global.CurrentB.toggleMode(modename)
-		return glisp.SexpNull, nil
+		enabled, err := Global.CurrentB.toggleMode(modename)
+		return glisp.SexpBool(enabled), err
 	} else if len(args) == 2 {
 		var modename string
 		switch t := args[0].(type) {
@@ -466,8 +481,8 @@ func lispSetMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, 
 		default:
 			return glisp.SexpNull, errors.New("Arg 2 needs to be a bool")
 		}
-		Global.CurrentB.setMode(modename, enabled)
-		return glisp.SexpNull, nil
+		enabled, err := Global.CurrentB.setMode(modename, enabled)
+		return glisp.SexpBool(enabled), err
 	}
 	return glisp.SexpNull, glisp.WrongNargs
 }
@@ -591,6 +606,7 @@ func loadLispFunctions(env *glisp.Glisp) {
 	env.AddFunction("emacsdefinecmd", lispDefineCmd)
 	env.AddFunction("runemacscmd", lispRunCommand)
 	env.AddFunction("cmduarg", lispRunCommandWithUarg)
+	env.AddFunction("defmode", lispDefMode)
 	env.AddFunction("setmode", lispSetMode)
 	env.AddFunction("hasmode", lispHasMode)
 	env.AddFunction("listmodes", lispListModes)
@@ -651,6 +667,18 @@ func LoadUserConfig(env *glisp.Glisp) {
 
 func LoadDefaultConfig(env *glisp.Glisp) {
 	_, err := env.EvalString(`
+(defmode "aggressive-fill-mode")
+(defmode "auto-fill-mode")
+(defmode "column-bytes-mode")
+(defmode "dired-mode")
+(defmode "indent-mode")
+(defmode "line-number-mode")
+(defmode "no-self-insert-mode")
+(defmode "terminal-title-mode")
+(defmode "tilde-mode")
+(defmode "toggle-mode")
+(defmode "xsel-jump-to-cursor-mode")
+
 (emacsbindkey "C-s" "isearch")
 (emacsbindkey "C-x C-c" "save-buffers-kill-emacs")
 (emacsbindkey "C-x C-s" "save-buffer")
