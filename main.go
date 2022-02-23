@@ -308,28 +308,27 @@ func editorDelChar() {
 			return
 		}
 	}
+	buf := Global.CurrentB
 	for i := 0; i < times; i++ {
-		if Global.CurrentB.cx == 0 && Global.CurrentB.cy == 0 {
+		if buf.cx == 0 && buf.cy == 0 {
 			Global.Input = "Beginning of buffer"
 			return
 		}
-		if Global.CurrentB.cy == Global.CurrentB.NumRows {
+		if buf.cy == buf.NumRows {
 			return
 		}
-		row := Global.CurrentB.Rows[Global.CurrentB.cy]
-		if Global.CurrentB.cx > 0 {
-			_, rs := utf8.DecodeLastRuneInString(Global.CurrentB.Rows[Global.CurrentB.cy].Data[:Global.CurrentB.cx])
-			editorAddDeleteUndo(Global.CurrentB.cx-rs, Global.CurrentB.cx, Global.CurrentB.cy,
-				Global.CurrentB.cy, row.Data[Global.CurrentB.cx-rs:Global.CurrentB.cx])
-			editorRowDelChar(row, Global.CurrentB, Global.CurrentB.cx-rs, rs)
-			Global.CurrentB.cx -= rs
+		row := buf.Rows[buf.cy]
+		if buf.cx > 0 {
+			_, rs := utf8.DecodeLastRuneInString(row.Data[:buf.cx])
+			editorAddDeleteUndo(buf.cx-rs, buf.cx, buf.cy, buf.cy, row.Data[buf.cx-rs:buf.cx])
+			editorRowDelChar(row, buf, buf.cx-rs, rs)
+			buf.cx -= rs
 		} else {
-			editorAddDeleteUndo(Global.CurrentB.cx, Global.CurrentB.Rows[Global.CurrentB.cy-1].Size,
-				Global.CurrentB.cy-1, Global.CurrentB.cy, row.Data)
-			Global.CurrentB.cx = Global.CurrentB.Rows[Global.CurrentB.cy-1].Size
-			editorRowAppendStr(Global.CurrentB.Rows[Global.CurrentB.cy-1], Global.CurrentB, row.Data)
-			editorDelRow(Global.CurrentB.cy)
-			Global.CurrentB.cy--
+			editorAddDeleteUndo(buf.cx, buf.Rows[buf.cy-1].Size, buf.cy-1, buf.cy, row.Data)
+			buf.cx = buf.Rows[buf.cy-1].Size
+			editorRowAppendStr(buf.Rows[buf.cy-1], buf, row.Data)
+			editorDelRow(buf.cy)
+			buf.cy--
 		}
 	}
 }
