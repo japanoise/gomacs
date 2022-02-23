@@ -319,7 +319,16 @@ func editorDelChar() {
 		}
 		row := buf.Rows[buf.cy]
 		if buf.cx > 0 {
-			_, rs := utf8.DecodeLastRuneInString(row.Data[:buf.cx])
+			rv, rs := utf8.DecodeLastRuneInString(row.Data[:buf.cx])
+			if Global.SoftTab && rv == ' ' {
+				for row.cxToRx(buf.cx-rs)%Global.Tabsize != 0 {
+					rv, _ = utf8.DecodeLastRuneInString(row.Data[:buf.cx-rs])
+					if rv != ' ' {
+						break
+					}
+					rs++
+				}
+			}
 			editorAddDeleteUndo(buf.cx-rs, buf.cx, buf.cy, buf.cy, row.Data[buf.cx-rs:buf.cx])
 			editorRowDelChar(row, buf, buf.cx-rs, rs)
 			buf.cx -= rs
