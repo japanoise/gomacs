@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"strings"
-	"time"
 	"unicode/utf8"
 
 	termutil "github.com/japanoise/termbox-util"
@@ -20,30 +19,13 @@ func InitTerm() {
 
 func editorGetKey() (string, bool) {
 	for {
-		// More hacking; if we've been waiting for some time, refresh the screen.
-		doReHl := false
-		timeout := make(chan bool, 1)
-		done := make(chan bool, 1)
-		go func() {
-			time.Sleep(time.Duration(TIMEOUT))
-			timeout <- true
-		}()
-		go func() {
-			select {
-			case _ = <-timeout:
-				editorRefreshScreen()
-			case _ = <-done:
-				// Don't refresh the screen.
-			}
-		}()
 		ev := termbox.PollEvent()
-		done <- true
 		if ev.Type == termbox.EventResize {
 			editorRefreshScreen()
 		} else if ev.Type == termbox.EventKey {
-			return ParseTermboxEvent(ev), doReHl
+			return ParseTermboxEvent(ev), true
 		} else if ev.Type == termbox.EventMouse {
-			return ParseMouseEvent(ev), doReHl
+			return ParseMouseEvent(ev), true
 		}
 	}
 }

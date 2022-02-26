@@ -22,8 +22,6 @@ import (
 	"github.com/zyedidia/highlight"
 )
 
-const TIMEOUT int64 = 10000000
-
 type EditorRow struct {
 	idx        int
 	Size       int
@@ -748,7 +746,7 @@ func main() {
 			RunCommandForKey(key, env)
 			// A bit hacky, but this fixes some of our speed issues when pasting.
 			// Don't do the optimisation if this key and the last were the same!
-			if t.UnixNano()-lt.UnixNano() > TIMEOUT || lastkey == key {
+			if t.UnixNano()-lt.UnixNano() > 10000000 || lastkey == key {
 				editorRefreshScreen()
 			}
 			if drhl {
