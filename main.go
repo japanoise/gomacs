@@ -54,8 +54,6 @@ type EditorBuffer struct {
 	Highlighter  *highlight.Highlighter
 	MajorMode    string
 	prefcx       int
-	rehlfrom     int
-	needshl      bool
 	regionActive bool
 	region       *Region
 }
@@ -156,23 +154,9 @@ func rowUpdateRender(row *EditorRow) {
 
 func editorReHighlightRow(row *EditorRow, buf *EditorBuffer) {
 	if buf.Highlighter != nil {
-		if buf.rehlfrom >= 0 && buf.rehlfrom != row.idx {
-			if row.idx < buf.rehlfrom {
-				buf.rehlfrom = row.idx
-			}
-			buf.needshl = true
-		} else {
-			buf.rehlfrom = row.idx
-		}
-	}
-}
-
-func (buf *EditorBuffer) updateHighlighting() {
-	if buf.Highlighter != nil && buf.rehlfrom >= 0 && buf.NumRows != 0 {
-		row := buf.Rows[buf.rehlfrom]
 		curstate := buf.State(row.idx)
 		buf.Highlighter.ReHighlightStates(buf, row.idx)
-		if curstate != buf.State(row.idx) || buf.needshl {
+		if curstate != buf.State(row.idx) {
 			// If the EOL state changed, the buffer needs rehighlighting
 			// as this was probably multiline comment or string.
 			buf.Highlighter.HighlightMatches(buf, row.idx, buf.NumRows)
@@ -180,8 +164,6 @@ func (buf *EditorBuffer) updateHighlighting() {
 			// Probably only this line changed.
 			buf.Highlighter.ReHighlightLine(buf, row.idx)
 		}
-		buf.rehlfrom = -1
-		buf.needshl = false
 	}
 }
 

@@ -31,7 +31,7 @@ func editorGetKey() (string, bool) {
 		go func() {
 			select {
 			case _ = <-timeout:
-				doReHl = true
+				editorRefreshScreen()
 			case _ = <-done:
 				// Don't refresh the screen.
 			}
