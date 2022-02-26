@@ -32,18 +32,15 @@ func micromode(repeatkey string, msg string, env *glisp.Glisp, f func(*glisp.Gli
 	f(env)
 	Global.Input = msg
 	editorRefreshScreen()
-	key, drhl := editorGetKey()
+	key, _ := editorGetKey()
 	for key == repeatkey {
 		f(env)
 		editorRefreshScreen()
-		key, drhl = editorGetKey()
+		key, _ = editorGetKey()
 	}
 	Global.SetUniversal = false
 	RunCommandForKey(key, env)
-	if drhl {
-		editorRefreshScreen()
-		Global.CurrentB.updateHighlighting()
-	}
+	editorRefreshScreen()
 }
 
 func doRunMacro(env *glisp.Glisp) {

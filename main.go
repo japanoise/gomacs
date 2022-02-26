@@ -582,7 +582,7 @@ func AddErrorMessage(msg string) {
 func SetUniversalArgument(env *glisp.Glisp) {
 	arg := ""
 	for {
-		key, drhl := editorGetKey()
+		key, _ := editorGetKey()
 		if (arg == "" && key == "-") || ('0' <= key[0] && key[0] <= '9') {
 			arg += key
 			Global.Input += key
@@ -591,7 +591,7 @@ func SetUniversalArgument(env *glisp.Glisp) {
 			if key == "C-u" {
 				Global.Input += " " + key
 				editorRefreshScreen()
-				key, drhl = editorGetKey()
+				key, _ = editorGetKey()
 			}
 			argi := 0
 			if arg != "" {
@@ -605,10 +605,7 @@ func SetUniversalArgument(env *glisp.Glisp) {
 			Global.Universal = argi
 			Global.SetUniversal = true
 			RunCommandForKey(key, env)
-			if drhl {
-				editorRefreshScreen()
-				Global.CurrentB.updateHighlighting()
-			}
+			editorRefreshScreen()
 			Global.SetUniversal = false
 			return
 		}
@@ -739,7 +736,7 @@ func main() {
 		if Global.quit {
 			return
 		} else {
-			key := editorGetKey()
+			key, _ := editorGetKey()
 			RunCommandForKey(key, env)
 		}
 	}
