@@ -32,11 +32,11 @@ func micromode(repeatkey string, msg string, env *glisp.Glisp, f func(*glisp.Gli
 	f(env)
 	Global.Input = msg
 	editorRefreshScreen()
-	key, _ := editorGetKey()
+	key := editorGetKey()
 	for key == repeatkey {
 		f(env)
 		editorRefreshScreen()
-		key, _ = editorGetKey()
+		key = editorGetKey()
 	}
 	Global.SetUniversal = false
 	RunCommandForKey(key, env)

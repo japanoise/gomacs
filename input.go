@@ -17,15 +17,15 @@ func InitTerm() {
 	termbox.SetInputMode(termbox.InputAlt | termbox.InputMouse)
 }
 
-func editorGetKey() (string, bool) {
+func editorGetKey() string {
 	for {
 		ev := termbox.PollEvent()
 		if ev.Type == termbox.EventResize {
 			editorRefreshScreen()
 		} else if ev.Type == termbox.EventKey {
-			return ParseTermboxEvent(ev), true
+			return ParseTermboxEvent(ev)
 		} else if ev.Type == termbox.EventMouse {
-			return ParseMouseEvent(ev), true
+			return ParseMouseEvent(ev)
 		}
 	}
 }
@@ -299,7 +299,7 @@ func tabCompletedEditorPrompt(prompt string, getCandidates func(string) []string
 				for undecided {
 					Global.Input = candidates[choice]
 					editorRefreshScreen()
-					key, _ := editorGetKey()
+					key := editorGetKey()
 					if key == "TAB" || key == "C-i" || key == "RIGHT" || key == "C-f" {
 						choice++
 						if choice == len(candidates) {

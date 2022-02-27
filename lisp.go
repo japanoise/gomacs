@@ -10,7 +10,7 @@ import (
 )
 
 func lispGetKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
-	key, _ := editorGetKey()
+	key := editorGetKey()
 	editorRefreshScreen()
 	return glisp.SexpStr(key), nil
 }

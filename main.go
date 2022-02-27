@@ -582,7 +582,7 @@ func AddErrorMessage(msg string) {
 func SetUniversalArgument(env *glisp.Glisp) {
 	arg := ""
 	for {
-		key, _ := editorGetKey()
+		key := editorGetKey()
 		if (arg == "" && key == "-") || ('0' <= key[0] && key[0] <= '9') {
 			arg += key
 			Global.Input += key
@@ -591,7 +591,7 @@ func SetUniversalArgument(env *glisp.Glisp) {
 			if key == "C-u" {
 				Global.Input += " " + key
 				editorRefreshScreen()
-				key, _ = editorGetKey()
+				key = editorGetKey()
 			}
 			argi := 0
 			if arg != "" {
@@ -736,7 +736,7 @@ func main() {
 		if Global.quit {
 			return
 		} else {
-			key, _ := editorGetKey()
+			key := editorGetKey()
 			RunCommandForKey(key, env)
 		}
 	}

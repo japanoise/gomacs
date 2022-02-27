@@ -121,7 +121,7 @@ func (r *RegisterList) jumpToPositionRegister(regname string) {
 func InteractiveGetRegister(prompt string) (*Register, string) {
 	Global.Input = prompt
 	editorRefreshScreen()
-	reg, _ := editorGetKey()
+	reg := editorGetKey()
 	Global.Input += reg
 	return Global.Registers.Registers[reg], reg
 }
