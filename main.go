@@ -12,7 +12,6 @@ import (
 	"runtime/pprof"
 	"strconv"
 	"strings"
-	"time"
 	"unicode/utf8"
 
 	termutil "github.com/japanoise/termbox-util"
@@ -21,8 +20,6 @@ import (
 	glisp "github.com/zhemao/glisp/interpreter"
 	"github.com/zyedidia/highlight"
 )
-
-const TIMEOUT int64 = 10000000
 
 type EditorRow struct {
 	idx        int
@@ -54,8 +51,6 @@ type EditorBuffer struct {
 	Highlighter  *highlight.Highlighter
 	MajorMode    string
 	prefcx       int
-	rehlfrom     int
-	needshl      bool
 	regionActive bool
 	region       *Region
 }
@@ -156,23 +151,9 @@ func rowUpdateRender(row *EditorRow) {
 
 func editorReHighlightRow(row *EditorRow, buf *EditorBuffer) {
 	if buf.Highlighter != nil {
-		if buf.rehlfrom >= 0 && buf.rehlfrom != row.idx {
-			if row.idx < buf.rehlfrom {
-				buf.rehlfrom = row.idx
-			}
-			buf.needshl = true
-		} else {
-			buf.rehlfrom = row.idx
-		}
-	}
-}
-
-func (buf *EditorBuffer) updateHighlighting() {
-	if buf.Highlighter != nil && buf.rehlfrom >= 0 && buf.NumRows != 0 {
-		row := buf.Rows[buf.rehlfrom]
 		curstate := buf.State(row.idx)
 		buf.Highlighter.ReHighlightStates(buf, row.idx)
-		if curstate != buf.State(row.idx) || buf.needshl {
+		if curstate != buf.State(row.idx) {
 			// If the EOL state changed, the buffer needs rehighlighting
 			// as this was probably multiline comment or string.
 			buf.Highlighter.HighlightMatches(buf, row.idx, buf.NumRows)
@@ -180,8 +161,6 @@ func (buf *EditorBuffer) updateHighlighting() {
 			// Probably only this line changed.
 			buf.Highlighter.ReHighlightLine(buf, row.idx)
 		}
-		buf.rehlfrom = -1
-		buf.needshl = false
 	}
 }
 
@@ -603,7 +582,7 @@ func AddErrorMessage(msg string) {
 func SetUniversalArgument(env *glisp.Glisp) {
 	arg := ""
 	for {
-		key, drhl := editorGetKey()
+		key := editorGetKey()
 		if (arg == "" && key == "-") || ('0' <= key[0] && key[0] <= '9') {
 			arg += key
 			Global.Input += key
@@ -612,7 +591,7 @@ func SetUniversalArgument(env *glisp.Glisp) {
 			if key == "C-u" {
 				Global.Input += " " + key
 				editorRefreshScreen()
-				key, drhl = editorGetKey()
+				key = editorGetKey()
 			}
 			argi := 0
 			if arg != "" {
@@ -626,10 +605,7 @@ func SetUniversalArgument(env *glisp.Glisp) {
 			Global.Universal = argi
 			Global.SetUniversal = true
 			RunCommandForKey(key, env)
-			if drhl {
-				editorRefreshScreen()
-				Global.CurrentB.updateHighlighting()
-			}
+			editorRefreshScreen()
 			Global.SetUniversal = false
 			return
 		}
@@ -754,26 +730,14 @@ func main() {
 
 	InitTerm()
 	defer termbox.Close()
-	editorRefreshScreen()
-	lastkey := "<none>"
-	lt := time.Now()
+
 	for {
+		editorRefreshScreen()
 		if Global.quit {
 			return
 		} else {
-			key, drhl := editorGetKey()
-			t := time.Now()
+			key := editorGetKey()
 			RunCommandForKey(key, env)
-			// A bit hacky, but this fixes some of our speed issues when pasting.
-			// Don't do the optimisation if this key and the last were the same!
-			if t.UnixNano()-lt.UnixNano() > TIMEOUT || lastkey == key {
-				editorRefreshScreen()
-			}
-			if drhl {
-				Global.CurrentB.updateHighlighting()
-				editorRefreshScreen()
-			}
-			lt = time.Now()
 		}
 	}
 }

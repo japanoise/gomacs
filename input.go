@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"strings"
-	"time"
 	"unicode/utf8"
 
 	termutil "github.com/japanoise/termbox-util"
@@ -18,32 +17,15 @@ func InitTerm() {
 	termbox.SetInputMode(termbox.InputAlt | termbox.InputMouse)
 }
 
-func editorGetKey() (string, bool) {
+func editorGetKey() string {
 	for {
-		// More hacking; if we've been waiting for some time, refresh the screen.
-		doReHl := false
-		timeout := make(chan bool, 1)
-		done := make(chan bool, 1)
-		go func() {
-			time.Sleep(time.Duration(TIMEOUT))
-			timeout <- true
-		}()
-		go func() {
-			select {
-			case _ = <-timeout:
-				doReHl = true
-			case _ = <-done:
-				// Don't refresh the screen.
-			}
-		}()
 		ev := termbox.PollEvent()
-		done <- true
 		if ev.Type == termbox.EventResize {
 			editorRefreshScreen()
 		} else if ev.Type == termbox.EventKey {
-			return ParseTermboxEvent(ev), doReHl
+			return ParseTermboxEvent(ev)
 		} else if ev.Type == termbox.EventMouse {
-			return ParseMouseEvent(ev), doReHl
+			return ParseMouseEvent(ev)
 		}
 	}
 }
@@ -317,7 +299,7 @@ func tabCompletedEditorPrompt(prompt string, getCandidates func(string) []string
 				for undecided {
 					Global.Input = candidates[choice]
 					editorRefreshScreen()
-					key, _ := editorGetKey()
+					key := editorGetKey()
 					if key == "TAB" || key == "C-i" || key == "RIGHT" || key == "C-f" {
 						choice++
 						if choice == len(candidates) {

@@ -10,11 +10,8 @@ import (
 )
 
 func lispGetKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
-	key, drhl := editorGetKey()
-	if drhl {
-		editorRefreshScreen()
-		Global.CurrentB.updateHighlighting()
-	}
+	key := editorGetKey()
+	editorRefreshScreen()
 	return glisp.SexpStr(key), nil
 }
 
