@@ -67,6 +67,7 @@ func hSplit() {
 func closeOtherWindows() {
 	win := getFocusWindow()
 	Global.WindowTree = win
+	Global.WindowTree.Parent = nil
 }
 
 func closeThisWindow() {
