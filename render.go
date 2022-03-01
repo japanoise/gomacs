@@ -130,7 +130,7 @@ func editorDrawRowsFocused(startx, starty, sx, sy int, buf *EditorBuffer, gutsiz
 				}
 			}
 			if filerow == buf.cy {
-				termbox.SetCursor(0, y)
+				termbox.SetCursor(startx+gutsize, y)
 			}
 			if row.coloff < row.RenderSize {
 				ts, off := trimString(row.Render, row.coloff)
