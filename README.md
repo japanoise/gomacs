@@ -196,7 +196,13 @@ yet - I'll try to keep this list up to date!
 
 ## Customization
 
-Emacs loads from ~/.gomacs.lisp on startup and executes the content of this file.
+Emacs loads from `rc.zy` on startup and executes the content of this file.
+Where this file is located depends on your operating system;
+`%APPDATA%\japanoise\gomacs\rc.zy` on Windows,
+`~/.config/japanoise/gomacs/rc.zy` or `$XDG_CONFIG_HOME/japanoise/gomacs/rc.zy`
+on Linux and BSD, and `${HOME}/Library/Application Support` on Mac OS. You can
+also use a system-wide config file: see https://github.com/uinta-labs/configdir
+
 Check out the Glisp documentation for information on how the language works!
 Some functions to get you started…
 

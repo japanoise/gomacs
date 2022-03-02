@@ -3,9 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 
-	"github.com/mitchellh/go-homedir"
+	"github.com/uinta-labs/configdir"
 	glisp "github.com/zhemao/glisp/interpreter"
 )
 
@@ -637,13 +636,13 @@ func NewLispInterp(loaduser bool) *glisp.Glisp {
 }
 
 func LoadUserConfig(env *glisp.Glisp) {
-	usr, ue := homedir.Dir()
-	if ue != nil {
-		Global.Input = "Error getting current user's home directory: " + ue.Error()
-		AddErrorMessage(Global.Input)
+	configDirs := configdir.New("japanoise", "gomacs")
+	folder := configDirs.QueryFolderContainsFile("rc.zy")
+	if folder == nil {
 		return
 	}
-	rc, err := ioutil.ReadFile(usr + "/.gomacs.lisp")
+
+	rc, err := folder.ReadFile("rc.zy")
 	if err != nil {
 		AddErrorMessage(err.Error())
 		return

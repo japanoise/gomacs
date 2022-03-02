@@ -8,6 +8,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.13
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/nsf/termbox-go v1.1.1
+	github.com/uinta-labs/configdir v0.0.0-20210210044545-77a3d24c2768
 	github.com/zhemao/glisp v0.0.0-20160128211312-e484114abe65
 	github.com/zyedidia/highlight v0.0.0-20200217010119-291680feaca1
 )
