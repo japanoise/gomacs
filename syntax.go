@@ -179,6 +179,13 @@ func LoadSyntaxDefs() {
 }
 
 func editorSelectSyntaxHighlight(buf *EditorBuffer, env *glisp.Glisp) {
+	if strings.HasSuffix(buf.Filename, "gomacs.lisp") {
+		buf.Highlighter = highlight.NewHighlighter(highlight.DetectFiletype(defs, "gomacs.zy", []byte{}))
+		buf.MajorMode = buf.Highlighter.Def.FileType
+		ExecHooksForMode(env, buf.MajorMode)
+		buf.Highlight()
+		return
+	}
 	var first []byte
 	if buf.NumRows > 0 {
 		first = []byte(buf.Rows[0].Data)
