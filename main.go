@@ -697,13 +697,45 @@ func main() {
 		Global.Input = "Welcome to Emacs!"
 	}
 	if len(args) > 0 {
-		ferr := EditorOpen(args[0], env)
-		if ferr != nil {
-			Global.Input = ferr.Error()
-			AddErrorMessage(ferr.Error())
-			Global.CurrentB.Rows = make([]*EditorRow, 1)
-			Global.CurrentB.Rows[0] = &EditorRow{Global.CurrentB.NumRows,
-				0, "", 0, "", nil, nil, 0}
+		var ferr error
+		if args[0][0] == '+' && len(args[0]) > 1 && len(args) > 1 {
+			num := args[0][1:]
+			linum, err := strconv.Atoi(num)
+
+			if err == nil {
+				linum--
+				args = args[1:]
+			} else {
+				AddErrorMessage(err.Error())
+			}
+
+			ferr := EditorOpen(args[0], env)
+			if ferr != nil {
+				Global.Input = ferr.Error()
+				AddErrorMessage(ferr.Error())
+				Global.CurrentB.Rows = make([]*EditorRow, 1)
+				Global.CurrentB.Rows[0] = &EditorRow{
+					Global.CurrentB.NumRows,
+					0, "", 0, "", nil, nil, 0}
+			}
+
+			if err == nil {
+				if linum >= Global.CurrentB.NumRows-1 {
+					Global.CurrentB.MoveCursorToEndOfBuffer()
+				} else if linum > 0 {
+					Global.CurrentB.cy = linum
+				}
+				Global.CurrentB.cx = 0
+			}
+		} else {
+			ferr := EditorOpen(args[0], env)
+			if ferr != nil {
+				Global.Input = ferr.Error()
+				AddErrorMessage(ferr.Error())
+				Global.CurrentB.Rows = make([]*EditorRow, 1)
+				Global.CurrentB.Rows[0] = &EditorRow{Global.CurrentB.NumRows,
+					0, "", 0, "", nil, nil, 0}
+			}
 		}
 		if len(args) > 1 {
 			for _, fn := range args[1:] {
