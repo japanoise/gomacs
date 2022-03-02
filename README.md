@@ -272,6 +272,9 @@ Gomacs contributors should be (in rough order of importance):
 
 ## Credits
 
+Thanks to ixtenu for a lot of code changes and getting me off my ass with this
+project.
+
 Thanks to nsf for termbox and godit (from which the suspend code comes.)
 
 Thanks to zyedidia and the rest of the micro team for the syntax highlighting
