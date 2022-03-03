@@ -394,9 +394,10 @@ func LoadDefaultCommands() {
 	DefineCommand(&CommandFunc{"quick-help", func(*glisp.Glisp) {
 		showMessages(`Welcome to Gomacs - Go-powered emacs!
 
-If you've not edited your rc file (~/.gomacs.lisp), here are some emergency
-commands that should help you out. C-n means hold Ctrl and press n, M-n means
-hold Meta (Alt on modern keyboards) and press n.
+If you've not edited your rc file (see README.md or the man page),
+here are some emergency commands that should help you out. C-n means
+hold Ctrl and press n, M-n means hold Meta (Alt on modern keyboards)
+and press n.
 
 - C-x C-c - Save all buffers and quit emacs
 - C-x C-s - Save currently selected buffer

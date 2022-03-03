@@ -43,11 +43,13 @@ section below)
 .El
 .Pp
 .Sh FILES
-.Bl -tag -width ~/.gomacs.lisp -compact
-.It Pa ~/.gomacs.lisp
+.Bl -tag -width ~/.config/japanoise/gomacs/rc.zy -compact
+.It Pa ~/.config/japanoise/gomacs/rc.zy
 rc file.
 .Nm
-will execute all lisp code in this file on startup.
+will execute all lisp code in this file on startup. If XDG_CONFIG_HOME is set,
+.Nm
+will look there instead of ~/.config for the rc file.
 .El
 .Sh BUGS
 Please report all bugs to me at the upstream repository:

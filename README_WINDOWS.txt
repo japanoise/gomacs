@@ -10,15 +10,13 @@ With that in mind, here's some stuff to help you run Gomacs on Windows.
 rc file
 =======
 
-The rc file lives in either:
+The rc file lives in %APPDATA%, which is usually:
 
-C:\Users\<Your name>\.gomacs.lisp
+    C:\Users\<User>\AppData\Roaming
 
-or:
+in recent versions of Windows. The file is inside that directory, in:
 
-C:\Documents and Settings\<Your name>\.gomacs.lisp
-
-depending on your version of Windows. For now you can open it in Notepad.
+    japanoise\gomacs\rc.zy
 
 Terminal Title
 ==============
