@@ -1,3 +1,36 @@
+2022-03-02 Release 1.5.0
+
+	"Rumors of my death greatly exaggerated" - It's Gomacs 1.5.0!
+
+	Back for the first release in two and a half years, and a great
+	improvement at that. Gomacs enters the new decade with a new
+	contributor (ixtenu) and a host of improvements.
+
+	In other news, Gomacs enters the brave new world of modules! Yeah,
+	it's old, so what?
+
+	This really will be the last 1.x.x release before 2.0.0; we
+	already have a bunch of changes lined up for that.
+
+	Features:
+	* "Smart" unindent - try backspacing on your Python files!
+	* Insert tabs into prompts - You can now search or replace them.
+	* Syntax highlighting for Forth and Zygomys
+	* +LINUM syntax - now you can open Gomacs from less(1)!
+
+	Bugfixes:
+	* Fix a long-standing rendering issue after pasting
+	* Fix a crash after C-x 1
+	* Fix cursor position on empty lines
+	* Fix a hang in query-replace-regexp
+	* UTF-8 fix
+
+	Tweaks:
+	* Point position by column, not bytes-in-line
+	* Remove an old easter egg
+	* Proper tabstop behavior
+	* Fill behavior tweaks
+
 2019-09-28 Release 1.4.0
 
 	CHANGE DA GOMACS, MY FINAL MESSAGE, GOODB YE!
