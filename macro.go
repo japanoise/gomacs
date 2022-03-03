@@ -1,6 +1,6 @@
 package main
 
-import glisp "github.com/zhemao/glisp/interpreter"
+import glisp "github.com/glycerine/zygomys/zygo"
 
 type EditorAction struct {
 	HasUniversal bool
@@ -13,7 +13,7 @@ type EditorMacro []*EditorAction
 var macro EditorMacro
 var macrorec bool = false
 
-func runMacroOnce(env *glisp.Glisp, m []*EditorAction) {
+func runMacroOnce(env *glisp.Zlisp, m []*EditorAction) {
 	if m == nil || len(m) <= 0 {
 		Global.Input = "Zero length or unset macro"
 		return
@@ -28,7 +28,7 @@ func runMacroOnce(env *glisp.Glisp, m []*EditorAction) {
 	}
 }
 
-func micromode(repeatkey string, msg string, env *glisp.Glisp, f func(*glisp.Glisp)) {
+func micromode(repeatkey string, msg string, env *glisp.Zlisp, f func(*glisp.Zlisp)) {
 	f(env)
 	Global.Input = msg
 	editorRefreshScreen()
@@ -43,9 +43,9 @@ func micromode(repeatkey string, msg string, env *glisp.Glisp, f func(*glisp.Gli
 	editorRefreshScreen()
 }
 
-func doRunMacro(env *glisp.Glisp) {
+func doRunMacro(env *glisp.Zlisp) {
 	stopRecMacro()
-	micromode("e", "Press e to run macro again", env, func(e *glisp.Glisp) {
+	micromode("e", "Press e to run macro again", env, func(e *glisp.Zlisp) {
 		runMacroOnce(e, macro)
 	})
 }

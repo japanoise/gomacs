@@ -2,7 +2,7 @@ package main
 
 import (
 	termbox "github.com/nsf/termbox-go"
-	glisp "github.com/zhemao/glisp/interpreter"
+	glisp "github.com/glycerine/zygomys/zygo"
 )
 
 type winTree struct {
@@ -194,7 +194,7 @@ func (t *winTree) draw(x, y, wx, wy int) {
 	}
 }
 
-func editorWriteFile(env *glisp.Glisp) {
+func editorWriteFile(env *glisp.Zlisp) {
 	fn := tabCompletedEditorPrompt("Write File", tabCompleteFilename)
 	if fn == "" {
 		return
@@ -204,7 +204,7 @@ func editorWriteFile(env *glisp.Glisp) {
 	EditorSave(env)
 }
 
-func editorVisitFile(env *glisp.Glisp) {
+func editorVisitFile(env *glisp.Zlisp) {
 	fn := tabCompletedEditorPrompt("Visit File", tabCompleteFilename)
 	if fn == "" {
 		return
@@ -224,7 +224,7 @@ func editorVisitFile(env *glisp.Glisp) {
 	}
 }
 
-func editorFindFile(env *glisp.Glisp) {
+func editorFindFile(env *glisp.Zlisp) {
 	fn := tabCompletedEditorPrompt("Find File", tabCompleteFilename)
 	if fn == "" {
 		return
@@ -232,7 +232,7 @@ func editorFindFile(env *glisp.Glisp) {
 	openFile(fn, env)
 }
 
-func openFile(fn string, env *glisp.Glisp) {
+func openFile(fn string, env *glisp.Zlisp) {
 	buffer := &EditorBuffer{}
 	Global.Buffers = append(Global.Buffers, buffer)
 

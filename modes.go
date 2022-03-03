@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	glisp "github.com/zhemao/glisp/interpreter"
+	glisp "github.com/glycerine/zygomys/zygo"
 )
 
 // Minor Modes
@@ -99,14 +99,14 @@ func loadDefaultHooks() HookList {
 	return ret
 }
 
-func ExecHooksForMode(env *glisp.Glisp, mode string) {
+func ExecHooksForMode(env *glisp.Zlisp, mode string) {
 	hooks := Global.MajorHooks[mode]
 	if hooks != nil {
 		for _, hook := range hooks.GoHooks {
 			hook()
 		}
 		for _, hook := range hooks.LispHooks {
-			env.Apply(hook, []glisp.Sexp{})
+			env.Apply(&hook, []glisp.Sexp{})
 		}
 	}
 }
@@ -142,7 +142,7 @@ func RegisterLispSaveHookForMode(mode string, hook glisp.SexpFunction) {
 	RegisterLispHookForMode(mode+"-save", hook)
 }
 
-func ExecSaveHooksForMode(env *glisp.Glisp, mode string) {
+func ExecSaveHooksForMode(env *glisp.Zlisp, mode string) {
 	ExecHooksForMode(env, mode+"-save")
 }
 

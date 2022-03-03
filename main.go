@@ -17,7 +17,7 @@ import (
 	termutil "github.com/japanoise/termbox-util"
 	"github.com/mitchellh/go-homedir"
 	"github.com/nsf/termbox-go"
-	glisp "github.com/zhemao/glisp/interpreter"
+	glisp "github.com/glycerine/zygomys/zygo"
 	"github.com/zyedidia/highlight"
 )
 
@@ -91,7 +91,7 @@ func editorSetPrompt(prompt string) {
 	Global.Prompt = prompt
 }
 
-func saveSomeBuffers(env *glisp.Glisp) bool {
+func saveSomeBuffers(env *glisp.Zlisp) bool {
 	nodirty := true
 	for _, buf := range Global.Buffers {
 		if buf.Dirty {
@@ -107,7 +107,7 @@ func saveSomeBuffers(env *glisp.Glisp) bool {
 	return nodirty
 }
 
-func doSaveSomeBuffers(env *glisp.Glisp) {
+func doSaveSomeBuffers(env *glisp.Zlisp) {
 	nodirty := saveSomeBuffers(env)
 	if nodirty {
 		Global.Input = "All buffers saved."
@@ -116,7 +116,7 @@ func doSaveSomeBuffers(env *glisp.Glisp) {
 	}
 }
 
-func saveBuffersKillEmacs(env *glisp.Glisp) {
+func saveBuffersKillEmacs(env *glisp.Zlisp) {
 	nodirty := saveSomeBuffers(env)
 	if !nodirty {
 		dq, cancel := editorYesNoPrompt("Unsaved buffers exist; really quit?", false)
@@ -405,7 +405,7 @@ func AbsPath(filename string) (string, error) {
 	return path.Join(cwd, filename), nil
 }
 
-func EditorOpen(filename string, env *glisp.Glisp) error {
+func EditorOpen(filename string, env *glisp.Zlisp) error {
 	fpath, perr := AbsPath(filename)
 	if perr != nil {
 		return perr
@@ -456,12 +456,12 @@ func tabCompleteFilename(fn string) []string {
 	return ret
 }
 
-func EditorSave(env *glisp.Glisp) {
+func EditorSave(env *glisp.Zlisp) {
 	editorBufSave(Global.CurrentB, env)
 	ExecSaveHooksForMode(env, Global.CurrentB.MajorMode)
 }
 
-func editorBufSave(buf *EditorBuffer, env *glisp.Glisp) {
+func editorBufSave(buf *EditorBuffer, env *glisp.Zlisp) {
 	fn := buf.Filename
 	if fn == "" {
 		fn = editorPrompt("Save as", nil)
@@ -536,7 +536,7 @@ func dumpCrashLog(e string) {
 	}
 }
 
-func RunCommandForKey(key string, env *glisp.Glisp) {
+func RunCommandForKey(key string, env *glisp.Zlisp) {
 	//use f12 as panic button
 	if key == "f12" {
 		Global.quit = true
@@ -547,7 +547,7 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 	if !Global.CurrentB.hasMode("no-self-insert-mode") && utf8.RuneCountInString(key) == 1 {
 		selfins = &CommandFunc{
 			key,
-			func(*glisp.Glisp) {
+			func(*glisp.Zlisp) {
 				editorInsertStr(key)
 			},
 			false,
@@ -579,7 +579,7 @@ func AddErrorMessage(msg string) {
 	Global.messages = append(Global.messages, msg)
 }
 
-func SetUniversalArgument(env *glisp.Glisp) {
+func SetUniversalArgument(env *glisp.Zlisp) {
 	arg := ""
 	for {
 		key := editorGetKey()
@@ -612,7 +612,7 @@ func SetUniversalArgument(env *glisp.Glisp) {
 	}
 }
 
-func RepeatCommand(env *glisp.Glisp) {
+func RepeatCommand(env *glisp.Zlisp) {
 	cmd := Global.LastCommand
 	Global.Universal = Global.LastCommandUniversal
 	Global.SetUniversal = Global.LastCommandSetUniversal
@@ -622,7 +622,7 @@ func RepeatCommand(env *glisp.Glisp) {
 	} else {
 		s = cmd.Name
 	}
-	micromode("z", "Press z to repeat "+s, env, func(e *glisp.Glisp) {
+	micromode("z", "Press z to repeat "+s, env, func(e *glisp.Zlisp) {
 		cmd.Com(e)
 		if !cmd.NoRepeat && macrorec {
 			macro = append(macro, &EditorAction{Global.SetUniversal, Global.Universal, cmd})

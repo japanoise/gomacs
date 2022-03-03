@@ -1,4 +1,4 @@
-;; Useful for if you use a crappy terminal that thinks C-h is backspace
+// Useful for if you use a crappy terminal that thinks C-h is backspace
 (emacsbindkey "f1 a" "apropos-command")
 (emacsbindkey "f1 c" "describe-key-briefly")
 (emacsbindkey "f1 m" "show-modes")

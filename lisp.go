@@ -4,35 +4,35 @@ import (
 	"errors"
 	"fmt"
 
+	glisp "github.com/glycerine/zygomys/zygo"
 	"github.com/uinta-labs/configdir"
-	glisp "github.com/zhemao/glisp/interpreter"
 )
 
-func lispGetKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispGetKey(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	key := editorGetKey()
 	editorRefreshScreen()
-	return glisp.SexpStr(key), nil
+	return &glisp.SexpStr{S: key}, nil
 }
 
-func lispChoiceIndex(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispChoiceIndex(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 3 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var prompt string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		prompt = string(t)
+	case *glisp.SexpStr:
+		prompt = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
 	var choices []string
 	switch t := args[1].(type) {
-	case glisp.SexpArray:
-		choices = make([]string, len(t))
-		for i, csexp := range t {
+	case *glisp.SexpArray:
+		choices = make([]string, len(t.Val))
+		for i, csexp := range t.Val {
 			switch choice := csexp.(type) {
-			case glisp.SexpStr:
-				choices[i] = string(choice)
+			case *glisp.SexpStr:
+				choices[i] = string(choice.S)
 			default:
 				return glisp.SexpNull, errors.New("Arg 2 needs to be a list of strings")
 			}
@@ -42,105 +42,105 @@ func lispChoiceIndex(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Se
 	}
 	var def int
 	switch t := args[2].(type) {
-	case glisp.SexpInt:
-		def = int(t)
+	case *glisp.SexpInt:
+		def = int(t.Val)
 	default:
 		return glisp.SexpNull, errors.New("Arg 3 needs to be an int")
 	}
-	return glisp.SexpInt(editorChoiceIndex(prompt, choices, def)), nil
+	return &glisp.SexpInt{Val: int64(editorChoiceIndex(prompt, choices, def))}, nil
 }
 
-func lispPrompt(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispPrompt(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var prompt string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		prompt = string(t)
+	case *glisp.SexpStr:
+		prompt = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg needs to be a string")
 	}
-	return glisp.SexpStr(editorPrompt(prompt, nil)), nil
+	return &glisp.SexpStr{S: editorPrompt(prompt, nil)}, nil
 }
 
-func lispPromptWithCallback(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispPromptWithCallback(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 2 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var prompt string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		prompt = string(t)
+	case *glisp.SexpStr:
+		prompt = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
-	var callback glisp.SexpFunction
+	var callback *glisp.SexpFunction
 	switch t := args[1].(type) {
-	case glisp.SexpFunction:
+	case *glisp.SexpFunction:
 		callback = t
 	default:
 		return glisp.SexpNull, errors.New("Arg 2 needs to be a function")
 	}
-	return glisp.SexpStr(editorPrompt(prompt, func(a, b string) {
-		env.Apply(callback, []glisp.Sexp{glisp.SexpStr(a), glisp.SexpStr(b)})
-	})), nil
+	return &glisp.SexpStr{S: editorPrompt(prompt, func(a, b string) {
+		env.Apply(callback, []glisp.Sexp{&glisp.SexpStr{S: a}, &glisp.SexpStr{S: b}})
+	})}, nil
 }
 
-func lispYesNoCancelPrompt(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispYesNoCancelPrompt(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var prompt string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		prompt = string(t)
+	case *glisp.SexpStr:
+		prompt = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg needs to be a string")
 	}
 	res, err := editorYesNoPrompt(prompt, true)
 	if err == nil {
-		return glisp.SexpBool(res), nil
+		return &glisp.SexpBool{Val: res}, nil
 	} else {
-		return glisp.SexpStr("Cancelled"), nil
+		return &glisp.SexpStr{S: "Cancelled"}, nil
 	}
 }
 
-func lispYesNoPrompt(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispYesNoPrompt(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var prompt string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		prompt = string(t)
+	case *glisp.SexpStr:
+		prompt = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg needs to be a string")
 	}
 	res, _ := editorYesNoPrompt(prompt, false)
-	return glisp.SexpBool(res), nil
+	return &glisp.SexpBool{Val: res}, nil
 }
 
-func lispPrint(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispPrint(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		Global.Input = string(t)
+	case *glisp.SexpStr:
+		Global.Input = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg needs to be a string")
 	}
 	return glisp.SexpNull, nil
 }
 
-func lispRunCommand(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispRunCommand(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		cn := StrToCmdName(string(t))
+	case *glisp.SexpStr:
+		cn := StrToCmdName(string(t.S))
 		cmd := funcnames[cn]
 		if cmd != nil && cmd.Com != nil {
 			cmd.Com(env)
@@ -151,19 +151,19 @@ func lispRunCommand(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sex
 	return glisp.SexpNull, nil
 }
 
-func lispRunCommandWithUarg(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispRunCommandWithUarg(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 2 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	switch t := args[0].(type) {
-	case glisp.SexpInt:
-		Global.Universal = int(t)
+	case *glisp.SexpInt:
+		Global.Universal = int(t.Val)
 	default:
 		return glisp.SexpNull, errors.New("Arg needs to be an int")
 	}
 	switch t := args[1].(type) {
-	case glisp.SexpStr:
-		cn := StrToCmdName(string(t))
+	case *glisp.SexpStr:
+		cn := StrToCmdName(string(t.S))
 		cmd := funcnames[cn]
 		if cmd != nil && cmd.Com != nil {
 			Global.SetUniversal = true
@@ -176,35 +176,35 @@ func lispRunCommandWithUarg(env *glisp.Glisp, name string, args []glisp.Sexp) (g
 	return glisp.SexpNull, nil
 }
 
-func lispSingleton(f func()) glisp.GlispUserFunction {
-	return func(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispSingleton(f func()) glisp.ZlispUserFunction {
+	return func(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 		f()
 		return glisp.SexpNull, nil
 	}
 }
 
-func cmdAndLispFunc(e *glisp.Glisp, cmdname, lispname string, f func()) {
+func cmdAndLispFunc(e *glisp.Zlisp, cmdname, lispname string, f func()) {
 	e.AddFunction(lispname, lispSingleton(f))
-	DefineCommand(&CommandFunc{cmdname, func(env *glisp.Glisp) { f() }, false})
+	DefineCommand(&CommandFunc{cmdname, func(env *glisp.Zlisp) { f() }, false})
 }
 
-func lispBindKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispBindKey(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) < 2 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var arg1 string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		arg1 = string(t)
+	case *glisp.SexpStr:
+		arg1 = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
-	var arg2 glisp.SexpFunction
+	var arg2 *glisp.SexpFunction
 	switch t := args[1].(type) {
-	case glisp.SexpFunction:
+	case *glisp.SexpFunction:
 		arg2 = t
-	case glisp.SexpStr:
-		cmdname := StrToCmdName(string(t))
+	case *glisp.SexpStr:
+		cmdname := StrToCmdName(string(t.S))
 		cmd := funcnames[cmdname]
 		if cmd == nil {
 			return glisp.SexpNull, errors.New("Unknown command: " + cmdname)
@@ -219,36 +219,36 @@ func lispBindKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, 
 	if len(args) > 2 {
 		av = args[2:]
 	}
-	Emacs.PutCommand(arg1, &CommandFunc{"lisp code", func(env *glisp.Glisp) {
+	Emacs.PutCommand(arg1, &CommandFunc{"lisp code", func(env *glisp.Zlisp) {
 		env.Apply(arg2, av)
 	}, false})
 	return glisp.SexpNull, nil
 }
 
-func lispBindMajorModeKey(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispBindMajorModeKey(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) < 3 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var mode string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		mode = string(t)
+	case *glisp.SexpStr:
+		mode = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
 	var arg1 string
 	switch t := args[1].(type) {
-	case glisp.SexpStr:
-		arg1 = string(t)
+	case *glisp.SexpStr:
+		arg1 = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg 2 needs to be a string")
 	}
-	var arg2 glisp.SexpFunction
+	var arg2 *glisp.SexpFunction
 	switch t := args[2].(type) {
-	case glisp.SexpFunction:
+	case *glisp.SexpFunction:
 		arg2 = t
-	case glisp.SexpStr:
-		cmdname := StrToCmdName(string(t))
+	case *glisp.SexpStr:
+		cmdname := StrToCmdName(string(t.S))
 		cmd := funcnames[cmdname]
 		if cmd == nil {
 			return glisp.SexpNull, errors.New("Unknown command: " + cmdname)
@@ -263,26 +263,26 @@ func lispBindMajorModeKey(env *glisp.Glisp, name string, args []glisp.Sexp) (gli
 	if len(args) > 3 {
 		av = args[3:]
 	}
-	BindKeyMajorMode(mode, arg1, &CommandFunc{"lisp code", func(env *glisp.Glisp) {
+	BindKeyMajorMode(mode, arg1, &CommandFunc{"lisp code", func(env *glisp.Zlisp) {
 		env.Apply(arg2, av)
 	}, false})
 	return glisp.SexpNull, nil
 }
 
-func lispDefineCmd(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispDefineCmd(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) < 2 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var arg1 string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		arg1 = StrToCmdName(string(t))
+	case *glisp.SexpStr:
+		arg1 = StrToCmdName(string(t.S))
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
-	var arg2 glisp.SexpFunction
+	var arg2 *glisp.SexpFunction
 	switch t := args[1].(type) {
-	case glisp.SexpFunction:
+	case *glisp.SexpFunction:
 		arg2 = t
 	default:
 		return glisp.SexpNull, errors.New("Arg 2 needs to be a function")
@@ -291,27 +291,27 @@ func lispDefineCmd(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp
 	if len(args) > 2 {
 		av = args[2:]
 	}
-	DefineCommand(&CommandFunc{arg1, func(env *glisp.Glisp) {
+	DefineCommand(&CommandFunc{arg1, func(env *glisp.Zlisp) {
 		env.Apply(arg2, av)
 	}, false})
 	return glisp.SexpNull, nil
 }
 
-func lispAddHook(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispAddHook(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 2 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var arg1 string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		arg1 = StrToCmdName(string(t))
+	case *glisp.SexpStr:
+		arg1 = StrToCmdName(string(t.S))
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
 	var arg2 glisp.SexpFunction
 	switch t := args[1].(type) {
-	case glisp.SexpFunction:
-		arg2 = t
+	case *glisp.SexpFunction:
+		arg2 = *t
 	default:
 		return glisp.SexpNull, errors.New("Arg 2 needs to be a function")
 	}
@@ -319,25 +319,25 @@ func lispAddHook(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, 
 	return glisp.SexpNull, nil
 }
 
-func lispAddSaveHook(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispAddSaveHook(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 2 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var arg1 string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		arg1 = StrToCmdName(string(t))
+	case *glisp.SexpStr:
+		arg1 = StrToCmdName(string(t.S))
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
 	var arg2 glisp.SexpFunction
 	switch t := args[1].(type) {
-	case glisp.SexpFunction:
-		arg2 = t
-	case glisp.SexpStr:
-		cmd := funcnames[StrToCmdName(string(t))]
+	case *glisp.SexpFunction:
+		arg2 = *t
+	case *glisp.SexpStr:
+		cmd := funcnames[StrToCmdName(string(t.S))]
 		if cmd == nil {
-			return glisp.SexpNull, errors.New("Unknown command: " + string(t))
+			return glisp.SexpNull, errors.New("Unknown command: " + string(t.S))
 		}
 		RegisterGoSaveHookForMode(arg1, func() {
 			e := cmd.Run(env)
@@ -353,18 +353,18 @@ func lispAddSaveHook(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Se
 	return glisp.SexpNull, nil
 }
 
-func lispOnlyWindow(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
-	return glisp.SexpBool(Global.WindowTree == getFocusWindow()), nil
+func lispOnlyWindow(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	return &glisp.SexpBool{Val: Global.WindowTree == getFocusWindow()}, nil
 }
 
-func lispSetTabStop(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispSetTabStop(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var x int
 	switch t := args[0].(type) {
-	case glisp.SexpInt:
-		x = int(t)
+	case *glisp.SexpInt:
+		x = int(t.Val)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be an int")
 	}
@@ -372,14 +372,14 @@ func lispSetTabStop(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sex
 	return glisp.SexpNull, nil
 }
 
-func lispSetSoftTab(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispSetSoftTab(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var x bool
 	switch t := args[0].(type) {
-	case glisp.SexpBool:
-		x = bool(t)
+	case *glisp.SexpBool:
+		x = bool(t.Val)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a bool")
 	}
@@ -387,14 +387,14 @@ func lispSetSoftTab(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sex
 	return glisp.SexpNull, nil
 }
 
-func lispSetSyntaxOff(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispSetSyntaxOff(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var x bool
 	switch t := args[0].(type) {
-	case glisp.SexpBool:
-		x = bool(t)
+	case *glisp.SexpBool:
+		x = bool(t.Val)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a bool")
 	}
@@ -402,16 +402,16 @@ func lispSetSyntaxOff(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.S
 	return glisp.SexpNull, nil
 }
 
-func lispGetTabStr(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
-	return glisp.SexpStr(getTabString()), nil
+func lispGetTabStr(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	return &glisp.SexpStr{S: getTabString()}, nil
 }
 
-func lispAddDefaultMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispAddDefaultMode(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) == 1 {
 		var modename string
 		switch t := args[0].(type) {
-		case glisp.SexpStr:
-			modename = StrToCmdName(string(t))
+		case *glisp.SexpStr:
+			modename = StrToCmdName(string(t.S))
 		default:
 			return glisp.SexpNull, errors.New("Arg needs to be a string")
 		}
@@ -421,12 +421,12 @@ func lispAddDefaultMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp
 	return glisp.SexpNull, glisp.WrongNargs
 }
 
-func lispRemDefaultMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispRemDefaultMode(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) == 1 {
 		var modename string
 		switch t := args[0].(type) {
-		case glisp.SexpStr:
-			modename = StrToCmdName(string(t))
+		case *glisp.SexpStr:
+			modename = StrToCmdName(string(t.S))
 		default:
 			return glisp.SexpNull, errors.New("Arg needs to be a string")
 		}
@@ -436,12 +436,12 @@ func lispRemDefaultMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp
 	return glisp.SexpNull, glisp.WrongNargs
 }
 
-func lispDefMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispDefMode(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) == 1 {
 		var modename string
 		switch t := args[0].(type) {
-		case glisp.SexpStr:
-			modename = StrToCmdName(string(t))
+		case *glisp.SexpStr:
+			modename = StrToCmdName(string(t.S))
 		default:
 			return glisp.SexpNull, errors.New("Arg needs to be a string")
 		}
@@ -451,83 +451,83 @@ func lispDefMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, 
 	return glisp.SexpNull, glisp.WrongNargs
 }
 
-func lispSetMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispSetMode(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) == 1 {
 		var modename string
 		switch t := args[0].(type) {
-		case glisp.SexpStr:
-			modename = StrToCmdName(string(t))
+		case *glisp.SexpStr:
+			modename = StrToCmdName(string(t.S))
 		default:
 			return glisp.SexpNull, errors.New("Arg needs to be a string")
 		}
 		enabled, err := Global.CurrentB.toggleMode(modename)
-		return glisp.SexpBool(enabled), err
+		return &glisp.SexpBool{Val: enabled}, err
 	} else if len(args) == 2 {
 		var modename string
 		switch t := args[0].(type) {
-		case glisp.SexpStr:
-			modename = StrToCmdName(string(t))
+		case *glisp.SexpStr:
+			modename = StrToCmdName(string(t.S))
 		default:
 			return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 		}
 		var enabled bool
 		switch t := args[1].(type) {
-		case glisp.SexpBool:
-			enabled = bool(t)
+		case *glisp.SexpBool:
+			enabled = bool(t.Val)
 		default:
 			return glisp.SexpNull, errors.New("Arg 2 needs to be a bool")
 		}
 		enabled, err := Global.CurrentB.setMode(modename, enabled)
-		return glisp.SexpBool(enabled), err
+		return &glisp.SexpBool{Val: enabled}, err
 	}
 	return glisp.SexpNull, glisp.WrongNargs
 }
 
-func lispHasMode(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispHasMode(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) != 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		return glisp.SexpBool(Global.CurrentB.hasMode(StrToCmdName(string(t)))), nil
+	case *glisp.SexpStr:
+		return &glisp.SexpBool{Val: Global.CurrentB.hasMode(StrToCmdName(string(t.S)))}, nil
 	default:
 		return glisp.SexpNull, errors.New("Arg needs to be a string")
 	}
 }
 
-func lispListModes(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispListModes(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	modes := []glisp.Sexp{}
 	for _, mode := range Global.CurrentB.getEnabledModes() {
-		modes = append(modes, glisp.SexpStr(mode))
+		modes = append(modes, &glisp.SexpStr{S: mode})
 	}
 	return glisp.MakeList(modes), nil
 }
 
-func lispGetUniversalArgument(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
-	return glisp.SexpInt(Global.Universal), nil
+func lispGetUniversalArgument(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	return &glisp.SexpInt{Val: int64(Global.Universal)}, nil
 }
 
-func lispIsUniversalArgumentSet(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
-	return glisp.SexpBool(Global.SetUniversal), nil
+func lispIsUniversalArgumentSet(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+	return &glisp.SexpBool{Val: Global.SetUniversal}, nil
 }
 
-func lispRunExtCmd(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispRunExtCmd(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) < 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var com string
 	var cmdargs []string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		com = string(t)
+	case *glisp.SexpStr:
+		com = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
 	if len(args) > 1 {
 		for _, arg := range args[1:] {
 			switch t := arg.(type) {
-			case glisp.SexpStr:
-				cmdargs = append(cmdargs, string(t))
+			case *glisp.SexpStr:
+				cmdargs = append(cmdargs, string(t.S))
 			default:
 				return glisp.SexpNull, errors.New("All command args need to be strings")
 			}
@@ -537,23 +537,23 @@ func lispRunExtCmd(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp
 	return glisp.SexpNull, nil
 }
 
-func lispFilterRegion(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispFilterRegion(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) < 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var com string
 	var cmdargs []string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		com = string(t)
+	case *glisp.SexpStr:
+		com = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
 	if len(args) > 1 {
 		for _, arg := range args[1:] {
 			switch t := arg.(type) {
-			case glisp.SexpStr:
-				cmdargs = append(cmdargs, string(t))
+			case *glisp.SexpStr:
+				cmdargs = append(cmdargs, string(t.S))
 			default:
 				return glisp.SexpNull, errors.New("All command args need to be strings")
 			}
@@ -563,23 +563,23 @@ func lispFilterRegion(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.S
 	return glisp.SexpNull, nil
 }
 
-func lispFilterBuffer(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
+func lispFilterBuffer(env *glisp.Zlisp, name string, args []glisp.Sexp) (glisp.Sexp, error) {
 	if len(args) < 1 {
 		return glisp.SexpNull, glisp.WrongNargs
 	}
 	var com string
 	var cmdargs []string
 	switch t := args[0].(type) {
-	case glisp.SexpStr:
-		com = string(t)
+	case *glisp.SexpStr:
+		com = string(t.S)
 	default:
 		return glisp.SexpNull, errors.New("Arg 1 needs to be a string")
 	}
 	if len(args) > 1 {
 		for _, arg := range args[1:] {
 			switch t := arg.(type) {
-			case glisp.SexpStr:
-				cmdargs = append(cmdargs, string(t))
+			case *glisp.SexpStr:
+				cmdargs = append(cmdargs, string(t.S))
 			default:
 				return glisp.SexpNull, errors.New("All command args need to be strings")
 			}
@@ -589,7 +589,7 @@ func lispFilterBuffer(env *glisp.Glisp, name string, args []glisp.Sexp) (glisp.S
 	return glisp.SexpNull, nil
 }
 
-func loadLispFunctions(env *glisp.Glisp) {
+func loadLispFunctions(env *glisp.Zlisp) {
 	env.AddFunction("emacsprint", lispPrint)
 	cmdAndLispFunc(env, "save-buffers-kill-emacs", "emacsquit", func() { saveBuffersKillEmacs(env) })
 	env.AddFunction("emacsbindkey", lispBindKey)
@@ -625,8 +625,8 @@ func loadLispFunctions(env *glisp.Glisp) {
 	LoadDefaultCommands()
 }
 
-func NewLispInterp(loaduser bool) *glisp.Glisp {
-	ret := glisp.NewGlisp()
+func NewLispInterp(loaduser bool) *glisp.Zlisp {
+	ret := glisp.NewZlisp()
 	loadLispFunctions(ret)
 	LoadDefaultConfig(ret)
 	if loaduser {
@@ -635,7 +635,7 @@ func NewLispInterp(loaduser bool) *glisp.Glisp {
 	return ret
 }
 
-func LoadUserConfig(env *glisp.Glisp) {
+func LoadUserConfig(env *glisp.Zlisp) {
 	configDirs := configdir.New("japanoise", "gomacs")
 	folder := configDirs.QueryFolderContainsFile("rc.zy")
 	if folder == nil {
@@ -661,7 +661,7 @@ func LoadUserConfig(env *glisp.Glisp) {
 	}
 }
 
-func LoadDefaultConfig(env *glisp.Glisp) {
+func LoadDefaultConfig(env *glisp.Zlisp) {
 	_, err := env.EvalString(`
 (defmode "aggressive-fill-mode")
 (defmode "auto-fill-mode")
