@@ -36,6 +36,8 @@ github.com/tinylib/msgp v1.1.6/go.mod h1:75BAfg2hauQhs3qedfdDZmWAPcFMAvJE5b9rGOM
 github.com/ugorji/go v1.2.6/go.mod h1:anCg0y61KIhDlPZmnH+so+RQbysYVyDko0IMgJv0Nn0=
 github.com/ugorji/go/codec v1.2.6 h1:7kbGefxLoDBuYXOms4yD7223OpNMMPNPZxXk5TvFcyQ=
 github.com/ugorji/go/codec v1.2.6/go.mod h1:V6TCNZ4PHqoHGFZuSG1W8nrCzzdgA2DozYxWFFpvxTw=
+github.com/uinta-labs/configdir v0.0.0-20210210044545-77a3d24c2768 h1:aUS2lQL4QIDmooqYlOHH8eFserCXvio3Nhq0RFThNa4=
+github.com/uinta-labs/configdir v0.0.0-20210210044545-77a3d24c2768/go.mod h1:bPsFN4veWuYTW1yTrwtX5oeCC+KgfwxDFDjyCLj6vXs=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/zyedidia/highlight v0.0.0-20200217010119-291680feaca1 h1:8oQDIgT8V1yyEoEvvoXkSfoJgSst+dUEwunxq8fbs1c=
 github.com/zyedidia/highlight v0.0.0-20200217010119-291680feaca1/go.mod h1:c1r+Ob9tUTPB0FKWO1+x+Hsc/zNa45WdGq7Y38Ybip0=
