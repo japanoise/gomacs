@@ -54,8 +54,10 @@ Please report all bugs to me at the upstream repository:
 https://github.com/japanoise/gomacs
 .Sh AUTHOR
 .Nm
-by japanoise/chameleon, with a lot of indirect help from Zachary Yedidia et al
-(the authors of Micro and highlight) and nsf, the author of termbox and godit.
+by japanoise/chameleon and ixtenu, with a lot of indirect help from Zachary
+Yedidia et al (the authors of Micro and highlight) and nsf, the author of
+termbox and godit.
 .Sh COPYRIGHT
 .Nm
-is Copyright © 2017-2022 japanoise/chameleon, licensed under the MIT license.
+is Copyright © 2017-2022 japanoise/chameleon, Copyright 2022 ixtenu, licensed
+under the MIT license.
