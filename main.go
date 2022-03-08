@@ -553,16 +553,9 @@ func RunCommandForKey(key string, env *glisp.Glisp) {
 			false,
 		}
 	}
-	if Global.MajorBindings[Global.CurrentB.MajorMode] != nil {
-		Global.Input = ""
-		com, comerr := Global.MajorBindings[Global.CurrentB.MajorMode].GetCommand(key)
-		if com != nil && comerr == nil {
-			com.Run(env)
-			return
-		}
-	}
+
 	Global.Input = ""
-	com, comerr := Emacs.GetCommand(key)
+	com, comerr := GetCommand(key, Emacs, Global.MajorBindings[Global.CurrentB.MajorMode])
 	if comerr != nil {
 		if selfins != nil {
 			selfins.Run(env)
