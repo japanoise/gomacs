@@ -87,21 +87,35 @@ func getMousek(key string) string {
 	}
 }
 
-func (c *CommandList) GetCommand(key string) (*CommandFunc, error) {
+func GetCommand(key string, tree *CommandList, majorMode *CommandList) (*CommandFunc, error) {
 	Global.Input += key + " "
 	key = getMousek(key)
 	editorRefreshScreen()
-	child := c.Children[key]
-	if child == nil {
-		return nil, errors.New("Bad command: " + Global.Input)
+
+	var mChild, child *CommandList
+	if tree != nil && tree.Parent {
+		child = tree.Children[key]
 	}
-	if child.Parent {
-		nextkey := editorGetKey()
-		s, e := child.GetCommand(nextkey)
-		return s, e
-	} else {
-		return child.Command, nil
+	if majorMode != nil && majorMode.Parent {
+		mChild = majorMode.Children[key]
 	}
+
+	if mChild != nil {
+		if mChild.Parent {
+			nextkey := editorGetKey()
+			return GetCommand(nextkey, child, mChild)
+		} else {
+			return mChild.Command, nil
+		}
+	} else if child != nil {
+		if child.Parent {
+			nextkey := editorGetKey()
+			return GetCommand(nextkey, child, mChild)
+		} else {
+			return child.Command, nil
+		}
+	}
+	return nil, errors.New("Bad command: " + Global.Input)
 }
 
 func (c *CommandList) UnbindAll() {
@@ -125,7 +139,7 @@ func DescribeKeyBriefly() {
 	editorRefreshScreen()
 	key := editorGetKey()
 	if Global.MajorBindings[Global.CurrentB.MajorMode] != nil {
-		com, comerr := Global.MajorBindings[Global.CurrentB.MajorMode].GetCommand(key)
+		com, comerr := GetCommand(key, Emacs, Global.MajorBindings[Global.CurrentB.MajorMode])
 		if com != nil && comerr == nil {
 			if com.Name == "lisp code" {
 				Global.Input += "runs anonymous lisp code"
@@ -135,7 +149,7 @@ func DescribeKeyBriefly() {
 			return
 		}
 	}
-	com, comerr := Emacs.GetCommand(key)
+	com, comerr := GetCommand(key, Emacs, Global.MajorBindings[Global.CurrentB.MajorMode])
 	if comerr != nil {
 		Global.Input += "is not bound to a command"
 	} else if com != nil {
