@@ -41,7 +41,7 @@ func editorGetKeyNoRefresh() string {
 
 func recalcBuffer(result string) (string, int, int, int) {
 	rlen := len(result)
-	return result, rlen, 0, 0
+	return result, rlen, rlen, termutil.RunewidthStr(result)
 }
 
 func backwordWordIndex(buffer string, bufpos int) int {
