@@ -276,6 +276,43 @@ func editorIndent() {
 	editorInsertStr(tab)
 }
 
+func editorDeleteIndentation() {
+	buf := Global.CurrentB
+	if buf.cy == 0 || buf.NumRows <= 1 {
+		return
+	}
+
+	cx := 0
+	for _, ru := range buf.Rows[buf.cy].Data {
+		if ru != ' ' && ru != '\t' {
+			break
+		}
+		// Yes, we can just increment it; tabs and spaces are both one byte
+		cx++
+	}
+
+	startc, startl, endc, endl := buf.Rows[buf.cy-1].Size, buf.cy-1, cx, buf.cy
+	buf.cx, buf.cy = startc, startl
+	buf.MarkX, buf.MarkY = endc, endl
+	_, err := regionCmd(func(buf *EditorBuffer, startc, endc, startl, endl int) string {
+		ret := bufKillRegion(buf, startc, endc, startl, endl)
+		editorAddRegionUndo(false, startc, endc,
+			startl, endl, ret)
+		return ret
+	})
+
+	// "foo\nbar" -> "foo bar"
+	if startc != 0 {
+		editorInsertStr(" ")
+		buf.cx--
+		buf.Undo.paired = true
+	}
+
+	if err != nil {
+		Global.Input = err.Error()
+	}
+}
+
 func editorDelChar() {
 	times := 1
 	if Global.SetUniversal {

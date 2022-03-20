@@ -686,4 +686,8 @@ Current key bindings:
 		func(env *glisp.Zlisp) {
 			swapWindows()
 		}, false})
+	DefineCommand(&CommandFunc{"delete-indentation",
+		func(env *glisp.Zlisp) {
+			editorDeleteIndentation()
+		}, false})
 }
