@@ -796,6 +796,7 @@ func LoadDefaultConfig(env *glisp.Glisp) {
 (emacsbindkey "M-t" "transpose-words")
 (emacsbindkey "C-x 4 r" "rotate-windows")
 (emacsbindkey "C-x 4 s" "swap-windows")
+(emacsbindkey "M-^" "delete-indentation")
 `)
 	if err != nil {
 		fmt.Println(err.Error())
