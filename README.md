@@ -152,6 +152,7 @@ yet - I'll try to keep this list up to date!
 - `C-x f` - Set the fill column
 - `C-t` - Transpose (swap) characters at point
 - `M-t` - Transpose (swap) words at point
+- `M-^` - delete-indentation - merge current line with previous line
 
 ### Region operations
 
