@@ -17,7 +17,7 @@ for a wide array of languages; see the `syntax-files/` directory.
 Closely follows
 [the modified version of Kilo found in this tutorial](http://viewsourcecode.org/snaptoken/kilo)
 in terms of the inner workings of the editor. Inspiration also comes from
-[the suckless editor Sandy.](http://tools.suckless.org/sandy)
+[the suckless editor Sandy.](https://dl.suckless.org/htmlout/tools.suckless.org/sandy.html)
 
 ## Installation
 
