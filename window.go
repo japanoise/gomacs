@@ -1,8 +1,8 @@
 package main
 
 import (
-	termbox "github.com/nsf/termbox-go"
 	glisp "github.com/glycerine/zygomys/zygo"
+	termbox "github.com/nsf/termbox-go"
 )
 
 type winTree struct {

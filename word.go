@@ -5,8 +5,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	termutil "github.com/japanoise/termbox-util"
 	glisp "github.com/glycerine/zygomys/zygo"
+	termutil "github.com/japanoise/termbox-util"
 )
 
 func indexEndOfBackwardWord() (int, int) {

@@ -5,8 +5,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/kballard/go-shellquote"
 	glisp "github.com/glycerine/zygomys/zygo"
+	"github.com/kballard/go-shellquote"
 )
 
 func shellCmd(com string, args []string) (string, error) {

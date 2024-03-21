@@ -66,7 +66,7 @@ func forwardWordIndex(buffer string, bufpos int) int {
 	return ret
 }
 
-//As prompt, but calls a function after every keystroke.
+// As prompt, but calls a function after every keystroke.
 func PromptWithCallback(prompt string, refresh func(int, int), callback func(string, string)) string {
 	if callback == nil {
 		return DynamicPromptWithCallback(prompt, refresh, nil)
@@ -78,7 +78,7 @@ func PromptWithCallback(prompt string, refresh func(int, int), callback func(str
 	}
 }
 
-//As prompt, but calls a function after every keystroke that can modify the query.
+// As prompt, but calls a function after every keystroke that can modify the query.
 func DynamicPromptWithCallback(prompt string, refresh func(int, int), callback func(string, string) string) string {
 	return EditDynamicWithCallback("", prompt, refresh, callback)
 }

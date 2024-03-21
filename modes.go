@@ -86,7 +86,7 @@ func remDefaultMode(mode string) {
 	Global.DefaultModes[mode] = false
 }
 
-//Major Modes
+// Major Modes
 type Hooks struct {
 	GoHooks   []func()
 	LispHooks []glisp.SexpFunction
